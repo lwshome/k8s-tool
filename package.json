@@ -1,0 +1,27 @@
+{
+  "name": "boozang-k8s-tools",
+  "version": "0.0.1",
+  "release-it": {
+    "npm": {
+      "publish": false
+    },
+    "git": {
+      "tagName": "v${version}"
+    }
+  },
+  "description": "Boozang k8s learning",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "Node.js"
+  ],
+  "author": "Wensheng Li and Mats Ljunggren",
+  "license": "MIT",
+  "dependencies": {
+    "mkdirp": "^1.0.4",
+    "express": "latest",
+    "socket.io": "^4.1.2"
+  }
+}

@@ -1,0 +1,123 @@
+const _logViewDef={
+  _if:"_logHandler._data._showLog",
+  _tag:"div",
+  _attr:{
+    class:"bz-details-panel",
+    style:"flex:1"
+  },
+  _items:[
+    {
+      _tag:"div",
+      _attr:{
+        class:"bz-v-panel",
+        style:"border: var(--bz-border);"
+      },
+      _items:[
+        {
+          _tag:"div",
+          _attr:{
+            class:"bz-panel-header"
+          },
+          _items:[
+            {
+              _tag:"header",
+              _text:"k8s._data._curFile._name",
+              _attr:{
+                style:"flex:1;padding-left:10px;"
+              }
+            },
+            {
+              _tag:"button",
+              _attr:{
+                style:"position: relative;top: 3px;margin-right:10px;",
+                class:"btn btn-icon bz-small-btn bz-none-border bz-save"
+              },
+              _jqext:{
+                click:function(){
+                }
+              }
+            },
+            {
+              _tag:"button",
+              _attr:{
+                class:"btn btn-icon bz-small-btn bz-none-border bz-setting",
+                style:"position: relative;top: 3px;",
+                title:"_k8sMessage._method._setting"
+              },
+              _jqext:{
+                click:function(){
+                  _logHandler._showSetting()
+                }
+              }
+            },
+            {
+              _tag:"button",
+              _attr:{
+                class:"btn btn-icon bz-small-btn bz-none-border bz-close",
+                style:"margin-left:10px;position: relative;top: 3px;",
+                title:"_k8sMessage._method._close"
+              },
+              _jqext:{
+                click:function(){
+                  _logHandler._data._showLog=0
+                }
+              }
+            }
+          ]
+        },
+        {
+          _tag:"div",
+          _attr:{
+            style:"flex:1;margin-bottom:8px;display:flex;flex-direction: column;"
+          },
+          _items:[
+            {
+              _tag:"div",
+              _attr:{
+                style:"flex:1;",
+                class:"bz-v-panel"
+              },
+              _items:[
+                {
+                  _tag:"div",
+                  _attr:{
+                    class:"bz-panel-header"
+                  },
+                  _items:[
+                    {
+                      _tag:"header",
+                      _text:"_data._item._name"
+                    },
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-small-btn bz-none-border bz-close",
+                        style:"margin-left:10px;position: relative;top: 3px;",
+                        title:"_k8sMessage._method._close"
+                      },
+                      _jqext:{
+                        click:function(){
+                          _logHandler._closeLog(this._data._item)
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  _tag:"div",
+                  _attr:{
+                    class:"bz-panel-content"
+                  },
+                  _after:function(o){
+                    o._data._item._element=o
+                  }
+                }
+              ],
+              _dataRepeat:"_logHandler._data._logList"
+            }
+          ]
+        }
+      ]
+    }    
+  ]
+}
