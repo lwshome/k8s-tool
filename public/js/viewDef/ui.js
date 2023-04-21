@@ -131,12 +131,14 @@ const ui={
         },
         {
           _tag:"div",
+          _attr:{
+            style:"margin-right:15px;width:33%;min-width:100px;"
+          },
           _items:[
             {
               _tag:"div",
               _attr:{
-                class:"input-group",
-                style:"margin-right:15px;"
+                class:"input-group"
               },
               _items:[
                 {

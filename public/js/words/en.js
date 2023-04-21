@@ -27,6 +27,7 @@ const _k8sMessage={
     _save:"Save",
     _cancel:"Cancel",
     _close:"Close",
+    _clean:"Clean",
     "add-folder":"Add Folder",
     "add-file":"Add File",
     "delete-pod":"Delete (Rebuild) pod"
@@ -44,6 +45,10 @@ const _k8sMessage={
   _log:{
     _title:"Log setting",
     _highlightTitle:"Highlight",
-    _example:"Example"
+    _regexValue:"Filter regular expression",
+    _style:"Highlight style (css)",
+    _example:"Example",
+    _autoMerge:"Auto merge log (merge duplicate content)",
+    _cleanDynamicRegex:"Regular expression to sanitize dynamic characters"
   }
 }

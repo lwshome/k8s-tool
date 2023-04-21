@@ -57,6 +57,7 @@ function socketFun(socket){
         data:v
       })
     }
+
     k8s.k8s[msg.method](msg.data||_fun,_fun)
   });
 

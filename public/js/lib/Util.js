@@ -986,7 +986,14 @@ var _DialogViewDef={
         }
       ]
     }
-  ]
+  ],
+  _jqext:{
+    click:function(e){
+      if(e.target==this){
+        _Util._closeModelWindow()
+      }
+    }
+  }
 };
 
 var _dialogList=[];

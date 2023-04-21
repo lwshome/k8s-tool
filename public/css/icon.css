@@ -156,9 +156,6 @@
 }
 
 .bz-setting:before{
-  content:"···";
-  transform: rotate(90deg);
-  font-size:15px;
-  position: relative;
-  display: block;
+  content:"⛭";
+  font-size:13px;
 }

@@ -2,8 +2,7 @@ const _detailsViewDef={
   _if:"k8s._data._curFile",
   _tag:"div",
   _attr:{
-    class:"bz-details-panel",
-    style:"flex:1"
+    class:"bz-details-panel"
   },
   _items:[
     {
@@ -15,15 +14,19 @@ const _detailsViewDef={
         {
           _tag:"div",
           _attr:{
-            style:"line-height:30px;display:flex;"
+            class:"bz-panel-header"
           },
           _items:[
             {
-              _tag:"header",
-              _text:"k8s._data._curFile._name",
+              _tag:"span",
               _attr:{
-                style:"flex:1;padding-left:10px;"
+                class:"btn btn-icon bz-small-btn bz-file",
+                style:"cursor:default;margin-right:5px;"
               }
+            },
+            {
+              _tag:"header",
+              _text:"k8s._data._curFile._name"
             },
             {
               _tag:"button",
@@ -84,6 +87,7 @@ const _detailsViewDef={
               _jqext:{
                 click:function(){
                   k8s._data._curFile=0
+                  _logHandler._data._showLog=_logHandler._data._logList.length
                 }
               }
             }

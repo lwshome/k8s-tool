@@ -94,6 +94,7 @@ function _buildTreeNode(){
                         }
                       }else{
                         k8s._data._curFile=d
+                        _logHandler._data._showLog=0
                         if(!d._content){
                           k8s._openFile(d._pod,d)
                         }
@@ -394,7 +395,11 @@ const _listViewDef={
                             case "delete-pod":
                               return k8s._removePod(d)
                             case "log":
-                              return k8s._getLog(d,d)
+                              if($(this).hasClass("bz-press")){
+                                return _logHandler._closeLog(d)
+                              }else{
+                                return k8s._getLog(d,d)
+                              }
                           }
                         }
                       },

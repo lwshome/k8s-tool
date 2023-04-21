@@ -256,7 +256,7 @@ const k8s={
     return c.stars.find(x=>x.s==v.s&&x.p==v.p)
   },
   _getConfig:function(_fun){
-    k8s._data._config=JSON.parse(localStorage.getItem("config")||'{"stars":[],NSFilter:""}')
+    k8s._data._config=JSON.parse(localStorage.getItem("config")||'{"stars":[],"NSFilter":""}')
 
     _k8sProxy._send({
       _data:{
@@ -287,7 +287,8 @@ const k8s={
       _success:function(v){
         v=v.trim().split("\n").map(x=>x.split(/\s+/))
         v.shift()
-        v=v.filter(x=>x[2]!="Completed").map(x=>{
+        v=v.filter(x=>x[2]!="Completed")
+        v=v.map(x=>{
           return {
             _name:x[0],
             _ready:x[1][0]!="0",
@@ -350,8 +351,9 @@ const k8s={
                 _k8sProxy._send({
                   _data:{
                     method:"killProcess",
-                    data:"logs "+p
-                  }
+                    data:"logs -f --tail=100 "+p
+                  },
+                  _success:function(v){}
                 })
               }
               return 1
@@ -453,6 +455,7 @@ const k8s={
   },
   _getLog:function(d,p){
     _logHandler._data._showLog=1
+    k8s._data._curFile=0
     
     if(p._log){
       _logHandler._data._logList.splice(_logHandler._data._logList.indexOf(p),1)
@@ -469,14 +472,7 @@ const k8s={
         }
       },
       _success:function(v){
-        v=v.split("\n").map(x=>{
-          return `<pre>${x}</pre>`
-        })
-        p._log.push(...v)
-        p._log.splice(0,p.length-5000)
-        if(p._element){
-          p._element.innerHTML=p._log.join("")
-        }
+        _logHandler._addLog(v,p)
       }
     })
   },

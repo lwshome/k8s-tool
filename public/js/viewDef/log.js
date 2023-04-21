@@ -2,15 +2,19 @@ const _logViewDef={
   _if:"_logHandler._data._showLog",
   _tag:"div",
   _attr:{
-    class:"bz-details-panel",
-    style:"flex:1"
+    class:"bz-details-panel"
   },
   _items:[
     {
       _tag:"div",
       _attr:{
-        class:"bz-v-panel",
-        style:"border: var(--bz-border);"
+        style:function(d){
+          let i=_logHandler._data._logList.length
+          if(i){
+            return `height:calc(${100/i}% - ${30/i}px);`
+          }
+        },
+        class:"bz-v-panel"
       },
       _items:[
         {
@@ -20,17 +24,22 @@ const _logViewDef={
           },
           _items:[
             {
-              _tag:"header",
-              _text:"k8s._data._curFile._name",
+              _tag:"span",
               _attr:{
-                style:"flex:1;padding-left:10px;"
+                class:"btn btn-icon bz-small-btn bz-log",
+                style:"cursor:default;margin-right:5px;"
               }
+            },
+            {
+              _tag:"header",
+              _text:"_data._item._name"
             },
             {
               _tag:"button",
               _attr:{
-                style:"position: relative;top: 3px;margin-right:10px;",
-                class:"btn btn-icon bz-small-btn bz-none-border bz-save"
+                style:"margin-left:10px;position: relative;top: 3px;",
+                class:"btn btn-icon bz-small-btn bz-none-border bz-save",
+                title:"_k8sMessage._method._save"
               },
               _jqext:{
                 click:function(){
@@ -40,8 +49,21 @@ const _logViewDef={
             {
               _tag:"button",
               _attr:{
+                class:"btn btn-icon bz-small-btn bz-none-border bz-delete",
+                style:"margin-left:10px;position: relative;top: 3px;",
+                title:"_k8sMessage._method._clean"
+              },
+              _jqext:{
+                click:function(){
+                  this._data._item._element.innerHTML=""
+                }
+              }
+            },
+            {
+              _tag:"button",
+              _attr:{
                 class:"btn btn-icon bz-small-btn bz-none-border bz-setting",
-                style:"position: relative;top: 3px;",
+                style:"margin-left: 8px;position: relative;top: 3px;",
                 title:"_k8sMessage._method._setting"
               },
               _jqext:{
@@ -59,7 +81,7 @@ const _logViewDef={
               },
               _jqext:{
                 click:function(){
-                  _logHandler._data._showLog=0
+                  _logHandler._closeLog(this._data._item)
                 }
               }
             }
@@ -68,56 +90,14 @@ const _logViewDef={
         {
           _tag:"div",
           _attr:{
-            style:"flex:1;margin-bottom:8px;display:flex;flex-direction: column;"
+            class:"bz-panel-content"
           },
-          _items:[
-            {
-              _tag:"div",
-              _attr:{
-                style:"flex:1;",
-                class:"bz-v-panel"
-              },
-              _items:[
-                {
-                  _tag:"div",
-                  _attr:{
-                    class:"bz-panel-header"
-                  },
-                  _items:[
-                    {
-                      _tag:"header",
-                      _text:"_data._item._name"
-                    },
-                    {
-                      _tag:"button",
-                      _attr:{
-                        class:"btn btn-icon bz-small-btn bz-none-border bz-close",
-                        style:"margin-left:10px;position: relative;top: 3px;",
-                        title:"_k8sMessage._method._close"
-                      },
-                      _jqext:{
-                        click:function(){
-                          _logHandler._closeLog(this._data._item)
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  _tag:"div",
-                  _attr:{
-                    class:"bz-panel-content"
-                  },
-                  _after:function(o){
-                    o._data._item._element=o
-                  }
-                }
-              ],
-              _dataRepeat:"_logHandler._data._logList"
-            }
-          ]
+          _after:function(o){
+            o._data._item._element=o
+          }
         }
-      ]
-    }    
+      ],
+      _dataRepeat:"_logHandler._data._logList"
+    }
   ]
 }

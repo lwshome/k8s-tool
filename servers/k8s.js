@@ -30,9 +30,12 @@ const k8s={
     })
   },
   getLog:function(d,_fun){
-    let s=`${_getK8sCmdHeader(d)} logs -f --tail=100 ${d.serverName}`
-    s=s.split(" ")
-    _monitor(s.shift(),s,_fun)
+    let s=`logs -f --tail=100 ${d.serverName}`
+    k8s.killProcess(s,function(){
+      s=`${_getK8sCmdHeader(d)} ${s}`
+      s=s.split(" ")
+      _monitor(s.shift(),s,_fun)
+    })
   },
   getList:function(d,_fun){
     let s=`${_getK8sCmdHeader(d)} get ${d.type}`
