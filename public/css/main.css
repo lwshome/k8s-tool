@@ -366,7 +366,6 @@ select.form-control{
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  flex:1;
 }
 
 .bz-node-title:hover{
