@@ -1,0 +1,32 @@
+{
+  "stars": [],
+  "defaultNS": "mycac",
+  "NSFilter": "mycac|deploy|testing",
+  "filter": "lstnrs|kf|pm",
+  "log": {
+    "autoMerge": "on",
+    "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
+    "highlights": [
+      {
+        "value": "org.springframework",
+        "css": "background-color:yellow;"
+      },
+      {
+        "value": "DispatcherServlet",
+        "css": "background-color:#CCF;"
+      }
+    ]
+  },
+  "link": [
+    {
+      "name": "health",
+      "value": "/actuator/health"
+    },
+    {
+      "name": "metrics",
+      "value": "/actuator/metrics"
+    }
+  ],
+  "cmd": [],
+  "ns": "mycac"
+}

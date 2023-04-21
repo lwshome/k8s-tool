@@ -1,6 +1,8 @@
 const _k8sMessage={
   _common:{
-    _namespace:"Namespace"
+    _namespace:"Namespace",
+    _name:"Name",
+    _value:"Value"
   },
   _info:{
     _downloadInBG:"The file/folder was download in server side.",
@@ -14,6 +16,8 @@ const _k8sMessage={
   _method:{
     _confirm:"Confirm",
     _filter:"Filter",
+    cmd:"Execute remote command",
+    link:"Open browser in link",
     forward:"Forward",
     search:"Search file / folder",
     refresh:"Refresh",
@@ -28,6 +32,7 @@ const _k8sMessage={
     _cancel:"Cancel",
     _close:"Close",
     _clean:"Clean",
+    _addItem:"Add Item",
     "add-folder":"Add Folder",
     "add-file":"Add File",
     "delete-pod":"Delete (Rebuild) pod"
@@ -41,6 +46,10 @@ const _k8sMessage={
     }
   },
   _setting:{
+    _title:"Setting ...",
+    cmd:"Remote Command setting",
+    link:"Pod Link setting",
+    _list:"Item list:"
   },
   _log:{
     _title:"Log setting",

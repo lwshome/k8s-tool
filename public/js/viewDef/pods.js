@@ -360,7 +360,7 @@ const _listViewDef={
                       _tag:"input",
                       _attr:{
                         class:"form-control",
-                        style:"margin-left:10px;padding:5px;padding: 4px;margin-top: -3px;",
+                        style:"margin-left:10px;padding:5px;padding: 4px;margin-top: -3px;width:150px;",
                         placeholder:"_k8sMessage._method._filter"
                       },
                       _dataModel:"_data._item.filter"
@@ -379,7 +379,7 @@ const _listViewDef={
                         }
                       },
                       _jqext:{
-                        click:function(){
+                        click:function(e){
                           let d=this._data._supData._item
                           switch(this._data._item){
                             case "forward":
@@ -394,6 +394,15 @@ const _listViewDef={
                               return k8s._getFileList(d,d)
                             case "delete-pod":
                               return k8s._removePod(d)
+                            case "cmd":
+                            case "link":
+                              k8s._uiSwitch._showMenu={
+                                _item:d,
+                                _key:this._data._item,
+                                _element:this
+                              }
+                              e.stopPropagation()
+                              return
                             case "log":
                               if($(this).hasClass("bz-press")){
                                 return _logHandler._closeLog(d)
@@ -403,7 +412,90 @@ const _listViewDef={
                           }
                         }
                       },
-                      _dataRepeat:["search","refresh","delete-pod","forward","log"]
+                      _dataRepeat:["search","refresh","delete-pod","forward","log","cmd","link"]
+                    }
+                  ]
+                },
+                {
+                  _if:"['cmd','link'].includes(k8s._uiSwitch._showMenu._key)&&k8s._uiSwitch._showMenu._item==_data._item",
+                  _tag:"div",
+                  _attr:{
+                    style:function(){
+                      let r=k8s._uiSwitch._showMenu._element.getBoundingClientRect()
+                      return `top:${r.top+20}px;right:${window.innerWidth-r.right}px;`
+                    },
+                    class:"bz-menu-panel"
+                  },
+                  _items:[
+                    {
+                      _if:"k8s._uiSwitch._showMenu=='link'",
+                      _tag:"div",
+                      _attr:{
+                        class:"bz-menu-item",
+                        title:"_k8sMessage._method._copy"
+                      },
+                      _items:[
+                        {
+                          _tag:"span",
+                          _text:"192.168.1.1:8080",
+                          _attr:{
+                            style:"margin-right:10px;"
+                          }
+                        },
+                        {
+                          _tag:"button",
+                          _attr:{
+                            class:"btn btn-icon bz-small-btn bz-none-border bz-copy"
+                          }
+                        }
+                      ],
+                      _jqext:{
+                        click:function(){
+                          _Util._copyText(this.innerText.trim(),document,this.children[0])
+                        }
+                      }
+                    },
+                    {
+                      _tag:"div",
+                      _attr:{
+                        class:"bz-menu-item"
+                      },
+                      _items:[
+                        {
+                          _tag:"span",
+                          _text:"_data._item.name||_data._item"
+                        }
+                      ],
+                      _dataRepeat:"_data._item[k8s._uiSwitch._showMenu._key]",
+                      _jqext:{
+                        click:function(){
+                          k8s._exeItem(k8s._uiSwitch._showMenu._key,this._data._item)
+                        }
+                      }
+                    },
+                    {
+                      _tag:"div",
+                      _attr:{
+                        class:"bz-menu-item"
+                      },
+                      _items:[
+                        {
+                          _tag:"button",
+                          _attr:{
+                            class:"btn btn-icon bz-small-btn bz-setting bz-none-border",
+                            style:"margin-right:10px;"
+                          }
+                        },
+                        {
+                          _tag:"span",
+                          _text:"_k8sMessage._setting._title"
+                        }
+                      ],
+                      _jqext:{
+                        click:function(){
+                          k8s._openFunSetting(k8s._uiSwitch._showMenu._key)
+                        }
+                      }
                     }
                   ]
                 }

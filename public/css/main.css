@@ -15,6 +15,7 @@ body{
   display: flex;
   padding: 5px;
 }
+
 .bz-panel,
 .bz-v-panel{
   width: 100%;
@@ -66,9 +67,6 @@ textarea{
   border:var(--bz-border);
   white-space:pre;
 }
-textarea:focus{
-  outline: none;
-}
 
 .btn {
   /**line-height: 1.2; **/
@@ -119,12 +117,11 @@ textarea:focus{
 }
 
 
-.input-group .form-control:focus,
-.form-control:focus {
+textarea:focus,
+select:focus,
+input:focus {
   border:1px solid #66afe9 !important;
   outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
-          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
 }
 .form-control::-moz-placeholder {
   color: #999;
@@ -474,8 +471,10 @@ pre {
   font-size: 13px;
   line-height: 60px;
   border-bottom: var(--bz-border);
-  padding: 0px 14px;
-  /**padding: 0 1.5rem;**/
+  padding: 0px 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: bold;
 }
 .bz-modal-window .bz-modal-body {
   box-sizing: border-box;
@@ -543,3 +542,37 @@ header{
   white-space: nowrap;
   border: 1px solid red;
 }
+.bz-oneline-input{
+  border:0;
+  border-bottom:var(--bz-border);
+  padding: 5px;
+}
+.bz-oneline-input:focus{
+  outline: none;
+  border-left:0px !important;
+  border-right:0px !important;
+  border-top:0px !important;
+}
+.bz-menu-panel{
+  z-index:1111;
+  position:absolute;
+  box-shadow: var(--bz-shadow);
+  margin-top:3px;
+  padding: 2px;
+  background-color: #FFF;
+}
+.bz-menu-item{
+  cursor:pointer;
+  padding: 5px 10px;
+}
+.bz-menu-item span{
+  position: relative;
+  top: 2px;
+}
+.bz-menu-item:hover span{
+  text-decoration: underline;
+}
+.bz-menu-item:hover{
+  background-color: #CCF;
+}
+

@@ -37,6 +37,95 @@ const k8s={
     }
     return s
   },
+  _openFunSetting:function(t){
+    _Util._confirmMessage({
+      _tag:"div",
+      _attr:{
+        class:"bz-fun-setting-dialog"
+      },
+      _items:[
+        {
+          _tag:"div",
+          _attr:{
+            class:"bz-panel-header"
+          },
+          _items:[
+            {
+              _tag:"header",
+              _text:"_k8sMessage._setting._list"
+            },
+            {
+              _tag:"button",
+              _attr:{
+                class:"btn btn-icon bz-plus bz-none-border bz-small-btn",
+                style:"margin-top:2px;"
+              },
+              _jqext:{
+                click:function(ex){
+                  k8s._data._config[t]=k8s._data._config[t]||[]
+                  k8s._data._config[t].push({})
+                  _Util._resizeModelWindow()
+                  setTimeout(()=>{
+                    let os=$(".bz-fun-setting-dialog input")
+                    $(os[os.length-2]).focus()
+                  },100)
+                }
+              }
+            }
+          ]
+        },
+        {
+          _tag:"div",
+          _attr:{
+            class:"bz-panel-content",
+            style:"margin-bottom:10px;"
+          },
+          _items:[
+            {
+              _tag:"div",
+              _attr:{
+                style:"display:flex;margin-top:5px;"
+              },
+              _items:[
+                {
+                  _tag:"input",
+                  _attr:{
+                    style:"flex:1;",
+                    class:"form-control bz-oneline-input",
+                    placeholder:"_k8sMessage._common._name"
+                  },
+                  _dataModel:`k8s._data._config.${t}[_data._idx].name`
+                },
+                {
+                  _tag:"input",
+                  _attr:{
+                    style:"flex:1;margin-left:10px;",
+                    class:"form-control bz-oneline-input",
+                    placeholder:"_k8sMessage._common._value"
+                  },
+                  _dataModel:`k8s._data._config.${t}[_data._idx].value`
+                },
+                {
+                  _tag:"button",
+                  _attr:{
+                    style:"margin-top:2px;",
+                    class:"btn btn-icon bz-small-btn bz-delete bz-none-border"
+                  },
+                  _jqext:{
+                    click:function(){
+                      k8s._data._config[t].splice(this._data._idx,1);
+                      _Util._resizeModelWindow()
+                    }
+                  }
+                }
+              ],
+              _dataRepeat:`k8s._data._config.${t}`
+            }
+          ]
+        }
+      ]
+    },[],_k8sMessage._setting[t],0,1)
+  },
   _addFile:function(d,p,f){
     let n=prompt(_k8sMessage._info._askFileName)
     if(n){
@@ -79,7 +168,7 @@ const k8s={
                       y.s=x
                     }
                   })
-                  k8s._storeLocalData()
+                  k8s._saveSetting()
                 }
               }
             }
@@ -248,7 +337,7 @@ const k8s={
     }else{
       c.stars=c.stars.filter(x=>x.s!=v.s||x.p!=v.p)
     }
-    k8s._storeLocalData()
+    k8s._saveSetting()
   },
   _isStar:function(d){
     let c=k8s._data._config
@@ -256,14 +345,16 @@ const k8s={
     return c.stars.find(x=>x.s==v.s&&x.p==v.p)
   },
   _getConfig:function(_fun){
-    k8s._data._config=JSON.parse(localStorage.getItem("config")||'{"stars":[],"NSFilter":""}')
-
     _k8sProxy._send({
       _data:{
         method:"getConfig"
       },
       _success:function(v){
-        Object.assign(k8s._data._config,v)
+        for(let k in v){
+          k8s._data._config[k]=v[k]
+        }
+
+        _logHandler._data._setting=v.log
         setTimeout(()=>{
           _CtrlDriver._refreshData(k8s._data._config,"defaultNS")
         },500)
@@ -271,8 +362,13 @@ const k8s={
       }
     })
   },
-  _storeLocalData:function(){
-    localStorage.setItem("config",JSON.stringify(k8s._data._config))
+  _saveSetting:function(){
+    _k8sProxy._send({
+      _data:{
+        method:"saveConfig",
+        data:k8s._data._config
+      }
+    })
   },
   _getPods:function(_fun,_noloading){
     clearTimeout(k8s._loadPodsTime)
@@ -388,6 +484,15 @@ const k8s={
         _fun&&_fun()
       }
     })
+  },
+  _exeItem:function(t,d){
+    if(t=="link"){
+      window.open(d.value)
+    }else if(t=="cmd"){
+      _k8sProxy._send({
+        cmd:"ls -l\npwd\nwhoami"
+      })
+    }
   },
   _forward:function(d){
     if(d._forwarding){

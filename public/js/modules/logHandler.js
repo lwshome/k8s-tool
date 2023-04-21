@@ -1,20 +1,19 @@
 const _logHandler={
-  _data:_CtrlDriver._buildProxy({_logList:[],_setting:{highlights:[],cleanDynamicRegex:"([0-9 -:\/.]{17,23}|@[0-9a-f]{7,32})"}}),
-  _init:function(){
-    _logHandler._data._setting=JSON.parse(localStorage.getItem("logSetting")||'{"highlights":[],"cleanDynamicRegex":"([0-9 -:\/.]{17,23}|@[0-9a-f]{7,32})"}')
-  },
-  _saveSetting:function(){
-    localStorage.setItem("logSetting",JSON.stringify(_logHandler._data._setting))
+  _data:_CtrlDriver._buildProxy({_logList:[],_setting:{}}),
+  _saveLog:function(d){
+    let c=".bz-panel-content{flex:1;overflow: auto;}\n.even{background-color: #EEE;}\n.bz-log-repeat{border-radius: 10px;color:#FFF;background-color: red;min-width: 13px;display: block;float: right;text-align: center;padding: 0px;font-weight: bold;font-size: 11px;margin-right: 5px;white-space: nowrap;border: 1px solid red;}";
+    let v=`<!DOCTYPE html><html><header><title>${d._name}</title><style>${c}</style></header><body>${d._element.outerHTML}</body></html>`
+    _Util._downloadAsHtmlFile(d._name+(new Date().toJSON())+".html",v)
   },
   _showSetting:function(){
     _Util._confirmMessage({
       _tag:"div",
       _update:function(){
-        _logHandler._saveSetting()
+        k8s._saveSetting()
         _Util._resizeModelWindow()
       },
       _attr:{
-        class:"bz-v-panel"
+        class:"bz-v-panel bz-log-setting-dialog"
       },
       _items:[
         {
@@ -35,6 +34,9 @@ const _logHandler={
                 },
                 {
                   _tag:"span",
+                  _attr:{
+                    style:"position: relative;top: -2px;left: 5px;"
+                  },
                   _text:"_k8sMessage._log._autoMerge"
                 }
               ]
@@ -51,7 +53,7 @@ const _logHandler={
               _tag:"textarea",
               _attr:{
                 placeholder:"_k8sMessage._log._cleanDynamicRegex",
-                style:"width:calc(100% - 10px);height:50px;"
+                style:"width:calc(100% - 12px);height:50px;"
               },
               _dataModel:"_logHandler._data._setting.cleanDynamicRegex"
             }
@@ -59,6 +61,9 @@ const _logHandler={
         },
         {
           _tag:"div",
+          _attr:{
+            style:"margin-top:10px;"
+          },
           _items:[
             {
               _tag:"div",
@@ -73,14 +78,18 @@ const _logHandler={
                 {
                   _tag:"button",
                   _attr:{
-                    class:"btn btn-icon bz-plus bz-none-border",
-                    style:"margin-top:5px;"
+                    class:"btn btn-icon bz-plus bz-none-border bz-small-btn",
+                    style:"margin-top:2px;"
                   },
                   _jqext:{
                     click:function(ex){
                       _logHandler._data._setting.highlights==_logHandler._data._setting.highlights||[]
                       _logHandler._data._setting.highlights.push({css:"background-color:yellow;"})
                       _Util._resizeModelWindow()
+                      setTimeout(()=>{
+                        let os=$(".bz-log-setting-dialog input")
+                        $(os[os.length-2]).focus()
+                      },100)
                     }
                   }
                 }
@@ -89,7 +98,8 @@ const _logHandler={
             {
               _tag:"div",
               _attr:{
-                class:"bz-panel-content"
+                class:"bz-panel-content",
+                style:"margin-bottom:10px;"
               },
               _items:[
                 {
@@ -101,8 +111,8 @@ const _logHandler={
                     {
                       _tag:"input",
                       _attr:{
-                        style:"flex:1",
-                        class:"form-control",
+                        style:"flex:1;",
+                        class:"form-control bz-oneline-input",
                         placeholder:"_k8sMessage._log._regexValue"
                       },
                       _dataModel:"_logHandler._data._setting.highlights[_data._idx].value"
@@ -110,8 +120,8 @@ const _logHandler={
                     {
                       _tag:"input",
                       _attr:{
-                        style:"flex:1;margin-left:-1px;",
-                        class:"form-control",
+                        style:"flex:1;margin-left:10px;",
+                        class:"form-control bz-oneline-input",
                         placeholder:"_k8sMessage._log._style"
                       },
                       _dataModel:"_logHandler._data._setting.highlights[_data._idx].css"
@@ -119,13 +129,19 @@ const _logHandler={
                     {
                       _tag:"div",
                       _attr:{
-                        style:"'margin-left:10px;margin-right:10px;line-height:21px;'+_data._item.css"
+                        style:function(d,c,o){
+                          if(o){
+                            o.style=""
+                          }
+                          return 'margin-left:10px;margin-right:10px;line-height:25px;'+d._item.css
+                        }
                       },
                       _text:"_k8sMessage._log._example"
                     },
                     {
                       _tag:"button",
                       _attr:{
+                        style:"margin-top:2px;",
                         class:"btn btn-icon bz-small-btn bz-delete bz-none-border"
                       },
                       _jqext:{
@@ -143,7 +159,7 @@ const _logHandler={
           ]
         }
       ]
-    },[],_k8sMessage._log._title)
+    },[],_k8sMessage._log._title,0,1)
   },
   _closeLog:function(p) {
     let s=_logHandler._data._logList
@@ -243,4 +259,3 @@ const _logHandler={
     }
   }
 }
-_logHandler._init()

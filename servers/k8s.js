@@ -2,9 +2,19 @@ const { exec } = require("child_process");
 const spawn = require('child_process').spawn
 const fs = require("fs");
 const _config=global._config;
+let settings;
 const k8s={
-  getConfig:function(_fun){
-    _fun(_config)
+  getConfig:function(d,_fun){
+    if(!settings){
+      settings=fs.readFileSync("config/env/setting.txt")||"{}"
+      settings=JSON.parse(settings)
+    }
+    _fun(settings)
+  },
+  saveConfig:function(c){
+    console.log(c)
+    settings=c
+    fs.writeFileSync("config/env/setting.txt",JSON.stringify(c,0,2))
   },
   getNamespaceList:function(_fun){
     _exe("kubectl get namespace",_fun)
@@ -175,6 +185,28 @@ const k8s={
   },
   updateScaleConfig:function(_data){
     let s=`${_getK8sCmdHeader(_data)} scale --${_data.name}=${_data.value} deployment/${_data.serverName}`
+  },
+  _exeCmd:function(d){
+    let cs=d.cmd.split("\n")
+    cs=cs.filter(x=>x).map(x=>{
+      return {
+        ns:d.ns,
+        name:d.name,
+        cmd:x
+      }
+    })
+    _doIt(cs)
+    function _doIt(cs){
+      let c=cs.shift()
+      let s=_buildRemoteK8sCmd(c).split(" ");
+      _monitor(s.shift(),s,function(v){
+        if(v.startsWith("COMPLETE:")){
+          _doIt(cs)
+        }else{
+          console.log(v)
+        }
+      })
+    }
   }
 }
 function _getK8sCmdHeader(_data){

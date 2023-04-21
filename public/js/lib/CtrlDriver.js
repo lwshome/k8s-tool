@@ -302,11 +302,11 @@ var _CtrlDriver={
           _CtrlDriver._lastSet._repeatValue++
         }
         _CtrlDriver._lastSet._repeat++
-        if(_CtrlDriver._lastSet._repeat>BZ._debugger){
-          debugger
-        }else if(_CtrlDriver._lastSet._repeatValue>10&&_CtrlDriver._lastSet._repeatValue<=BZ._repeat/2){
-          debugger
-        }
+        // if(_CtrlDriver._lastSet._repeat>BZ._debugger){
+        //   debugger
+        // }else if(_CtrlDriver._lastSet._repeatValue>10&&_CtrlDriver._lastSet._repeatValue<=BZ._repeat/2){
+        //   debugger
+        // }
       }
     }
   },

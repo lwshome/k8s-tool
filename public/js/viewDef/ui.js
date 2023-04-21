@@ -33,6 +33,7 @@ const ui={
                 class:"form-control"
               },
               _update:function(){
+                k8s._saveSetting()
                 k8s._getInitData()
               },
               _items:[
@@ -75,9 +76,7 @@ const ui={
             {
               _tag:"input",
               _update:function(){
-                setTimeout(()=>{
-                  k8s._storeLocalData()
-                },100)
+                k8s._saveSetting()
               },
               _attr:{
                 class:"form-control"
@@ -152,7 +151,7 @@ const ui={
                   _tag:"input",
                   _update:function(){
                     setTimeout(()=>{
-                      k8s._storeLocalData()
+                      k8s._saveSetting()
                     },100)
                   },
                   _attr:{
@@ -183,4 +182,7 @@ const ui={
 }
 setTimeout(()=>{
   _CtrlDriver._execute(k8s,0,ui,document.body)
+  $(document.body).click(function(){
+    k8s._uiSwitch._showMenu=0
+  })
 })

@@ -97,11 +97,15 @@
   top: -3px;
   background-color: #CCF;
 }
-.bz-download:before{
-  content:"⭳";
-  font-size:13px;
-  font-weight: bold;
+.bz-download{
+  transform: rotate(90deg);
 }
+.bz-download:before{
+  content:"➠";
+  font-size:13px;
+  font-weight: 400;
+}
+
 .bz-open-item{
   transform: rotate(90deg);
 }
@@ -159,3 +163,14 @@
   content:"⛭";
   font-size:13px;
 }
+
+.bz-cmd:before{
+  content:">_";
+  font-size:13px;
+}
+
+.bz-link:before{
+  content:"🔗";
+  font-size:13px;
+}
+

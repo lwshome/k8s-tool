@@ -38,11 +38,12 @@ const _logViewDef={
               _tag:"button",
               _attr:{
                 style:"margin-left:10px;position: relative;top: 3px;",
-                class:"btn btn-icon bz-small-btn bz-none-border bz-save",
-                title:"_k8sMessage._method._save"
+                class:"btn btn-icon bz-small-btn bz-none-border bz-download",
+                title:"_k8sMessage._method._download"
               },
               _jqext:{
                 click:function(){
+                  _logHandler._saveLog(this._data._item)
                 }
               }
             },

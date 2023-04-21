@@ -23,7 +23,7 @@ const _k8sProxy={
         let f=_k8sProxy._sentMap[_msg.k]
         if(f&&f._success){
           let d=_msg.data
-          if(d&&d.cmd){
+          if(d&&d.cmd&&!d.link){
             if(f._error){
               f._error(d)
             }else{
@@ -52,8 +52,8 @@ const _k8sProxy={
           k8s._data._loading=!_msg._noloading
           _msg._data.k=k8s._getKey()
           _k8sProxy._sentMap[_msg._data.k]=_msg;
-          _msg=_msg._data
         }
+        _msg=_msg._data||_msg
         _k8sProxy._socket.emit("work",_msg);
         return _k8sProxy._lanuch()
       }else{
