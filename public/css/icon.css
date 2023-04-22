@@ -167,6 +167,7 @@
 .bz-cmd:before{
   content:">_";
   font-size:13px;
+  font-family: monospace
 }
 
 .bz-link:before{

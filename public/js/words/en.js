@@ -2,7 +2,12 @@ const _k8sMessage={
   _common:{
     _namespace:"Namespace",
     _name:"Name",
-    _value:"Value"
+    _value:"Value",
+    _repeat:"Repeat",
+    _message:"Message",
+    _ok:"OK",
+    _waiting:"Waiting ...",
+    _question:"Question"
   },
   _info:{
     _downloadInBG:"The file/folder was download in server side.",
@@ -11,16 +16,20 @@ const _k8sMessage={
     _confirmDelete:"Do you want to delete the item?",
     _askFileName:"What's the name please?",
     _importFileError:"Error importing file: {0}",
-    _noMoreAsk: "Don't ask again"
+    _noMoreAsk: "Don't ask again",
+    _askSearchFile:"What's file are you looking for?"
   },
   _method:{
+    _search:"Search",
     _confirm:"Confirm",
     _filter:"Filter",
+    _yes:"Yes",
     cmd:"Execute remote command",
     link:"Open browser in link",
     forward:"Forward",
     search:"Search file / folder",
     refresh:"Refresh",
+    log:"Monitor Logging",
     star:"Favor",
     _refresh:"Refresh",
     _download:"Download",

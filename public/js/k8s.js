@@ -40,6 +40,11 @@ const k8s={
   _openFunSetting:function(t){
     _Util._confirmMessage({
       _tag:"div",
+      _update:function(){
+        setTimeout(()=>{
+          k8s._saveSetting()
+        })
+      },
       _attr:{
         class:"bz-fun-setting-dialog"
       },
@@ -78,46 +83,78 @@ const k8s={
           _tag:"div",
           _attr:{
             class:"bz-panel-content",
-            style:"margin-bottom:10px;"
+            style:"margin-bottom:10px;max-height:600px;"
           },
           _items:[
             {
               _tag:"div",
               _attr:{
-                style:"display:flex;margin-top:5px;"
+                style:"display:flex;margin-top:5px;flex-direction:column;"
               },
               _items:[
                 {
-                  _tag:"input",
-                  _attr:{
-                    style:"flex:1;",
-                    class:"form-control bz-oneline-input",
-                    placeholder:"_k8sMessage._common._name"
+                  _if:function(d){
+                    return !d._idx||(t=="cmd")
                   },
-                  _dataModel:`k8s._data._config.${t}[_data._idx].name`
+                  _tag:"hr",
+                  _attr:{
+                    style:"width:99%"
+                  }
                 },
                 {
-                  _tag:"input",
+                  _tag:"div",
                   _attr:{
-                    style:"flex:1;margin-left:10px;",
+                    style:"display:flex;margin-top:5px;"
+                  },
+                  _items:[
+                    {
+                      _tag:"input",
+                      _attr:{
+                        style:"flex:1;",
+                        class:"form-control bz-oneline-input",
+                        placeholder:"_k8sMessage._common._name"
+                      },
+                      _dataModel:`k8s._data._config.${t}[_data._idx].name`
+                    },
+                    {
+                      _if:function(){
+                        return t=="link"
+                      },
+                      _tag:"input",
+                      _attr:{
+                        style:"flex:1;margin-left:10px;",
+                        class:"form-control bz-oneline-input",
+                        placeholder:"_k8sMessage._common._value"
+                      },
+                      _dataModel:`k8s._data._config.${t}[_data._idx].value`
+                    },
+                    {
+                      _tag:"button",
+                      _attr:{
+                        style:"margin-top:2px;",
+                        class:"btn btn-icon bz-small-btn bz-delete bz-none-border"
+                      },
+                      _jqext:{
+                        click:function(){
+                          k8s._data._config[t].splice(this._data._idx,1);
+                          _Util._resizeModelWindow()
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  _if:function(){
+                    return t=="cmd"
+                  },
+                  _tag:"textarea",
+                  _attr:{
+                    style:"height:100px;",
                     class:"form-control bz-oneline-input",
                     placeholder:"_k8sMessage._common._value"
                   },
                   _dataModel:`k8s._data._config.${t}[_data._idx].value`
                 },
-                {
-                  _tag:"button",
-                  _attr:{
-                    style:"margin-top:2px;",
-                    class:"btn btn-icon bz-small-btn bz-delete bz-none-border"
-                  },
-                  _jqext:{
-                    click:function(){
-                      k8s._data._config[t].splice(this._data._idx,1);
-                      _Util._resizeModelWindow()
-                    }
-                  }
-                }
               ],
               _dataRepeat:`k8s._data._config.${t}`
             }
@@ -127,22 +164,25 @@ const k8s={
     },[],_k8sMessage._setting[t],0,1)
   },
   _addFile:function(d,p,f){
-    let n=prompt(_k8sMessage._info._askFileName)
-    if(n){
-      _k8sProxy._send({
-        _data:{
-          method:"addFile",
-          data:{
-            serverName:d._name,
-            path:p._path+"/"+n,
-            folder:f
+    _Util._promptMessage({
+      _msg:_k8sMessage._info._askFileName,
+      _fun:function(c,v){
+        _k8sProxy._send({
+          _data:{
+            method:"addFile",
+            data:{
+              serverName:d._name,
+              path:p._path+"/"+v,
+              folder:f
+            }
+          },
+          _success:function(r){
+            k8s._getFileList(d,p)
+            c._ctrl._close()
           }
-        },
-        _success:function(r){
-          k8s._getFileList(d,p)
-        }
-      })
-    }
+        })
+      }
+    })
   },
   _loadStar:function(pp){
     if(!k8s._data._loading&&k8s._data._serviceList&&k8s._data._podList){
@@ -280,47 +320,50 @@ const k8s={
     d._loading=0
   },
   _searchFile:function(d){
-    let f=prompt("What's file are you looking for?")
-    if(!f){
-      return
-    }
-    d._loading=1
-    d._subList=[]
-    let s=(d._pod||d)._name,p=d._path||"/"
-    _k8sProxy._send({
-      _data:{
-        method:"searchFile",
-        data:{
-          serverName:s,
-          path:p.replace("etc/../","")||"/",
-          file:f
-        }
-      },
-      _success:function(v){
-        v=v.trim().split("\n").map(x=>x.trim().split(/\s+/))
-        v=v.filter(x=>x.length>=11)
-        v=v.map(x=>{
-          x.shift()
-          x.shift()
-          let n=x.pop()
-          if(x[x.length-1]=="->"){
-            x.pop()
-            n=x.pop()
-          }
-          return {
-            _name:n,
-            _date:([x.pop(),x.pop(),x.pop()]).reverse().join(" "),
-            _size:x.pop(),
-            _folder:x[0][0]=="d",
-            _chmod:x[0],
-            _pod:d._pod||d,
-            _path:n
+    _Util._promptMessage({
+      _msg:_k8sMessage._info._askSearchFile,
+      _fun:function(c,sv){
+        d._loading=1
+        d._subList=[]
+        let s=(d._pod||d)._name,p=d._path||"/"
+        _k8sProxy._send({
+          _data:{
+            method:"searchFile",
+            data:{
+              serverName:s,
+              path:p.replace("etc/../","")||"/",
+              file:sv
+            }
+          },
+          _success:function(v){
+            v=v.trim().split("\n").map(x=>x.trim().split(/\s+/))
+            v=v.filter(x=>x.length>=11)
+            v=v.map(x=>{
+              x.shift()
+              x.shift()
+              let n=x.pop()
+              if(x[x.length-1]=="->"){
+                x.pop()
+                n=x.pop()
+              }
+              return {
+                _name:n,
+                _date:([x.pop(),x.pop(),x.pop()]).reverse().join(" "),
+                _size:x.pop(),
+                _folder:x[0][0]=="d",
+                _chmod:x[0],
+                _pod:d._pod||d,
+                _path:n
+              }
+            })
+            d._subList.push(...v)
+            k8s._orderFileList(d)
+            c._ctrl._close()
           }
         })
-        d._subList.push(...v)
-        k8s._orderFileList(d)
       }
     })
+
   },
   _getServiceByPod:function(d){
     return k8s._data._serviceList.find(x=>(d._name||d).includes(x._name))
@@ -486,59 +529,177 @@ const k8s={
     })
   },
   _exeItem:function(t,d){
-    if(t=="link"){
+    if(t._key=="link"){
       window.open(d.value)
-    }else if(t=="cmd"){
+    }else if(t._key=="cmd"){
+      k8s._uiSwitch._response=""
+
+      _Util._confirmMessage({
+        _tag:"div",
+        _items:[
+          {
+            _tag:"textarea",
+            _attr:{
+              readonly:1,
+              placeholder:'_k8sMessage._common._waiting',
+              style:'width:calc(100% - 10px);height:650px;'
+            },
+            _dataModel:'k8s._uiSwitch._response'
+          },
+          {
+            _tag:"div",
+            _attr:{
+              class:"input-group",
+              style:"width:calc(100% - 10px);"
+            },
+            _items:[
+              {
+                _tag:"label",
+                _attr:{
+                  class:"input-group-addon",
+                  style:"min-width: 0;font-family: monospace;font-size: 12px;font-weight: bold;"
+                },
+                _text:"˃"
+              },
+              {
+                _tag:"input",
+                _attr:{
+                  class:"form-control"
+                },
+                _jqext:{
+                  keydown:function(e){
+                    if(e.keyCode==13){
+                      _sendCmd(this.value,t._item._name)
+                    }
+                  }
+                }
+              },
+              {
+                _tag:"div",
+                _attr:{
+                  class:"input-group-btn",
+                  style:"left: 12px;"
+                },
+                _items:[
+                  {
+                    _tag:"button",
+                    _attr:{
+                      class:"bz-none-border btn btn-icon bz-delete bz-small-btn",
+                      style:"width: 24px;",
+                      title:"_k8sMessage._method._clean"
+                    },
+                    _jqext:{
+                      click:function(){
+                        k8s._uiSwitch._response=""
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },[],_k8sMessage._common._message,"80%",1)
       _k8sProxy._send({
-        cmd:"ls -l\npwd\nwhoami"
+        _data:{
+          method:"exeCmd",
+          data:{
+            cmd:d.value,
+            name:t._item._name
+          }
+        },
+        _success:_updateResponse
+      })
+    }
+    function _updateResponse(v){
+      _Util._autoScrollToBottom($("textarea")[0],function(){
+        k8s._uiSwitch._response+=v
+      },20)
+    }
+    function _sendCmd(v,n){
+      _k8sProxy._send({
+        _data:{
+          method:"exeCmd",
+          data:{
+            cmd:v,
+            name:n,
+            split:1
+          }
+        },
+        _success:_updateResponse
       })
     }
   },
   _forward:function(d){
     if(d._forwarding){
-      if(confirm(_k8sMessage._info._confirmStopForwarding+d._name)){
-        _k8sProxy._send({
-          _data:{
-            method:"killProcess",
-            data:"port-forward "+d._name
-          },
-          _success:function(v){
-            d._forwarding=0
-          },
-          _error:function(){
-            d._forwarding=0
-          }
-        })
-      }
+      _Util._confirmMessage(_k8sMessage._info._confirmStopForwarding+d._name,[{
+        _title:_k8sMessage._method._yes,
+        _class:"btn btn-warn",
+        _click:function(c){
+          _k8sProxy._send({
+            _data:{
+              method:"killProcess",
+              data:"port-forward "+d._name
+            },
+            _success:function(v){
+              d._forwarding=0
+            },
+            _error:function(){
+              d._forwarding=0
+            }
+          })
+          c._ctrl._close()
+        }
+      }])
+
       return
     }
     let s=k8s._getServiceByPod(d)
     if(s){
       s=s._port.split("/")[0]
-      let s2=prompt(_k8sMessage._info._askPort,s)
-      if(!s2){
-        return
-      }
-      _k8sProxy._send({
-        _data:{
-          method:"forward",
-          data:{
-            serverName:d._name,
-            port:s2+":"+s
-          }
-        },
-        _success:function(v){
-          if(v.startsWith("Forwarding from")||v.startsWith("Handling connection")){
-            if(!d._forwarding){
-              d._forwarding=s2+":"+s
-              alert(v)
+      let ss=_findPort(s)
+      _Util._promptMessage({
+        _msg:_k8sMessage._info._askSearchFile,
+        _value:ss,
+        _btnText:_k8sMessage._method._forward,
+        _fun:function(c,sv){
+          _k8sProxy._send({
+            _data:{
+              method:"forward",
+              data:{
+                serverName:d._name,
+                port:sv+":"+s
+              }
+            },
+            _success:function(v){
+              if(v.startsWith("Forwarding from")||v.startsWith("Handling connection")){
+                if(!d._forwarding){
+                  d._forwarding=sv+":"+s
+                  alert(v)
+                }
+              }else{
+                d._forwarding=0
+                alert(v)
+              }
             }
-          }else{
-            d._forwarding=0
-            alert(v)
-          }
+          })
+    
+          c._ctrl._close()
         }
       })
+    }
+
+    function _findPort(v){
+      let f=k8s._data._podList.find(x=>{
+        if(x._forwarding&&x._forwarding.startsWith(v+":")){
+          return 1
+        }
+      })
+      if(!f){
+        return v
+      }else{
+        return _findPort(parseInt(v)+1)
+      }
     }
   },
   _isShowItem:function(x,v){
@@ -665,39 +826,48 @@ const k8s={
     }
   },
   _removePod:function(d){
-    if(!confirm(_k8sMessage._info._confirmDelete)){
-      return
-    }
-    _k8sProxy._send({
-      _data:{
-        method:"removePod",
-        data:{
-          serverName:d._name
+    _Util._confirmMessage(_k8sMessage._info._confirmDelete,[
+      {
+        _title:_k8sMessage._method._yes,
+        _class:"btn btn-warn",
+        _click:function(c){
+          _k8sProxy._send({
+            _data:{
+              method:"removePod",
+              data:{
+                serverName:d._name
+              }
+            },
+            _success:function(r){
+              k8s._data._podList=k8s._data._podList.filter(x=>x!=d)
+              c._ctrl._close()
+            }
+          })
         }
-      },
-      _success:function(r){
-        k8s._data._podList=k8s._data._podList.filter(x=>x!=d)
       }
-    })
-
+    ])
   },
   _deleteFile:function(d,p){
-    if(!confirm(_k8sMessage._info._confirmDelete)){
-      return
-    }
-    _k8sProxy._send({
-      _data:{
-        method:"deleteFile",
-        data:{
-          serverName:d._name,
-          path:p._path,
-          folder:p._folder
-        }
-      },
-      _success:function(r){
-        k8s._getFileList(d,p._parent||d)
+    _Util._confirmMessage(_k8sMessage._info._confirmDelete,[{
+      _title:_k8sMessage._method._yes,
+      _class:"btn btn-warn",
+      _click:function(c){
+        _k8sProxy._send({
+          _data:{
+            method:"deleteFile",
+            data:{
+              serverName:d._name,
+              path:p._path,
+              folder:p._folder
+            }
+          },
+          _success:function(r){
+            k8s._getFileList(d,p._parent||d)
+            c._ctrl._close()
+          }
+        })
       }
-    })
+    }])
   },
   _saveFile:function(d,p,_fun){
     p._loading=1
@@ -773,3 +943,11 @@ const k8s={
     })
   }
 }
+$(document).keydown(x=>{
+  if(x.keyCode==27){
+    $(".bz-modal-bg").click()
+    // if(!_Util._isStdInputElement($(":focus")[0]||document.body)){
+      
+    // }
+  }
+})

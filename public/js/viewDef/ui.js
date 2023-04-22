@@ -68,8 +68,7 @@ const ui={
             {
               _tag:"label",
               _attr:{
-                class:"input-group-addon",
-                style:"min-width:unset"
+                class:"input-group-addon"
               },
               _text:"_k8sMessage._method._filter"
             },

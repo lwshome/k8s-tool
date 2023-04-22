@@ -186,7 +186,8 @@ const k8s={
   updateScaleConfig:function(_data){
     let s=`${_getK8sCmdHeader(_data)} scale --${_data.name}=${_data.value} deployment/${_data.serverName}`
   },
-  _exeCmd:function(d){
+  exeCmd:function(d,_fun){
+    console.log(d)
     let cs=d.cmd.split("\n")
     cs=cs.filter(x=>x).map(x=>{
       return {
@@ -196,16 +197,26 @@ const k8s={
       }
     })
     _doIt(cs)
-    function _doIt(cs){
+    function _doIt(cs,_split){
       let c=cs.shift()
-      let s=_buildRemoteK8sCmd(c).split(" ");
-      _monitor(s.shift(),s,function(v){
-        if(v.startsWith("COMPLETE:")){
-          _doIt(cs)
-        }else{
-          console.log(v)
-        }
-      })
+      if(c){
+        let s=_buildRemoteK8sCmd(c).split(" "),_start;
+        _monitor(s.shift(),s,function(v){
+          if(v.startsWith("COMPLETE:")){
+            _start=0
+            _doIt(cs,1)
+          }else{
+            if(!_start){
+              if(_split||d.split){
+                _split="-".repeat("30")+"\n\n"
+              }
+              v=(_split||"")+c.cmd+":\n"+v
+              _start=1
+            }
+            _fun(v)
+          }
+        })
+      }
     }
   }
 }

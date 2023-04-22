@@ -173,7 +173,7 @@ function _buildTreeNode(){
                         }
                       },
                       _dataRepeat:function(d){
-                        let s=["download","delete","star"]
+                        let s=["download","star","delete"]
                         if(d._item._folder){
                           s.splice(1,0,"add-folder","add-file")
                           s.unshift("search","refresh")
@@ -412,7 +412,7 @@ const _listViewDef={
                           }
                         }
                       },
-                      _dataRepeat:["search","refresh","delete-pod","forward","log","cmd","link"]
+                      _dataRepeat:["search","refresh","forward","log","cmd","link","delete-pod"]
                     }
                   ]
                 },
@@ -428,7 +428,7 @@ const _listViewDef={
                   },
                   _items:[
                     {
-                      _if:"k8s._uiSwitch._showMenu=='link'",
+                      _if:"k8s._uiSwitch._showMenu._key=='link'",
                       _tag:"div",
                       _attr:{
                         class:"bz-menu-item",
@@ -456,22 +456,42 @@ const _listViewDef={
                       }
                     },
                     {
+                      _if:"k8s._uiSwitch._showMenu._key=='link'",
+                      _tag:"hr"
+                    },
+                    {
                       _tag:"div",
-                      _attr:{
-                        class:"bz-menu-item"
-                      },
                       _items:[
                         {
-                          _tag:"span",
-                          _text:"_data._item.name||_data._item"
+                          _tag:"div",
+                          _attr:{
+                            class:"bz-menu-item"
+                          },
+                          _items:[
+                            {
+                              _tag:"button",
+                              _attr:{
+                                class:"'btn btn-icon bz-small-btn bz-none-border bz-'+k8s._uiSwitch._showMenu._key",
+                                style:"margin-right:10px;"
+                              }
+                            },
+                            {
+                              _tag:"span",
+                              _text:"_data._item.name"
+                            }
+                          ],
+                          _dataRepeat:"k8s._data._config[k8s._uiSwitch._showMenu._key]",
+                          _jqext:{
+                            click:function(){
+                              k8s._exeItem(k8s._uiSwitch._showMenu,this._data._item)
+                            }
+                          }
                         }
-                      ],
-                      _dataRepeat:"_data._item[k8s._uiSwitch._showMenu._key]",
-                      _jqext:{
-                        click:function(){
-                          k8s._exeItem(k8s._uiSwitch._showMenu._key,this._data._item)
-                        }
-                      }
+                      ]
+                    },
+                    {
+                      _if:"k8s._data._config[k8s._uiSwitch._showMenu._key].length",
+                      _tag:"hr"
                     },
                     {
                       _tag:"div",

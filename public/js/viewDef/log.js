@@ -65,7 +65,7 @@ const _logViewDef={
               _attr:{
                 class:"btn btn-icon bz-small-btn bz-none-border bz-setting",
                 style:"margin-left: 8px;position: relative;top: 3px;",
-                title:"_k8sMessage._method._setting"
+                title:"_k8sMessage._setting._title"
               },
               _jqext:{
                 click:function(){

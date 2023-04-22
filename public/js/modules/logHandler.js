@@ -181,65 +181,60 @@ const _logHandler={
       _regex=_logHandler._data._setting.autoMerge?new RegExp(_logHandler._data._setting.cleanDynamicRegex,"gi"):0
     }catch(ex){}
     try{
-      let e=p._element,_setTop
+      let e=p._element
       if(e){
-        if(e.scrollHeight-e.getBoundingClientRect().height-e.scrollTop<30){
-          _setTop=1
-        }
-
-        v=v.split("\n").filter(x=>x).map(x=>{
-          return {
-            v:x,
-            r:0,
-            k:_regex?x.replace(_regex,""):x
+        _Util._autoScrollToBottom(e,function(){
+          v=v.split("\n").filter(x=>x).map(x=>{
+            return {
+              v:x,
+              r:0,
+              k:_regex?x.replace(_regex,""):x
+            }
+          })
+          let os=e.children
+          if(_regex&&!v.find(x=>{
+            for(let i=os.length-1;i>=0&&os.length-i<1000;i--){
+              let o=e.children[i]
+              if(o.d.k==x.k){
+                x.m=o
+                return
+              }
+            }
+            return 1
+          })){
+            v.forEach(x=>{
+              x.m.d.r+=1
+              let r=$(x.m).find("span.bz-log-repeat")[0]
+              if(r){
+                r.innerText=x.m.d.r
+              }else{
+                $(x.m).append($(`<span class="bz-log-repeat">${x.m.d.r}</span>`)[0])
+              }
+            })
+          }else{
+            v.forEach(x=>{
+              if(x){
+                if(p._even){
+                  p._even=""
+                }else{
+                  p._even="even"
+                }
+                let r=""
+                if(x.r){
+                  r=`<span class="bz-log-repeat">${x.r}</span>`
+                }
+  
+                let o=$(`<pre class="${p._even}">${_highlight(x.v)}${r}</pre>`)[0]
+                o.d=x
+                delete x.m
+                e.append(o)
+              }
+            })
+          }
+          while(e.children.length>5000){
+            e.children[0].remove()
           }
         })
-        let os=e.children
-        if(_regex&&!v.find(x=>{
-          for(let i=os.length-1;i>=0&&os.length-i<1000;i--){
-            let o=e.children[i]
-            if(o.d.k==x.k){
-              x.m=o
-              return
-            }
-          }
-          return 1
-        })){
-          v.forEach(x=>{
-            x.m.d.r+=1
-            let r=$(x.m).find("span.bz-log-repeat")[0]
-            if(r){
-              r.innerText=x.m.d.r
-            }else{
-              $(x.m).append($(`<span class="bz-log-repeat">${x.m.d.r}</span>`)[0])
-            }
-          })
-        }else{
-          v.forEach(x=>{
-            if(x){
-              if(p._even){
-                p._even=""
-              }else{
-                p._even="even"
-              }
-              let r=""
-              if(x.r){
-                r=`<span class="bz-log-repeat">${x.r}</span>`
-              }
-
-              let o=$(`<pre class="${p._even}">${_highlight(x.v)}${r}</pre>`)[0]
-              o.d=x
-              delete x.m
-              e.append(o)
-            }
-          })
-        }
-        while(e.children.length>5000){
-          e.children[0].remove()
-        }
-        if(_setTop){
-          e.scrollTop=e.scrollHeight
-        }
       }
     }catch(ex){}
 

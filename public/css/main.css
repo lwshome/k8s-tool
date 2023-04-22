@@ -66,8 +66,15 @@ textarea{
   font-size: 15px;
   border:var(--bz-border);
   white-space:pre;
+  resize: none;
 }
-
+hr{
+  height: 1px;
+  border: 0;
+  background-color: var(--border-color);
+  width: 100%;
+  margin: 2px;
+}
 .btn {
   /**line-height: 1.2; **/
   text-align: center;
@@ -91,6 +98,13 @@ textarea{
 .btn-primary {
   color: #F3F5F8 !important;
   background-color: var(--active-color) !important;
+}
+.btn-warn{
+  color: #F3F5F8;
+  background-color: #df3b69
+}
+.btn-warn:hover {
+  background: #D83F5C
 }
 
 .btn-secondary {
@@ -190,7 +204,7 @@ input:focus {
   font-weight: normal;
   line-height: 1;
   color: #555;
-  min-width: 70px;
+  /* min-width: 70px; */
   background-color:var(--pillbox-color);
   border: var(--bz-border);
   border-radius: var(--bz-border-radius) 0 0 var(--bz-border-radius);

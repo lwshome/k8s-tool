@@ -1,6 +1,12 @@
 const _k8sMessage={
   _common:{
-     _namespace:"命名空间"
+     _namespace:"命名空间",
+      _name:"名称",
+      _value:"值",
+      _repeat:"重复",
+      _message:"信息",
+      _ok:"好",
+      _waiting:"等待中 ..."
    },
    _info:{
      _downloadInBG:"文件/文件夹已在服务器端下载。",
@@ -14,9 +20,13 @@ const _k8sMessage={
    _method:{
      _confirm:"确认",
      _filter:"过滤器",
+     _yes:"是",
+     cmd:"执行远程命令",
+     link:"在浏览器中打开链接",
      forward:"转发",
      search:"搜索文件/文件夹",
      refresh:"刷新",
+     log:"监控记录",
      star:"青睐",
      _refresh:"刷新",
      _download:"下载",
@@ -28,26 +38,31 @@ const _k8sMessage={
      _cancel:"取消",
      _close:"关闭",
      _clean:"干净",
+     _addItem:"添加项目",
      "add-folder":"添加文件夹",
      "add-file":"添加文件",
      "delete-pod":"删除（重建）pod"
    },
-   _主要的:{
-     _标签:{
+   _main:{
+     _tabs:{
        _namespace:"命名空间",
        _pods:"豆荚",
        _services:"服务",
        _deployments:"部署"
      }
    },
-   _环境:{
+   _setting:{
+     _title:"设置 ...",
+     cmd:"远程命令设置",
+     link:"Pod 链接设置",
+     _list:"列表:"
    },
-   _日志:{
+   _log:{
      _title:"日志设置",
      _highlightTitle:"突出显示",
      _regexValue:"过滤正则表达式",
      _style:"高光样式 (css)",
-      _example:"例子",
+     _example:"例子",
      _autoMerge:"自动合并日志（合并重复内容）",
      _cleanDynamicRegex:"清理动态字符的正则表达式"
    }
