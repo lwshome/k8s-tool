@@ -7,7 +7,8 @@ const _k8sMessage={
     _message:"Message",
     _ok:"OK",
     _waiting:"Waiting ...",
-    _question:"Question"
+    _question:"Question",
+    _empty:"Empty"
   },
   _info:{
     _downloadInBG:"The file/folder was download in server side.",
@@ -66,7 +67,10 @@ const _k8sMessage={
     _regexValue:"Filter regular expression",
     _style:"Highlight style (css)",
     _example:"Example",
-    _autoMerge:"Auto merge log (merge duplicate content)",
+    formatJSON:"Auto-format JSON Data",
+    formatXML:"Auto-format XML Data",
+    groupMerge:"Group log in filter",
+    autoMerge:"Auto merge log (merge duplicate content)",
     _cleanDynamicRegex:"Regular expression to sanitize dynamic characters"
   }
 }

@@ -21,8 +21,10 @@ const k8s={
   },
   killProcess:function(k,_fun){
     let s=`ps aux | grep "${k}"`
+    console.log(s)
     _exe(s,function(v){
       if(v){
+        console.log(v)
         v=v.split(/\s+/)
         v.shift()
         s=`kill -9 `+v.shift()

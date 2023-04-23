@@ -30,18 +30,29 @@ const _logHandler={
                   _attr:{
                     type:"checkbox"
                   },
-                  _dataModel:"_logHandler._data._setting.autoMerge"
+                  _dataModel:function(d){
+                    return "_logHandler._data._setting."+d._item
+                  }
                 },
                 {
                   _tag:"span",
                   _attr:{
-                    style:"position: relative;top: -2px;left: 5px;"
+                    style:"position: relative;top: -2px;left: 5px;margin-right:5px;"
                   },
-                  _text:"_k8sMessage._log._autoMerge"
+                  _text:"_k8sMessage._log[_data._item]"
+                },
+                {
+                  _if:"_data._item=='groupMerge'",
+                  _tag:"i",
+                  _attr:{
+                    style:"position: relative;top: -2px;left: 5px;color:#666;"
+                  },
+                  _text:"'('+(k8s._data._config.filter||_k8sMessage._common._empty)+')'"
                 }
               ]
             }
-          ]
+          ],
+          _dataRepeat:["formatJSON","formatXML","groupMerge","autoMerge"]
         },
         {
           _if:"_logHandler._data._setting.autoMerge",
@@ -224,7 +235,7 @@ const _logHandler={
                   r=`<span class="bz-log-repeat">${x.r}</span>`
                 }
   
-                let o=$(`<pre class="${p._even}">${_highlight(x.v)}${r}</pre>`)[0]
+                let o=$(`<pre class="${p._even}">${_highlight(_formatJSON(_formatXML(x.v)))}${r}</pre>`)[0]
                 o.d=x
                 delete x.m
                 e.append(o)
@@ -238,7 +249,33 @@ const _logHandler={
       }
     }catch(ex){}
 
+    function _formatJSON(v){
+      if(k8s._data._config.log.formatJSON){
+        let j=v.match(/{.+}/)
+        if(j){
+          j=j[0]
+          v=v.split(j)
+          v=v[0]+"\n"+JSON.stringify(JSON.parse(j),0,2)+"\n"+v[1]
+        }
+      }
+      return v
+    }
+
+    function _formatXML(v){
+      if(k8s._data._config.log.formatXML){
+        let j=v.match(/<[^>]+><.+><[^>]+>/)
+        if(j){
+          j=j[0]
+          v=v.split(j)
+          j=_Util._formatMiniXML(j)
+          v=v[0]+"\n"+j+"\n"+v[1]
+        }
+      }
+      return v
+    }
+
     function _highlight(v){
+      v=v.replace(/</g,"&lt;").replace(/>/g,"&gt;")
       let w=""
       _logHandler._data._setting.highlights.forEach(x=>{
         let ms=v.match(new RegExp(x.value,"gi"))||[]

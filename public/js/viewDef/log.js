@@ -11,7 +11,7 @@ const _logViewDef={
         style:function(d){
           let i=_logHandler._data._logList.length
           if(i){
-            return `height:calc(${100/i}% - ${30/i}px);`
+            return `height:${100/i}%;`
           }
         },
         class:"bz-v-panel"

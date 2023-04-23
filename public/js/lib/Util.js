@@ -156,6 +156,66 @@ var _Util={
       window.getSelection().addRange(range);
     }
   },
+  _isXMLData:function(v){
+    return v&&v.constructor==String&&v.trim().match(/^<([^ ]+).+<([^>]+)>$/s);
+  },
+  _formatMiniXML:function(v){
+    let xx="",vv=v
+    try{
+      _handleStart("")
+      _handleEnd("")
+    }catch(ex){
+      console.log(ex.stack)
+      return vv
+    }
+
+    return xx.trim()
+
+    function _handleStart(t){
+      let x=v.match(/^<[^/][^>]*>/)
+      if(x){
+        x=x[0]
+        v=v.substring(x.length)
+        xx+=t+x
+        if(x.endsWith("/>")){
+          xx+=t+x+"\n"
+          v=v.trim()
+          _handleStart(t)
+        }else{
+          _handleContent(t)
+          _handleStart(t)
+        }
+      }else if(v){
+        xx+=t.substring(2)
+        _handleEnd(t.substring(2))
+      }
+    }
+
+    function _handleContent(t){
+      let c=v.match(/^[^<]+/)||""
+      if(c){
+        c=c[0]
+        if(c.trim()){
+          xx+=c
+        }
+      }
+      v=v.substring(c.length)
+      _handleEnd(t)
+    }
+
+    function _handleEnd(t){
+      let e=v.match(/^<\/[^>]+>/)
+      if(e){
+        e=e[0]
+        xx+=e+"\n"
+        v=v.substring(e.length)
+      }else{
+        xx+="\n"
+        _handleStart(t+"  ")
+      }
+
+    }
+  },
   _formatMessage:function(_msg,_value){
     if(_value&&_value.constructor!=Array){
       _value=[_value]

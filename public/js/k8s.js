@@ -659,7 +659,7 @@ const k8s={
       s=s._port.split("/")[0]
       let ss=_findPort(s)
       _Util._promptMessage({
-        _msg:_k8sMessage._info._askSearchFile,
+        _msg:_k8sMessage._info._askPort,
         _value:ss,
         _btnText:_k8sMessage._method._forward,
         _fun:function(c,sv){

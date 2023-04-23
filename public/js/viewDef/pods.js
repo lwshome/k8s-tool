@@ -48,14 +48,17 @@ function _buildTreeNode(){
                           }
                           return c
                         },
-                        style:"position: relative;top: -3px;"
+                        style:"position: relative;top: -1px;"
                       }
                     },
                     //info
                     {
                       _tag:"a",
                       _attr:{
-                        style:"margin-left:5px;"
+                        style:function(d){
+                          let c="margin-left:5px;"
+                          return c
+                        }
                       },
                       _items:[
                         //name
@@ -251,7 +254,7 @@ const _listViewDef={
                           }
                           return c
                         },
-                        style:"'font-size: 18px;font-family: monospace;visiablity:'+(_data._item._status=='Running'?'visible':'hidden')"
+                        style:"'font-size: 18px;font-family: monospace;visibility:'+(_data._item._status=='Running'?'visible':'hidden')"
                       }
                     },
                     //icon
@@ -276,7 +279,7 @@ const _listViewDef={
                           return c
                         },
                         title:"_data._item._forwarding",
-                        style:"'font-size: 18px;font-family: monospace;visiablity:'+(_data._item._status=='Running'?'visible':'hidden')"
+                        style:"'font-size: 18px;font-family: monospace;visibility:'+(_data._item._status=='Running'?'visible':'hidden')"
                       },
                       _jqext:{
                         click:function(e){
@@ -299,7 +302,7 @@ const _listViewDef={
                         {
                           _tag:"span",
                           _html:function(d){
-                            return _attachHighlight(d._item._name,k8s._data._config.filter)
+                            return _attachHighlight(d._item._name,k8s._data._config.filter,d._item)
                           }
                         },
                         //age
@@ -542,7 +545,7 @@ function _setCurCtrl(o,_focus){
   }
 }
 
-function _attachHighlight(v,ff){
+function _attachHighlight(v,ff,d){
   if(ff){
     let fs=ff.split("|");
     f=new RegExp(ff,"g")
@@ -551,6 +554,9 @@ function _attachHighlight(v,ff){
       let j=0,w="",t=""
       f=f[0]
       let g=fs.indexOf(f)+1
+      if(d.g!==g){
+        d.g=g
+      }
       let i=v.indexOf(f)
       w+=v.substring(j,i)+"<span class='g-"+g+"'>"+f+"</span>"
       v=v.substring(i+f.length)

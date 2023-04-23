@@ -4,18 +4,19 @@
   "NSFilter": "mycac|deploy|testing",
   "filter": "achn|napf|napl|loch|e911|nls-data-message-bus-kf|eric-pm",
   "log": {
-    "autoMerge": "on",
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
     "highlights": [
       {
-        "value": "org.springframework",
+        "value": "payload",
         "css": "background-color:yellow;"
       },
       {
         "value": "DispatcherServlet",
         "css": "background-color:#CCF;"
       }
-    ]
+    ],
+    "autoMerge": "on",
+    "groupMerge": "on"
   },
   "link": [
     {

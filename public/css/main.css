@@ -390,7 +390,7 @@ pre {
   font-family: monospace;
   margin: 0;
   word-break: break-all;
-  white-space: pre-line;
+  white-space: pre-wrap;
 }
 .even{
   background-color: #EEE;
