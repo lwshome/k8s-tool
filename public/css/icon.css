@@ -98,12 +98,11 @@
   background-color: #CCF;
 }
 .bz-download{
-  transform: rotate(90deg);
+  transform: rotate(180deg);
 }
 .bz-download:before{
-  content:"➠";
-  font-size:13px;
-  font-weight: 400;
+  content:"⇪";
+  font-size:15px;
 }
 
 .bz-open-item{

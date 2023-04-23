@@ -407,6 +407,10 @@ pre {
 .bz-list-row{
   display: flex;
 }
+.bz-list-row:hover{
+  background-color:#CFF;
+}
+
 .bz-list-row:hover .bz-row-star{
   display:none;
 }
@@ -422,9 +426,6 @@ pre {
   width:50px;
 }
 
-.bz-highlight-row{
-  background-color:#CFF;
-}
 .bz-press{
   border:2px inset #999 !important;
   border-radius: 5px;
@@ -590,3 +591,7 @@ header{
   background-color: #CCF;
 }
 
+button.btn.bz-none-border:hover{
+  border-radius:10px;
+  background-color: #FCC;
+}

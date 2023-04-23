@@ -85,11 +85,17 @@ const ui={
           ]
         },
         {
+          _tag:"div",
+          _attr:{
+            style:"flex:1"
+          }
+        },
+        {
           _if:"k8s._data._loading",
           _tag:"div",
           _attr:{
             class:"input-group-btn",
-            style:"margin-top:7px;"
+            style:"margin-top:7px;margin-right:10px;"
           },
           _items:[
             {

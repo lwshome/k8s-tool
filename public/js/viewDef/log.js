@@ -37,7 +37,7 @@ const _logViewDef={
             {
               _tag:"button",
               _attr:{
-                style:"margin-left:10px;position: relative;top: 3px;",
+                style:"margin-left:10px;position: relative;top: 2px;",
                 class:"btn btn-icon bz-small-btn bz-none-border bz-download",
                 title:"_k8sMessage._method._download"
               },
@@ -51,7 +51,7 @@ const _logViewDef={
               _tag:"button",
               _attr:{
                 class:"btn btn-icon bz-small-btn bz-none-border bz-delete",
-                style:"margin-left:10px;position: relative;top: 3px;",
+                style:"margin-left:10px;position: relative;top: 1px;",
                 title:"_k8sMessage._method._clean"
               },
               _jqext:{
@@ -64,7 +64,7 @@ const _logViewDef={
               _tag:"button",
               _attr:{
                 class:"btn btn-icon bz-small-btn bz-none-border bz-setting",
-                style:"margin-left: 8px;position: relative;top: 3px;",
+                style:"margin-left: 8px;position: relative;top: 1px;",
                 title:"_k8sMessage._setting._title"
               },
               _jqext:{
@@ -77,7 +77,7 @@ const _logViewDef={
               _tag:"button",
               _attr:{
                 class:"btn btn-icon bz-small-btn bz-none-border bz-close",
-                style:"margin-left:10px;position: relative;top: 3px;",
+                style:"margin-left:10px;position: relative;top: 1px;",
                 title:"_k8sMessage._method._close"
               },
               _jqext:{

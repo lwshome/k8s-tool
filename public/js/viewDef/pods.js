@@ -13,13 +13,7 @@ function _buildTreeNode(){
             {
               _tag:"div",
               _attr:{
-                class:function(d){
-                  let c="bz-list-row"
-                  if(d._item==k8s._data._curCtrl){
-                    c+= " bz-highlight-row"
-                  }
-                  return c
-                }
+                class:"bz-list-row"
               },
               _items:[
                 {
@@ -112,7 +106,7 @@ function _buildTreeNode(){
                 },
                 {
                   _if:function(d){
-                    return k8s._data._curCtrl==d._item
+                    return k8s._data._curCtrl._data==d._item
                   },
                   _tag:"div",
                   _attr:{
@@ -124,6 +118,7 @@ function _buildTreeNode(){
                       _tag:"input",
                       _attr:{
                         class:"form-control",
+                        style:"margin-left:10px;padding:5px;padding: 4px;margin-top: -3px;width:150px;",
                         placeholder:"_k8sMessage._method._filter"
                       },
                       _dataModel:"_data._item.filter"
@@ -186,7 +181,10 @@ function _buildTreeNode(){
               ],
               _jqext:{
                 mouseover:function(){
-                  k8s._data._curCtrl=this._data._item
+                  _setCurCtrl(this)
+                },
+                click:function(){
+                  _setCurCtrl(this,1)
                 }
               }
             },
@@ -222,13 +220,7 @@ const _listViewDef={
             {
               _tag:"div",
               _attr:{
-                class:function(d){
-                  let c="bz-list-row"
-                  if(d._item==k8s._data._curCtrl){
-                    c+= " bz-highlight-row"
-                  }
-                  return c
-                }
+                class:"bz-list-row"
               },
               _items:[
                 {
@@ -319,7 +311,7 @@ const _listViewDef={
                           _text:"'('+_data._item._age+')'"
                         },
                         {
-                          _if:"_data._item==k8s._data._curCtrl",
+                          _if:"_data._item==k8s._data._curCtrl._data",
                           _tag:"button",
                           _attr:{
                             class:"btn btn-icon bz-small-btn bz-none-border bz-copy",
@@ -349,7 +341,7 @@ const _listViewDef={
                 },
                 {
                   _if:function(d){
-                    return k8s._data._curCtrl==d._item
+                    return k8s._data._curCtrl._data==d._item
                   },
                   _tag:"div",
                   _attr:{
@@ -522,7 +514,10 @@ const _listViewDef={
               ],
               _jqext:{
                 mouseover:function(){
-                  k8s._data._curCtrl=this._data._item
+                  _setCurCtrl(this)
+                },
+                click:function(){
+                  _setCurCtrl(this,1)
                 }
               }
             },
@@ -536,6 +531,17 @@ const _listViewDef={
     }
   ]
 };
+
+function _setCurCtrl(o,_focus){
+  if(!_focus&&k8s._data._curCtrl&&$(k8s._data._curCtrl._element).find(":focus")[0]){
+    return
+  }
+  k8s._data._curCtrl={
+    _element:o,
+    _data:o._data._item
+  }
+}
+
 function _attachHighlight(v,ff){
   if(ff){
     let fs=ff.split("|");
