@@ -118,7 +118,7 @@ function _buildTreeNode(){
                       _tag:"input",
                       _attr:{
                         class:"form-control",
-                        style:"margin-left:10px;padding:5px;padding: 4px;margin-top: -3px;width:150px;",
+                        style:"margin-left:10px;padding:5px;padding: 4px;width:150px;",
                         placeholder:"_k8sMessage._method._filter"
                       },
                       _dataModel:"_data._item.filter"
@@ -127,9 +127,9 @@ function _buildTreeNode(){
                       _tag:"button",
                       _attr:{
                         title:"_k8sMessage._method[_data._item]",
-                        style:"margin-right:10px;",
+                        style:"margin-right:3px;",
                         class:function(d){
-                          let c='btn btn-icon bz-small-btn bz-none-border bz-'+d._item
+                          let c='btn btn-icon bz-none-border bz-'+d._item
                           if(k8s._isStar(d._supData._item)){
                             c+=" on"
                           }
@@ -314,7 +314,7 @@ const _listViewDef={
                           _if:"_data._item==k8s._data._curCtrl._data",
                           _tag:"button",
                           _attr:{
-                            class:"btn btn-icon bz-small-btn bz-none-border bz-copy",
+                            class:"btn btn-icon bz-none-border bz-copy",
                             title:"_k8sMessage._method._copy"
                           },
                           _jqext:{
@@ -352,7 +352,7 @@ const _listViewDef={
                       _tag:"input",
                       _attr:{
                         class:"form-control",
-                        style:"margin-left:10px;padding:5px;padding: 4px;margin-top: -3px;width:150px;",
+                        style:"margin-left:10px;padding:5px;padding: 4px;width:150px;",
                         placeholder:"_k8sMessage._method._filter"
                       },
                       _dataModel:"_data._item.filter"
@@ -361,9 +361,9 @@ const _listViewDef={
                       _tag:"button",
                       _attr:{
                         title:"_k8sMessage._method[_data._item]",
-                        style:"margin-right:10px;",
+                        style:"margin-right:3px;",
                         class:function(d){
-                          let c='btn btn-icon bz-small-btn bz-none-border bz-'+d._item
+                          let c='btn btn-icon bz-none-border bz-'+d._item
                           if((d._item=='forward'&&d._supData._item._forwarding)||(d._item=='log'&&d._supData._item._log)){
                             c+=" bz-press"
                           }

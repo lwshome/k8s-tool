@@ -1,7 +1,7 @@
 //Machine learn
 const k8s={
   _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods"}),
-  _data:_CtrlDriver._buildProxy({_config:{stars:[]}}),
+  _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[]}}),
   _getKey:function(){
     k8s._key=k8s._key||Date.now()
     return k8s._key++
@@ -161,7 +161,7 @@ const k8s={
           ]
         }
       ]
-    },[],_k8sMessage._setting[t],0,1)
+    },[],_k8sMessage._setting[t],"80%",1)
   },
   _addFile:function(d,p,f){
     _Util._promptMessage({
@@ -585,7 +585,7 @@ const k8s={
                     _tag:"button",
                     _attr:{
                       class:"bz-none-border btn btn-icon bz-delete bz-small-btn",
-                      style:"width: 24px;",
+                      style:"width: 24px;height:24px;margin:2px;",
                       title:"_k8sMessage._method._clean"
                     },
                     _jqext:{

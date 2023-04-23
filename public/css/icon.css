@@ -31,13 +31,16 @@
   content:"🗅";
   font-size:22px;
   position: relative;
-  top: -7px;
+  top: -4px;
 }
 .bz-add-folder span,
 .bz-add-file span{
   position: absolute;
-  margin: 4px -13px;
+  margin: 7px -13px;
   font-size: 10px;
+}
+.bz-add-folder span{
+  margin: 4px -13px;
 }
 .bz-file:before{
   content:"📄";
@@ -51,7 +54,6 @@
   font-weight: bold;
   font-size:13px;
   position: relative;
-  top: -2px;
 }
 .bz-save:before{
   content:"💾";
@@ -86,7 +88,7 @@
 }
 .bz-log:before{
   content:"🧾";
-  font-size: 13px;
+  font-size: 11px;
   position: relative;
   top: -1px;
 }
@@ -139,16 +141,15 @@
 
 .bz-delete:before{
   content:"🗑";
-  font-size:13px;
+  font-size:15px;
   font-stretch: expanded;
 }
 
 .bz-delete-pod:before{
   content:"🗑";
-  font-size:13px;
+  font-size:17px;
   font-stretch: expanded;
   position: relative;
-  top: -1px;
 }
 
 .bz-add:before{
@@ -171,6 +172,6 @@
 
 .bz-link:before{
   content:"🔗";
-  font-size:13px;
+  font-size:11px;
 }
 

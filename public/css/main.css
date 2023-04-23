@@ -402,7 +402,13 @@ pre {
 }
 .bz-ex-ctl-panel input{
   min-width:100px;
-  margin-right:10px;
+  margin-right:5px;
+  position: relative;
+  top: -4px;
+}
+.bz-ex-ctl-panel button{
+  position: relative;
+  top: -5px;
 }
 .bz-list-row{
   display: flex;
@@ -592,6 +598,6 @@ header{
 }
 
 button.btn.bz-none-border:hover{
-  border-radius:10px;
+  border-radius:20px;
   background-color: #FCC;
 }
