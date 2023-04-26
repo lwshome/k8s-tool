@@ -265,11 +265,7 @@ const _listViewDef={
                           let c='btn btn-icon bz-small-btn bz-none-border '
                           d=d._item
                           if(d._ready){
-                            if(d._forwarding){
-                              c+="bz-network"
-                            }else{
-                              c+="bz-computer"
-                            }
+                            c+="bz-computer"
                           }else if(d._status!="Running"){
                             c+="bz-failed"
                           }else{
@@ -286,7 +282,7 @@ const _listViewDef={
                           let d=this._data._item
                           if(d._forwarding){
                             e.stopPropagation()
-                            window.open("http://localhost:"+d._forwarding.split(":")[0]+"/actuator/health")
+                            window.open(d._host+"/actuator/health")
                           }
                         }
                       }
@@ -295,7 +291,7 @@ const _listViewDef={
                     {
                       _tag:"a",
                       _attr:{
-                        style:"margin-left:5px;"
+                        style:"margin-left:5px;margin-right:5px;"
                       },
                       _items:[
                         //name
@@ -318,6 +314,7 @@ const _listViewDef={
                           _tag:"button",
                           _attr:{
                             class:"btn btn-icon bz-none-border bz-copy",
+                            style:"position: relative;top: -1px;left: 5px;",
                             title:"_k8sMessage._method._copy"
                           },
                           _jqext:{
@@ -328,6 +325,22 @@ const _listViewDef={
                           }
                         }
                       ]
+                    },
+                    {
+                      _if:"_data._item._forwarding&&k8s._data._curCtrl._data!=_data._item",
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-small-btn bz-none-border bz-press bz-forward",
+                        style:"margin:2px;"
+                      }
+                    },
+                    {
+                      _if:"_data._item._log&&k8s._data._curCtrl._data!=_data._item",
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-small-btn bz-none-border bz-press bz-log",
+                        style:"margin:2px;"
+                      }
                     }
                   ],
                   _jqext:{
@@ -365,6 +378,9 @@ const _listViewDef={
                       _attr:{
                         title:"_k8sMessage._method[_data._item]",
                         style:"margin-right:3px;",
+                        disabled:function(d){
+                          return !d._supData._item._forwarding&&(d._item=='link'||d._item=='api')
+                        },
                         class:function(d){
                           let c='btn btn-icon bz-none-border bz-'+d._item
                           if((d._item=='forward'&&d._supData._item._forwarding)||(d._item=='log'&&d._supData._item._log)){
@@ -390,6 +406,7 @@ const _listViewDef={
                             case "delete-pod":
                               return k8s._removePod(d)
                             case "cmd":
+                            case "api":
                             case "link":
                               k8s._uiSwitch._showMenu={
                                 _item:d,
@@ -407,12 +424,14 @@ const _listViewDef={
                           }
                         }
                       },
-                      _dataRepeat:["search","refresh","forward","log","cmd","link","delete-pod"]
+                      _dataRepeat:function(d){
+                        return ["search","refresh","forward","log","cmd","link","api","delete-pod"]
+                      }
                     }
                   ]
                 },
                 {
-                  _if:"['cmd','link'].includes(k8s._uiSwitch._showMenu._key)&&k8s._uiSwitch._showMenu._item==_data._item",
+                  _if:"['cmd','link','api'].includes(k8s._uiSwitch._showMenu._key)&&k8s._uiSwitch._showMenu._item==_data._item",
                   _tag:"div",
                   _attr:{
                     style:function(){
@@ -432,23 +451,36 @@ const _listViewDef={
                       _items:[
                         {
                           _tag:"span",
-                          _text:"192.168.1.1:8080",
+                          _text:function(d){
+                            d=d._item
+                            if(!d._host){
+                              d._host="http://localhost:"+d._forwarding.split(":")[0]
+                            }
+                            return d._host
+                          },
                           _attr:{
-                            style:"margin-right:10px;"
+                            style:"margin-right:10px;cursor:pointer;"
+                          },
+                          _jqext:{
+                            click:function(){
+                              window.open(this.innerText.trim())
+                            }
                           }
                         },
                         {
                           _tag:"button",
                           _attr:{
-                            class:"btn btn-icon bz-small-btn bz-none-border bz-copy"
+                            class:"btn btn-icon bz-none-border bz-copy"
+                          },
+                          _jqext:{
+                            click:function(e){
+                              let o=this.previousSibling
+                              _Util._copyText(o.innerText.trim(),document,o)
+                              e.stopPropagation()
+                            }
                           }
                         }
-                      ],
-                      _jqext:{
-                        click:function(){
-                          _Util._copyText(this.innerText.trim(),document,this.children[0])
-                        }
-                      }
+                      ]
                     },
                     {
                       _if:"k8s._uiSwitch._showMenu._key=='link'",
@@ -472,10 +504,24 @@ const _listViewDef={
                             },
                             {
                               _tag:"span",
-                              _text:"_data._item.name"
+                              _text:function(d){
+                                d=d._item
+                                let v=d.name
+                                if(d.podGroup){
+                                  v+=" ("+d.podGroup+")"
+                                }
+                                return v
+                              }
                             }
                           ],
-                          _dataRepeat:"k8s._data._config[k8s._uiSwitch._showMenu._key]",
+                          _dataRepeat:function(d){
+                            let k=k8s._uiSwitch._showMenu._key
+                            if(k=="api"){
+                              return k8s._data._config.api.filter(x=>x.podGroup==d._item.gk)
+                            }else{
+                              return k8s._data._config[k]
+                            }
+                          },
                           _jqext:{
                             click:function(){
                               k8s._exeItem(k8s._uiSwitch._showMenu,this._data._item)
@@ -488,6 +534,7 @@ const _listViewDef={
                       _if:"k8s._data._config[k8s._uiSwitch._showMenu._key].length",
                       _tag:"hr"
                     },
+                    //setting 
                     {
                       _tag:"div",
                       _attr:{
@@ -508,6 +555,7 @@ const _listViewDef={
                       ],
                       _jqext:{
                         click:function(){
+                          k8s._data._curGroup=k8s._data._curCtrl._data.gk
                           k8s._openFunSetting(k8s._uiSwitch._showMenu._key)
                         }
                       }
@@ -556,6 +604,7 @@ function _attachHighlight(v,ff,d){
       let g=fs.indexOf(f)+1
       if(d.g!==g){
         d.g=g
+        d.gk=f
       }
       let i=v.indexOf(f)
       w+=v.substring(j,i)+"<span class='g-"+g+"'>"+f+"</span>"

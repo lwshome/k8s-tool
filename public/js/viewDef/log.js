@@ -32,7 +32,9 @@ const _logViewDef={
             },
             {
               _tag:"header",
-              _text:"_data._item._name"
+              _text:function(d){
+                return d._item[k8s._data._config.log.groupMerge?"gk":"_name"]
+              }
             },
             {
               _tag:"button",

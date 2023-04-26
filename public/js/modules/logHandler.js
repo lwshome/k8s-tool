@@ -173,16 +173,28 @@ const _logHandler={
     },[],_k8sMessage._log._title,0,1)
   },
   _closeLog:function(p) {
-    let s=_logHandler._data._logList
-    s.splice(s.indexOf(p),1)
-    p._log=0
-    _k8sProxy._send({
-      _data:{
-        method:"killProcess",
-        data:"logs -f --tail=100 "+p._name
-      },
-      _success:function(v){
-        _logHandler._data._showLog=s.length
+    let s=_logHandler._data._logList,
+        k=k8s._data._config.log.groupMerge?"gk":"_name"
+    s.find((x,i)=>{
+      if(x[k]==p[k]){
+        s.splice(i,1)
+        k8s._data._podList.forEach(y=>{
+          if(y._log&&y[k]==x[k]){
+            y._log=0
+
+            _k8sProxy._send({
+              _data:{
+                method:"killProcess",
+                data:"logs -f --tail=100 "+y._name
+              },
+              _success:function(v){
+                _logHandler._data._showLog=s.length
+              }
+            })
+        
+          }
+        })
+        return 1
       }
     })
   },
@@ -253,9 +265,24 @@ const _logHandler={
       if(k8s._data._config.log.formatJSON){
         let j=v.match(/{.+}/)
         if(j){
+          let ov=v
           j=j[0]
           v=v.split(j)
-          v=v[0]+"\n"+JSON.stringify(JSON.parse(j),0,2)+"\n"+v[1]
+          try{
+            j=JSON.parse(j)
+          }catch(ex){
+            j=j.replace(/""/g,'"')
+            j=j.split('}",')
+            if(j.length>1){
+              j=j[0]+"}"
+            }
+            try{
+              j=JSON.parse(j)
+            }catch(ee){
+              return ov
+            }
+          }
+          v=v[0]+"\n"+JSON.stringify(j,0,2)+"\n"+v[1]
         }
       }
       return v

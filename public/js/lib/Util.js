@@ -286,15 +286,43 @@ var _Util={
     }
   },
   _autoScrollToBottom:function(e,_setValueFun,_delay){
-    let _setTop
-    if(e.scrollHeight-e.getBoundingClientRect().height-e.scrollTop<30){
-      _setTop=1
+    if(_Util._autoScrollToBottomTime){
+      return setTimeout(()=>{
+        _Util._autoScrollToBottom(e,_setValueFun,_delay)
+      },1)
     }
-    _setValueFun()
-    if(_setTop){
-      setTimeout(()=>{
-        e.scrollTop=e.scrollHeight
-      },_delay||0)
+    try{
+      _Util._autoScrollToBottomTime=1
+      let _setTop
+      if(e.scrollHeight-e.getBoundingClientRect().height-e.scrollTop<80){
+        _setTop=1
+      }
+      _setValueFun()
+      if(_setTop){
+        setTimeout(()=>{
+          e.scrollTop=e.scrollHeight
+        },_delay||0)
+      }
+    }finally{
+      _Util._autoScrollToBottomTime=0
+    }
+  },
+  _jsonToCurl:function(d,v){
+    try{
+      let h="",b="";
+      if(v.headers){
+        h=JSON.parse(v.headers)
+        h=Object.keys(h||{}).map(k=>{
+          return `--header '${k}: ${h[k]}'`
+        }).join(" ")
+      }
+      if(v.body){
+        b=`--data-raw '${v.body}'`
+      }
+      let s=`curl --location --request ${v.method} 'http://localhost:${d._forwarding.split(":")[0]}${v.url}' ${h} ${b}`
+      return s
+    }catch(ex){
+      alert(ex.stack)
     }
   },
   _focusElement:function(o){
@@ -612,7 +640,7 @@ tbody td:first-child,tbody td:last-child{
       _click:function(e){
         d._fun(e,k8s._uiSwitch._tmpValue)
       }
-    }],d._title||_k8sMessage._common._question)
+    }],d._title||_k8sMessage._common._question,400)
   },
   _confirmMessage:function(_msg,_btns,_title,_width,_noCancel,_cancelFun,_noModal,_body,_noMoreAsk){
     let _loading=_msg

@@ -1,22 +1,36 @@
 {
   "stars": [],
-  "defaultNS": "mycac",
-  "NSFilter": "mycac|deploy|testing",
-  "filter": "achn|napf|napl|loch|e911|nls-data-message-bus-kf|eric-pm",
+  "defaultNS": "ms-testing",
+  "NSFilter": "mycac|testing",
+  "filter": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm",
   "log": {
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
     "highlights": [
       {
-        "value": "payload",
+        "value": "xmlPayload",
         "css": "background-color:yellow;"
       },
       {
-        "value": "DispatcherServlet",
-        "css": "background-color:#CCF;"
+        "value": "Exception",
+        "css": "background-color:red;color:yellow;"
+      },
+      {
+        "css": "background-color:#CCF;color:yellow;",
+        "value": "SPP"
+      },
+      {
+        "css": "background-color:yellow;",
+        "value": "transactionId"
+      },
+      {
+        "css": "background-color:yellow;",
+        "value": "user_identities"
       }
     ],
     "autoMerge": "on",
-    "groupMerge": "on"
+    "groupMerge": "on",
+    "formatJSON": "on",
+    "formatXML": "on"
   },
   "link": [
     {
@@ -26,10 +40,6 @@
     {
       "name": "metrics",
       "value": "/actuator/metrics"
-    },
-    {
-      "name": "lws",
-      "value": "/ok"
     }
   ],
   "cmd": [
@@ -42,5 +52,22 @@
       "value": "ls -l\n"
     }
   ],
-  "ns": "mycac"
+  "api": [
+    {
+      "name": "test",
+      "method": "POST",
+      "url": "/ckfigimjlkjlhugyfcxdxzaresrtftf?partnerID=1234&Password=password&Timestamp=2023-02-27%2012:12:12&xmlPayload=%3CCustomerTransactions%3E%3CCustomerTransaction%3E%3CTransactionInfo%3E%3CRequestedAction%3Eupdate%3C/RequestedAction%3E%3CFieldsModified%3Eimsi%3C/FieldsModified%3E%3CCustomerID%3E800027990549%3C/CustomerID%3E%3Cmsisdn%3E3465822806%3C/msisdn%3E%3CVersion%3E1.4%3C/Version%3E%3CTransactionID%3E7029269851742853040%3C/TransactionID%3E%3CVendorID%3E36%3C/VendorID%3E%3C/TransactionInfo%3E%3CAccountInfo%3E%3CAccountStatus%3Eactive%3C/AccountStatus%3E%3CCustomerID%3E800027990549%3C/CustomerID%3E%3Cmsisdn%3E3465822806%3C/msisdn%3E%3Cimsi%3E310260544341222%3C/imsi%3E%3Coldimsi%3E310260562275060%3C/oldimsi%3E%3Cban%3E166289062%3C/ban%3E%3CaccountType%3EI%3C/accountType%3E%3CaccountSubType%3EW%3C/accountSubType%3E%3CbillCyclePeriod%3E25%3C/billCyclePeriod%3E%3CCustomerType%3E2%3C/CustomerType%3E%3CsimSerial%3E8901260544743412226%3C/simSerial%3E%3COperatorID%3E1000%3C/OperatorID%3E%3C/AccountInfo%3E%3CServiceInfo%3E%3CVendorID%3E36%3C/VendorID%3E%3CServiceLevel%3E1%3C/ServiceLevel%3E%3C/ServiceInfo%3E%3C/CustomerTransaction%3E%3C/CustomerTransactions%3E",
+      "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}",
+      "podGroup": "naplstnr"
+    },
+    {
+      "podGroup": "e911lstnr",
+      "name": "Test",
+      "method": "POST",
+      "url": "/v4.0/notifications/locationevent",
+      "headers": "{\n  \"Content-Type\":\t\"application/json; charset=UTF-8\",\n  \"User-Agent\":\t\"Apache-HttpClient/4.1.1\",\n  \"x-transaction-id\":\t\"a9d4f7d5-b459-42df-98c3-52c0f123309f\"\n}",
+      "body": "{\n  \"user_identities\":{\n    \"msisdn\":\"12223333002\"\n  },\n  \"event\":\"ADDR_UPDATE\",\n  \"service\":\"TMO-WebSheet|CustomerCare\",\n  \"message\":\"Your address information is updated\",\n  \"address\":\"1821 Lincon,Seattle,WA\"\n}"
+    }
+  ],
+  "ns": "ms-testing"
 }

@@ -6,7 +6,9 @@ const _k8sMessage={
       _repeat:"重复",
       _message:"信息",
       _ok:"好",
-      _waiting:"等待中 ..."
+      _waiting:"等待中 ...",
+      _question:"问题",
+      _empty:"空值"
    },
    _info:{
      _downloadInBG:"文件/文件夹已在服务器端下载。",
@@ -15,14 +17,17 @@ const _k8sMessage={
      _confirmDelete:"你想删除该项目吗？",
      _askFileName:"请问文件名是什么？",
      _importFileError:"导入文件时出错:{0}",
-     _noMoreAsk:"不再询问"
+     _noMoreAsk:"不再询问",
+     _askSearchFile:"需要搜索的文件"
    },
    _method:{
+     _search:"搜索",
      _confirm:"确认",
      _filter:"过滤器",
      _yes:"是",
      cmd:"执行远程命令",
      link:"在浏览器中打开链接",
+     api:"API 测试",
      forward:"转发",
      search:"搜索文件/文件夹",
      refresh:"刷新",
@@ -63,6 +68,9 @@ const _k8sMessage={
      _regexValue:"过滤正则表达式",
      _style:"高光样式 (css)",
      _example:"例子",
+     formatJSON:"自动格式化 JSON 数据",
+     formatXML:"自动格式化 XML 数据",
+     groupMerge:"按过滤器分组日志",
      _autoMerge:"自动合并日志（合并重复内容）",
      _cleanDynamicRegex:"清理动态字符的正则表达式"
    }

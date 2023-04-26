@@ -188,6 +188,14 @@ const k8s={
   updateScaleConfig:function(_data){
     let s=`${_getK8sCmdHeader(_data)} scale --${_data.name}=${_data.value} deployment/${_data.serverName}`
   },
+  exeAPI:function(d,_fun){
+    console.log(d)
+    let s=d.api.split(" ")
+    _exe(d.api,_fun)
+    // _monitor(s.shift(),s,function(v){
+    //   _fun(v)
+    // })
+  },
   exeCmd:function(d,_fun){
     console.log(d)
     let cs=d.cmd.split("\n")

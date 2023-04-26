@@ -14,95 +14,114 @@ const ui={
       },
       _items:[
         {
-          _tag:"div",
+          _tag:"span",
           _attr:{
-            class:"input-group",
-            style:"width:250px;"
-          },
-          _items:[
-            {
-              _tag:"label",
-              _attr:{
-                class:"input-group-addon"
-              },
-              _text:"_k8sMessage._common._namespace"
-            },
-            {
-              _tag:"select",
-              _attr:{
-                class:"form-control"
-              },
-              _update:function(){
-                k8s._saveSetting()
-                k8s._getInitData()
-              },
-              _items:[
-                {
-                  _tag:"option",
-                  _attr:{
-                    value:"_data._item"
-                  },
-                  _text:"_data._item",
-                  _dataRepeat:function(){
-                    let d=k8s._data._namespaceList||[],
-                        f=k8s._data._config.NSFilter
-                    if(f){
-                      f=new RegExp(f,"i")
-                      d=d.filter(x=>f.test(x))
-                    }
-                    return d
-                  }
-                }
-              ],
-              _dataModel:"k8s._data._config.defaultNS"
+            class:function(){
+              let c="bz-main btn btn-icon bz-main bz-small-btn bz-none-border "
+              if(k8s._data._loading){
+                c+="bz-loading"
+              }else{
+                c+="bz-logo"
+              }
+              return c
             }
-          ]
-        },
-        {
-          _tag:"div",
-          _attr:{
-            class:"input-group",
-            style:"width:200px;margin-right:15px;margin-left: -1px;"
-          },
-          _items:[
-            {
-              _tag:"label",
-              _attr:{
-                class:"input-group-addon"
-              },
-              _text:"_k8sMessage._method._filter"
-            },
-            {
-              _tag:"input",
-              _update:function(){
-                k8s._saveSetting()
-              },
-              _attr:{
-                class:"form-control"
-              },
-              _dataModel:"k8s._data._config.NSFilter"
-            }
-          ]
-        },
-        {
-          _tag:"div",
-          _attr:{
-            style:"flex:1"
           }
         },
         {
-          _if:"k8s._data._loading",
           _tag:"div",
           _attr:{
-            class:"input-group-btn",
-            style:"margin-top:7px;margin-right:10px;"
+            class:"bz-main-header"
+          },
+          _text:"_k8sMessage._info._title"
+        },
+        {
+          _tag:"div",
+          _attr:{
+            class:"bz-namespace-box"
           },
           _items:[
             {
-              _tag:"button",
+              _tag:"div",
               _attr:{
-                class:"btn btn-icon bz-loading bz-small-btn bz-none-border"
-              }
+                class:"input-group",
+                style:"flex:1"
+              },
+              _items:[
+                {
+                  _tag:"label",
+                  _attr:{
+                    class:"input-group-addon",
+                    style:"width:0;"
+                  },
+                  _text:"NS"
+                },
+                {
+                  _tag:"select",
+                  _attr:{
+                    class:"form-control",
+                    title:"_k8sMessage._common._namespace"
+                  },
+                  _update:function(){
+                    k8s._saveSetting()
+                    k8s._getInitData()
+                  },
+                  _items:[
+                    {
+                      _tag:"option",
+                      _attr:{
+                        value:"_data._item"
+                      },
+                      _text:"_data._item",
+                      _dataRepeat:function(){
+                        let d=k8s._data._namespaceList||[],
+                            f=k8s._data._config.NSFilter
+                        if(f){
+                          f=new RegExp(f,"i")
+                          d=d.filter(x=>f.test(x))
+                        }
+                        return d
+                      }
+                    }
+                  ],
+                  _dataModel:"k8s._data._config.defaultNS"
+                }
+              ]
+            },
+            {
+              _tag:"div",
+              _attr:{
+                class:"input-group",
+                style:"margin-right:15px;margin-left: -1px;flex:1",
+                title:"_k8sMessage._method._nsFilter"
+              },
+              _items:[
+                {
+                  _tag:"label",
+                  _attr:{
+                    class:"input-group-addon",
+                    style:"width:0;"
+                  },
+                  _items:[
+                    {
+                      _tag:"span",
+                      _attr:{
+                        class:"btn btn-icon bz-none-border bz-filter"
+                      }
+                    }
+                  ]
+                },    
+                {
+                  _tag:"input",
+                  _update:function(){
+                    k8s._saveSetting()
+                  },
+                  _attr:{
+                    placeholder:"_k8sMessage._method._nsFilter",
+                    class:"form-control"
+                  },
+                  _dataModel:"k8s._data._config.NSFilter"
+                }
+              ]
             }
           ]
         }
@@ -136,36 +155,37 @@ const ui={
         {
           _tag:"div",
           _attr:{
-            style:"margin-right:15px;width:33%;min-width:100px;"
+            class:"input-group bz-item-filter",
+            title:"_k8sMessage._method._itemFilter"
           },
           _items:[
             {
-              _tag:"div",
+              _tag:"label",
               _attr:{
-                class:"input-group"
+                class:"input-group-addon"
               },
               _items:[
                 {
-                  _tag:"label",
+                  _tag:"span",
                   _attr:{
-                    class:"input-group-addon"
-                  },
-                  _text:"_k8sMessage._method._filter"
-                },
-                {
-                  _tag:"input",
-                  _update:function(){
-                    setTimeout(()=>{
-                      k8s._saveSetting()
-                    },100)
-                  },
-                  _attr:{
-                    class:"form-control"
-                  },
-                  _dataModel:"k8s._data._config.filter"
+                    class:"btn btn-icon bz-none-border bz-filter"
+                  }
                 }
               ]
-            }        
+            },
+            {
+              _tag:"input",
+              _update:function(){
+                setTimeout(()=>{
+                  k8s._saveSetting()
+                },100)
+              },
+              _attr:{
+                class:"form-control",
+                placeholder:"_k8sMessage._method._itemFilter"
+              },
+              _dataModel:"k8s._data._config.filter"
+            }
           ]
         }
       ]

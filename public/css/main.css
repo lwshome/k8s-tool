@@ -63,7 +63,7 @@ body{
 textarea{
   font-family:'Roboto Mono', monospace;
   padding: 5px;
-  font-size: 15px;
+  font-size: 11px;
   border:var(--bz-border);
   white-space:pre;
   resize: none;
@@ -384,9 +384,9 @@ select.form-control{
 }
 textarea,
 pre {
-  -moz-tab-size : 4;
-  -o-tab-size : 4;
-  tab-size : 4;
+  -moz-tab-size : 2;
+  -o-tab-size : 2;
+  tab-size : 2;
   font-family: monospace;
   margin: 0;
   word-break: break-all;
@@ -600,4 +600,79 @@ header{
 button.btn.bz-none-border:hover{
   border-radius:20px;
   background-color: #FCC;
+}
+
+.bz-item-row{
+  display:flex;
+  margin-top:5px;
+  flex-direction:column;
+  padding:5px;
+}
+.bz-item-row *{
+  background-color: transparent;
+}
+.bz-item-row:nth-child(even){
+  background-color: #EEE;
+}
+.bz-namespace-box{
+  width:calc(30% + 9px);
+  display:flex;
+}
+.bz-namespace-box label{
+  width:unset;
+}
+
+.bz-item-filter{
+  height: 25px;
+  top: 3px;
+  width:calc(30% - 5px);
+  position: relative;
+  margin-right:3px;
+  margin-right: 15px;
+}
+
+@media (max-width: 950px) {
+  .bz-namespace-box{
+    width:calc(40% + 9px);
+  }
+
+  .bz-item-filter{
+    width:calc(40% - 5px);
+  }
+}
+
+@media (max-width: 600px) {
+  .bz-namespace-box{
+    width:calc(50% + 9px);
+  }
+  .bz-namespace-box label{
+    display:none;
+  }
+
+  .bz-item-filter{
+    width:calc(50% - 5px);
+  }
+}
+
+.bz-main{
+  width: 40px;
+  height: 40px;
+  background-size: 30px;
+  position: absolute;
+  top:5px;
+  left:12px;
+}
+.bz-main.bz-loading{
+  background-size: 40px;
+}
+
+.bz-main-header{
+  flex: 1;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 30px;
+  text-indent: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

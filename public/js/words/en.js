@@ -11,6 +11,7 @@ const _k8sMessage={
     _empty:"Empty"
   },
   _info:{
+    _title:"Boozang K8s-Tool",
     _downloadInBG:"The file/folder was download in server side.",
     _askPort:"Please set forward port: ",
     _confirmStopForwarding:"Do you want to stop the forwarding from: ",
@@ -21,13 +22,16 @@ const _k8sMessage={
     _askSearchFile:"What's file are you looking for?"
   },
   _method:{
+    _nsFilter:"Namespace filter",
+    _itemFilter:"Pod/Service filter",
     _search:"Search",
     _confirm:"Confirm",
     _filter:"Filter",
     _yes:"Yes",
     cmd:"Execute remote command",
     link:"Open browser in link",
-    forward:"Forward",
+    api:"API Test",
+    forward:"Forward port",
     search:"Search file / folder",
     refresh:"Refresh",
     log:"Monitor Logging",
@@ -43,6 +47,7 @@ const _k8sMessage={
     _close:"Close",
     _clean:"Clean",
     _addItem:"Add Item",
+    _try:"Try",
     "add-folder":"Add Folder",
     "add-file":"Add File",
     "delete-pod":"Delete (Rebuild) pod"
@@ -59,6 +64,7 @@ const _k8sMessage={
     _title:"Setting ...",
     cmd:"Remote Command setting",
     link:"Pod Link setting",
+    api:"API setting",
     _list:"Item list:"
   },
   _log:{
@@ -69,7 +75,7 @@ const _k8sMessage={
     _example:"Example",
     formatJSON:"Auto-format JSON Data",
     formatXML:"Auto-format XML Data",
-    groupMerge:"Group log in filter",
+    groupMerge:"Group log by filter",
     autoMerge:"Auto merge log (merge duplicate content)",
     _cleanDynamicRegex:"Regular expression to sanitize dynamic characters"
   }

@@ -38,6 +38,12 @@ const k8s={
     return s
   },
   _openFunSetting:function(t){
+    k8s._data._config[t]=k8s._data._config[t]||[];
+    k8s._uiSwitch._configList=k8s._data._config[t];
+    if(t=="api"){
+      k8s._uiSwitch._configList=k8s._uiSwitch._configList.filter(x=>x.podGroup==k8s._data._curGroup)
+    }
+
     _Util._confirmMessage({
       _tag:"div",
       _update:function(){
@@ -67,8 +73,17 @@ const k8s={
               },
               _jqext:{
                 click:function(ex){
-                  k8s._data._config[t]=k8s._data._config[t]||[]
-                  k8s._data._config[t].push({})
+                  let d={}
+                  if(t=="api"){
+                    d.podGroup=k8s._data._curGroup
+                  }
+                  k8s._uiSwitch._configList.push(d)
+                  if(t=="api"){
+                    k8s._data._config.api.push(k8s._uiSwitch._configList[k8s._uiSwitch._configList.length-1])
+                  }
+                  let ls=k8s._uiSwitch._configList
+                  k8s._uiSwitch._configList=[]
+                  k8s._uiSwitch._configList=ls
                   _Util._resizeModelWindow()
                   setTimeout(()=>{
                     let os=$(".bz-fun-setting-dialog input")
@@ -89,7 +104,7 @@ const k8s={
             {
               _tag:"div",
               _attr:{
-                style:"display:flex;margin-top:5px;flex-direction:column;"
+                class:"bz-item-row"
               },
               _items:[
                 {
@@ -114,7 +129,7 @@ const k8s={
                         class:"form-control bz-oneline-input",
                         placeholder:"_k8sMessage._common._name"
                       },
-                      _dataModel:`k8s._data._config.${t}[_data._idx].name`
+                      _dataModel:`k8s._uiSwitch._configList[_data._idx].name`
                     },
                     {
                       _if:function(){
@@ -126,18 +141,59 @@ const k8s={
                         class:"form-control bz-oneline-input",
                         placeholder:"_k8sMessage._common._value"
                       },
-                      _dataModel:`k8s._data._config.${t}[_data._idx].value`
+                      _dataModel:`k8s._uiSwitch._configList[_data._idx].value`
                     },
                     {
+                      _if:function(){
+                        return t=="api"
+                      },
+                      _tag:"select",
+                      _attr:{
+                        style:"flex:1;margin-left:10px;",
+                        class:"form-control bz-oneline-input"
+                      },
+                      _items:[
+                        {
+                          _tag:"option",
+                          _attr:{
+                            value:"_data._item"
+                          },
+                          _text:"_data._item",
+                          _dataRepeat:"k8s._data._config.filter.split('|')"
+                        }
+                      ],
+                      _dataModel:`k8s._uiSwitch._configList[_data._idx].podGroup`
+                    },
+                    {
+                      _if:function(){
+                        return t=="api"
+                      },
                       _tag:"button",
                       _attr:{
-                        style:"margin-top:2px;",
-                        class:"btn btn-icon bz-small-btn bz-delete bz-none-border"
+                        class:"btn btn-icon bz-play bz-none-border",
+                        title:"_k8sMessage._method._try"
                       },
                       _jqext:{
                         click:function(){
-                          k8s._data._config[t].splice(this._data._idx,1);
-                          _Util._resizeModelWindow()
+                        }
+                      }
+                    },{
+                      _tag:"button",
+                      _attr:{
+                        title:"_k8sMessage._method.delete",
+                        class:"btn btn-icon bz-delete bz-none-border"
+                      },
+                      _jqext:{
+                        click:function(){
+                          let o=k8s._uiSwitch._configList.splice(this._data._idx,1);
+                          if(t=="api"){
+                            k8s._data._config.api.splice(k8s._data._config.api.indexOf(o),1)
+                          }
+                          let ls=k8s._uiSwitch._configList
+                          k8s._uiSwitch._configList=[]
+                          k8s._uiSwitch._configList=ls
+        
+                          _saveList()
                         }
                       }
                     }
@@ -153,15 +209,84 @@ const k8s={
                     class:"form-control bz-oneline-input",
                     placeholder:"_k8sMessage._common._value"
                   },
-                  _dataModel:`k8s._data._config.${t}[_data._idx].value`
+                  _dataModel:`k8s._uiSwitch._configList[_data._idx].value`
                 },
+                {
+                  _if:function(){
+                    return t=="api"
+                  },
+                  _tag:"div",
+                  _attr:{
+                    style:"display:flex;flex-direction:column;"
+                  },
+                  _items:[
+                    {
+                      _tag:"div",
+                      _attr:{
+                        style:"display:flex;"
+                      },
+                      _items:[
+                        {
+                          _tag:"select",
+                          _attr:{
+                            class:"form-control",
+                            style:"width:unset;"
+                          },
+                          _items:[
+                            {
+                              _tag:"option",
+                              _text:"_data._item",
+                              _attr:{
+                                value:"_data._item"
+                              },
+                              _dataRepeat:["GET","POST","PUT","DELETE","PATCH"]
+                            }
+                          ],
+                          _dataModel:`k8s._uiSwitch._configList[_data._idx].method`
+                        },
+                        {
+                          _tag:"input",
+                          _attr:{
+                            class:"form-control",
+                            style:"flex:1",
+                            placeholder:"URL"
+                          },
+                          _dataModel:`k8s._uiSwitch._configList[_data._idx].url`
+                        }
+                      ]
+                    },
+                    {
+                      _tag:"textarea",
+                      _attr:{
+                        placeholder:"headers (JSON)",
+                        style:"height:50px"
+                      },
+                      _dataModel:`k8s._uiSwitch._configList[_data._idx].headers`
+                    },
+                    {
+                      _tag:"textarea",
+                      _attr:{
+                        placeholder:"body (JSON)",
+                        style:"height:150px"
+                      },
+                      _dataModel:`k8s._uiSwitch._configList[_data._idx].body`
+                    }
+                  ]
+                }
               ],
-              _dataRepeat:`k8s._data._config.${t}`
+              _dataRepeat:function(){
+                return k8s._uiSwitch._configList
+              }
             }
           ]
         }
       ]
-    },[],_k8sMessage._setting[t],"80%",1)
+    },[],_k8sMessage._setting[t],t=="cmd"?"80%":0,1)
+  
+    function _saveList(){
+      k8s._saveSetting()
+      _Util._resizeModelWindow()
+    }
   },
   _addFile:function(d,p,f){
     _Util._promptMessage({
@@ -530,7 +655,7 @@ const k8s={
   },
   _exeItem:function(t,d){
     if(t._key=="link"){
-      window.open(d.value)
+      window.open(t._item._host+d.value)
     }else if(t._key=="cmd"){
       k8s._uiSwitch._response=""
 
@@ -610,6 +735,8 @@ const k8s={
         },
         _success:_updateResponse
       })
+    }else if(t._key=="api"){
+      _sendAPI(t._item,d)
     }
     function _updateResponse(v){
       _Util._autoScrollToBottom($("textarea")[0],function(){
@@ -628,6 +755,38 @@ const k8s={
         },
         _success:_updateResponse
       })
+    }
+    function _sendAPI(t,d){
+      k8s._uiSwitch._response=""
+      let s=_Util._jsonToCurl(t,d)
+      if(s){
+        _Util._confirmMessage({
+          _tag:"div",
+          _items:[
+            {
+              _tag:"textarea",
+              _attr:{
+                readonly:1,
+                placeholder:'_k8sMessage._common._waiting',
+                style:'width:calc(100% - 10px);height:650px;'
+              },
+              _dataModel:'k8s._uiSwitch._response'
+            }
+          ]
+        },[],_k8sMessage._common._message,"80%",1)
+  
+        _k8sProxy._send({
+          _data:{
+            method:"exeAPI",
+            data:{
+              api:s
+            }
+          },
+          _success:function(v){
+            _updateResponse(v)
+          }
+        })
+      }
     }
   },
   _forward:function(d){
@@ -722,25 +881,44 @@ const k8s={
   _getLog:function(d,p){
     _logHandler._data._showLog=1
     k8s._data._curFile=0
-    
-    if(p._log){
-      _logHandler._data._logList.splice(_logHandler._data._logList.indexOf(p),1)
-      p._log=0
-    }else{
-      p._log=[]
-      _logHandler._data._logList.push(p)
-    }
-    _k8sProxy._send({
-      _data:{
-        method:"getLog",
-        data:{
-          serverName:d._name
+    let ls=_logHandler._data._logList,
+        pl=p._log||{
+          _name:p._name,
+          gk:p.gk
+        },
+        k=k8s._data._config.log.groupMerge?"gk":"_name"
+
+    if(!ls.find((x,i)=>{
+      if(x[k]==pl[k]){
+        if(p._log){
+          ls.splice(i,1)
+          k8s._data._podList.forEach(y=>{
+            if(y._log&&y._log[k]==pl[k]){
+              y._log=0
+            }
+          })
+        }else{
+          p._log=x
         }
-      },
-      _success:function(v){
-        _logHandler._addLog(v,p)
+        return 1
       }
-    })
+    })){
+      p._log=pl
+      ls.push(p._log)
+    }
+    if(p._log){
+      _k8sProxy._send({
+        _data:{
+          method:"getLog",
+          data:{
+            serverName:p._name
+          }
+        },
+        _success:function(v){
+          _logHandler._addLog(v,p._log)
+        }
+      })
+    }
   },
   _getFileList:function(d,p){
     p._loading=1
