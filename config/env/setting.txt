@@ -1,8 +1,8 @@
 {
   "stars": [],
-  "defaultNS": "ms-testing",
+  "defaultNS": "mycac",
   "NSFilter": "mycac|testing",
-  "filter": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm",
+  "filter": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm|profile",
   "log": {
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
     "highlights": [
@@ -69,5 +69,5 @@
       "body": "{\n  \"user_identities\":{\n    \"msisdn\":\"12223333002\"\n  },\n  \"event\":\"ADDR_UPDATE\",\n  \"service\":\"TMO-WebSheet|CustomerCare\",\n  \"message\":\"Your address information is updated\",\n  \"address\":\"1821 Lincon,Seattle,WA\"\n}"
     }
   ],
-  "ns": "ms-testing"
+  "ns": "mycac"
 }

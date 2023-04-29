@@ -768,24 +768,32 @@ const k8s={
               _attr:{
                 readonly:1,
                 placeholder:'_k8sMessage._common._waiting',
-                style:'width:calc(100% - 10px);height:650px;'
+                style:'width:calc(100% - 10px);height:440px;'
               },
               _dataModel:'k8s._uiSwitch._response'
             }
           ]
-        },[],_k8sMessage._common._message,"80%",1)
-  
-        _k8sProxy._send({
-          _data:{
-            method:"exeAPI",
-            data:{
-              api:s
-            }
-          },
-          _success:function(v){
-            _updateResponse(v)
+        },[{
+          _title:_k8sMessage._method._execute,
+          _click:function(){
+            _doSend()
           }
-        })
+        }],_k8sMessage._common._message,0,"_close")
+        
+        _doSend()
+        function _doSend(){
+          _k8sProxy._send({
+            _data:{
+              method:"exeAPI",
+              data:{
+                api:s
+              }
+            },
+            _success:function(v){
+              _updateResponse(v)
+            }
+          })  
+        }
       }
     }
   },

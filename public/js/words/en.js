@@ -22,6 +22,7 @@ const _k8sMessage={
     _askSearchFile:"What's file are you looking for?"
   },
   _method:{
+    _execute:"Execute",
     _nsFilter:"Namespace filter",
     _itemFilter:"Pod/Service filter",
     _search:"Search",
