@@ -8,7 +8,15 @@ const _k8sMessage={
     _ok:"OK",
     _waiting:"Waiting ...",
     _question:"Question",
-    _empty:"Empty"
+    _empty:"Empty",
+    _autoStart:"Auto start",
+    _success:"Success",
+    _failed:"Failed",
+    _allPods:"All Pods",
+    _system:"System",
+    _scope:"Scope",
+    _count:"Execute count",
+    _intervals:"Intervals"
   },
   _info:{
     _title:"Boozang K8s-Tool",
@@ -19,7 +27,8 @@ const _k8sMessage={
     _askFileName:"What's the name please?",
     _importFileError:"Error importing file: {0}",
     _noMoreAsk: "Don't ask again",
-    _askSearchFile:"What's file are you looking for?"
+    _askSearchFile:"What's file are you looking for?",
+    _missExePod:"There is not a pod to execute the task. Please forwarding a suitable pod first, and try again."
   },
   _method:{
     _execute:"Execute",
@@ -47,6 +56,8 @@ const _k8sMessage={
     _cancel:"Cancel",
     _close:"Close",
     _clean:"Clean",
+    _play:"Play",
+    _stop:"Stop",
     _addItem:"Add Item",
     _try:"Try",
     "add-folder":"Add Folder",

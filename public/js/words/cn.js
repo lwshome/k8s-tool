@@ -8,7 +8,8 @@ const _k8sMessage={
     _ok:"好",
     _waiting:"等待中 ...",
     _question:"问题",
-    _empty:"空值"
+    _empty:"空值",
+    _autoStart:"自动启动"
   },
   _info:{
     _title:"Boozang K8s-工具",
@@ -28,7 +29,7 @@ const _k8sMessage={
     _search:"搜索",
     _confirm:"确认",
     _filter:"过滤器",
-    _yes:"是",
+    _yes:"确定",
     cmd:"执行远程命令",
     link:"在浏览器中打开链接",
     api:"API 测试",

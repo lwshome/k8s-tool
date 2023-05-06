@@ -376,7 +376,15 @@ const _listViewDef={
                     {
                       _tag:"button",
                       _attr:{
-                        title:"_k8sMessage._method[_data._item]",
+                        title:function(d){
+                          let s=d._supData._item
+                          d=d._item
+                          let v=_k8sMessage._method[d]
+                          if(d=="forward"){
+                            v+=" ("+s._forwarding+")"
+                          }
+                          return v
+                        },
                         style:"margin-right:3px;",
                         disabled:function(d){
                           return !d._supData._item._forwarding&&(d._item=='link'||d._item=='api')
@@ -515,12 +523,7 @@ const _listViewDef={
                             }
                           ],
                           _dataRepeat:function(d){
-                            let k=k8s._uiSwitch._showMenu._key
-                            if(k=="api"){
-                              return k8s._data._config.api.filter(x=>x.podGroup==d._item.gk)
-                            }else{
-                              return k8s._data._config[k]
-                            }
+                            return k8s._data._config[k8s._uiSwitch._showMenu._key].filter(x=>!x.podGroup||x.podGroup==d._item.gk)
                           },
                           _jqext:{
                             click:function(){

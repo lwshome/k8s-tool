@@ -72,8 +72,8 @@ hr{
   height: 1px;
   border: 0;
   background-color: var(--border-color);
-  width: 100%;
-  margin: 2px;
+  width: calc(100% - 10px);
+  margin: 5px;
 }
 .btn {
   /**line-height: 1.2; **/
@@ -328,6 +328,7 @@ td.input-group{
 
 .input-group input.form-control{
   height:25px;
+  width:calc(100% - 12px);
 }
 select.form-control{
   height:27px;
@@ -428,7 +429,7 @@ pre {
   overflow: auto;
   border-left:var(--bz-border);
   padding: 5px;
-  flex: 1;
+  flex: 2;
   width:50px;
 }
 
@@ -675,4 +676,10 @@ button.btn.bz-none-border:hover{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+label>input[type=checkbox]{
+  margin-right: 10px;
+  position: relative;
+  top: 2px;
 }

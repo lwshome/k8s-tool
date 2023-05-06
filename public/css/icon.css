@@ -190,23 +190,28 @@
   color:red;
   font-size:13px;
 }
+.bz-stop:before{
+  content:"⏹";
+  color:red;
+  font-size:13px;
+}
 .bz-filter{
   position: absolute;
   margin: -12px !important;
 }
 .bz-filter:before{
   content: "🞃";
-  font-size: 25px;
+  font-size: 22px;
   position: absolute;
-  top: -6px;
-  left: 1px;
+  top: -4px;
+  left: 2px;
   margin: 0;
 }
 .bz-filter:after{
   content: "𝅛";
-  font-size: 18px;
+  font-size: 15px;
   position: absolute;
-  top: 5px;
+  top: 8px;
   left: 9px;
   margin: 0;
 }

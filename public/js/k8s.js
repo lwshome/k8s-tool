@@ -1,7 +1,7 @@
 //Machine learn
 const k8s={
   _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods"}),
-  _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[]}}),
+  _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[],autoForward:{}}}),
   _getKey:function(){
     k8s._key=k8s._key||Date.now()
     return k8s._key++
@@ -38,6 +38,9 @@ const k8s={
     return s
   },
   _openFunSetting:function(t){
+    if(t=="sys-cmd"){
+      t="cmd"
+    }
     k8s._data._config[t]=k8s._data._config[t]||[];
     k8s._uiSwitch._configList=k8s._data._config[t];
     if(t=="api"){
@@ -103,71 +106,91 @@ const k8s={
           _items:[
             {
               _tag:"div",
-              _attr:{
-                class:"bz-item-row"
-              },
               _items:[
                 {
                   _if:function(d){
                     return !d._idx||(t=="cmd")
                   },
-                  _tag:"hr",
-                  _attr:{
-                    style:"width:99%"
-                  }
+                  _tag:"hr"
                 },
                 {
                   _tag:"div",
                   _attr:{
-                    style:"display:flex;margin-top:5px;"
+                    style:"display:flex;"
                   },
                   _items:[
                     {
-                      _tag:"input",
+                      _tag:"div",
                       _attr:{
                         style:"flex:1;",
-                        class:"form-control bz-oneline-input",
-                        placeholder:"_k8sMessage._common._name"
-                      },
-                      _dataModel:`k8s._uiSwitch._configList[_data._idx].name`
-                    },
-                    {
-                      _if:function(){
-                        return t=="link"
-                      },
-                      _tag:"input",
-                      _attr:{
-                        style:"flex:1;margin-left:10px;",
-                        class:"form-control bz-oneline-input",
-                        placeholder:"_k8sMessage._common._value"
-                      },
-                      _dataModel:`k8s._uiSwitch._configList[_data._idx].value`
-                    },
-                    {
-                      _if:function(){
-                        return t=="api"
-                      },
-                      _tag:"select",
-                      _attr:{
-                        style:"flex:1;margin-left:10px;",
-                        class:"form-control bz-oneline-input"
+                        class:"input-group"
                       },
                       _items:[
                         {
-                          _tag:"option",
+                          _tag:"label",
                           _attr:{
-                            value:"_data._item"
+                            class:"input-group-addon"
                           },
-                          _text:"_data._item",
-                          _dataRepeat:"k8s._data._config.filter.split('|')"
-                        }
-                      ],
-                      _dataModel:`k8s._uiSwitch._configList[_data._idx].podGroup`
+                          _text:"_k8sMessage._common._name"
+                        },
+                        {
+                          _tag:"input",
+                          _attr:{
+                            class:"form-control",
+                            placeholder:"_k8sMessage._common._name"
+                          },
+                          _dataModel:`k8s._uiSwitch._configList[_data._idx].name`
+                        },
+                      ]
                     },
                     {
-                      _if:function(){
-                        return t=="api"
+                      _tag:"div",
+                      _attr:{
+                        style:"flex:1;",
+                        class:"input-group"
                       },
+                      _items:[
+                        {
+                          _tag:"label",
+                          _attr:{
+                            class:"input-group-addon"
+                          },
+                          _text:"_k8sMessage._common._scope"
+                        },
+                        {
+                          _tag:"select",
+                          _attr:{
+                            class:"form-control"
+                          },
+                          _items:[
+                            {
+                              _tag:"option",
+                              _attr:{
+                                value:""
+                              },
+                              _text:"_k8sMessage._common._allPods"
+                            },
+                            {
+                              _tag:"option",
+                              _attr:{
+                                value:"_data._item"
+                              },
+                              _text:"_data._item",
+                              _dataRepeat:"k8s._data._config.filter.split('|')"
+                            },
+                            {
+                              _tag:"option",
+                              _attr:{
+                                value:"bz-node-system"
+                              },
+                              _text:"_k8sMessage._common._system"
+                            }
+                          ],
+                          _dataModel:`k8s._uiSwitch._configList[_data._idx].podGroup`
+                        }
+                      ]
+                    },
+                    {
                       _tag:"button",
                       _attr:{
                         class:"btn btn-icon bz-play bz-none-border",
@@ -175,9 +198,11 @@ const k8s={
                       },
                       _jqext:{
                         click:function(){
+                          k8s._exeItem(t,this._data._item)
                         }
                       }
-                    },{
+                    },
+                    {
                       _tag:"button",
                       _attr:{
                         title:"_k8sMessage._method.delete",
@@ -201,12 +226,38 @@ const k8s={
                 },
                 {
                   _if:function(){
+                    return t=="link"
+                  },
+                  _tag:"div",
+                  _attr:{
+                    style:"flex:1;",
+                    class:"input-group"
+                  },
+                  _items:[
+                    {
+                      _tag:"label",
+                      _attr:{
+                        class:"input-group-addon"
+                      },
+                      _text:"_k8sMessage._common._value"
+                    },
+                    {
+                      _tag:"input",
+                      _attr:{
+                        class:"form-control"
+                      },
+                      _dataModel:`k8s._uiSwitch._configList[_data._idx].value`
+                    }
+                  ]
+                },
+                {
+                  _if:function(){
                     return t=="cmd"
                   },
                   _tag:"textarea",
                   _attr:{
-                    style:"height:100px;",
-                    class:"form-control bz-oneline-input",
+                    style:"height:100px;width:calc(100% - 12px);",
+                    class:"form-control",
                     placeholder:"_k8sMessage._common._value"
                   },
                   _dataModel:`k8s._uiSwitch._configList[_data._idx].value`
@@ -259,7 +310,7 @@ const k8s={
                       _tag:"textarea",
                       _attr:{
                         placeholder:"headers (JSON)",
-                        style:"height:50px"
+                        style:"height:50px;width:calc(100% - 12px);"
                       },
                       _dataModel:`k8s._uiSwitch._configList[_data._idx].headers`
                     },
@@ -272,6 +323,9 @@ const k8s={
                       _dataModel:`k8s._uiSwitch._configList[_data._idx].body`
                     }
                   ]
+                },
+                {
+                  _tag:"hr"
                 }
               ],
               _dataRepeat:function(){
@@ -281,7 +335,7 @@ const k8s={
           ]
         }
       ]
-    },[],_k8sMessage._setting[t],t=="cmd"?"80%":0,1)
+    },[],_k8sMessage._setting[t],t=="cmd"?"80%":"60%",1,0,1)
   
     function _saveList(){
       k8s._saveSetting()
@@ -653,10 +707,36 @@ const k8s={
       }
     })
   },
+  _getItemByGroup:function(d,t){
+    let v={_key:t}
+    if(!d.podGroup){
+      v._item=k8s._data._podList.find(x=>x._forwarding)
+      if(!v._item){
+        v=0
+      }
+    }else if(d.podGroup!="bz-node-system"){
+      t=k8s._data._podList.find(x=>x.gk==d.podGroup&&(x._forwarding||t=="cmd"))
+      if(t){
+        v._item=t
+      }else{
+        v=0
+      }
+    }
+    if(!v){
+      alert(_k8sMessage._info._missExePod)
+    }
+    return v
+  },
   _exeItem:function(t,d){
+    if(!t._item){
+      t=k8s._getItemByGroup(d,t)
+      if(!t){
+        return
+      }
+    }
     if(t._key=="link"){
       window.open(t._item._host+d.value)
-    }else if(t._key=="cmd"){
+    }else if(t._key=="cmd"||t._key=="sys-cmd"){
       k8s._uiSwitch._response=""
 
       _Util._confirmMessage({
@@ -674,91 +754,173 @@ const k8s={
           {
             _tag:"div",
             _attr:{
-              class:"input-group",
-              style:"width:calc(100% - 10px);"
+              style:"display:flex;"
             },
             _items:[
               {
-                _tag:"label",
+                _tag:"div",
                 _attr:{
-                  class:"input-group-addon",
-                  style:"min-width: 0;font-family: monospace;font-size: 12px;font-weight: bold;"
+                  class:"input-group",
+                  style:"flex:1"
                 },
-                _text:"˃"
-              },
-              {
-                _tag:"input",
-                _attr:{
-                  class:"form-control"
-                },
-                _jqext:{
-                  keydown:function(e){
-                    if(e.keyCode==13){
-                      _sendCmd(this.value,t._item._name)
-                    }
+                _items:[
+                  {
+                    _tag:"label",
+                    _attr:{
+                      class:"input-group-addon",
+                      style:"min-width: 0;font-family: monospace;font-size: 12px;font-weight: bold;"
+                    },
+                    _text:"˃"
+                  },
+                  {
+                    _tag:"input",
+                    _attr:{
+                      disabled:"k8s._uiSwitch._playing",
+                      class:"form-control"
+                    },
+                    _jqext:{
+                      keydown:function(e){
+                        if(e.keyCode==13){
+                          $(".bz-play").click()
+                        }
+                      }
+                    },
+                    _dataModel:"k8s._data._tmpCmd"
                   }
-                }
+                ]
               },
               {
                 _tag:"div",
                 _attr:{
-                  class:"input-group-btn",
-                  style:"left: 12px;"
+                  class:"input-group",
+                  style:"width:220px;"
                 },
                 _items:[
                   {
-                    _tag:"button",
+                    _tag:"label",
                     _attr:{
-                      class:"bz-none-border btn btn-icon bz-delete bz-small-btn",
-                      style:"width: 24px;height:24px;margin:2px;",
-                      title:"_k8sMessage._method._clean"
+                      class:"input-group-addon"
                     },
-                    _jqext:{
-                      click:function(){
-                        k8s._uiSwitch._response=""
+                    _text:"_k8sMessage._common._intervals+'(s)'"
+                  },
+                  {
+                    _tag:"input",
+                    _attr:{
+                      type:"number",
+                      class:"form-control"
+                    },
+                    _dataModel:"k8s._data._tmpIntervals"
+                  },
+                  {
+                    _tag:"div",
+                    _attr:{
+                      class:"input-group-btn",
+                      style:"left: 12px;"
+                    },
+                    _items:[
+                      {
+                        _tag:"button",
+                        _attr:{
+                          class:function(){
+                            let c="bz-none-border btn btn-icon bz-small-btn "
+                            if(k8s._uiSwitch._playing){
+                              c+="bz-stop"
+                            }else{
+                              c+="bz-play"
+                            }
+                            return c
+                          },
+                          style:"width: 24px;height:24px;margin:2px;border-radius:20px;",
+                          title:"k8s._uiSwitch._playing?'_k8sMessage._method._stop':'_k8sMessage._method._play'"
+                        },
+                        _jqext:{
+                          click:function(){
+                            if(k8s._uiSwitch._playing){
+                              k8s._uiSwitch._playing=0
+                              clearTimeout(k8s._uiSwitch._exeTmpTimer)
+                            }else{
+                              _sendCmd(k8s._data._tmpCmd,t._item._name,this)
+                            }
+                          }
+                        }
+                      },
+                      {
+                        _tag:"button",
+                        _attr:{
+                          class:"bz-none-border btn btn-icon bz-delete bz-small-btn",
+                          style:"width: 24px;height:24px;margin:2px;",
+                          title:"_k8sMessage._method._clean"
+                        },
+                        _jqext:{
+                          click:function(){
+                            k8s._uiSwitch._response=""
+                          }
+                        }
+                      },
+                      {
+                        _tag:"button",
+                        _attr:{
+                          class:"bz-none-border btn btn-icon bz-close bz-small-btn",
+                          style:"width: 24px;height:24px;margin:2px;",
+                          title:"_k8sMessage._method._close"
+                        },
+                        _jqext:{
+                          click:function(){
+                            _Util._closeModelWindow(this)
+                          }
+                        }
                       }
-                    }
+                    ]
                   }
                 ]
               }
             ]
           }
         ]
-      },[],_k8sMessage._common._message,"80%",1)
-      _k8sProxy._send({
-        _data:{
-          method:"exeCmd",
-          data:{
-            cmd:d.value,
-            name:t._item._name
-          }
-        },
-        _success:_updateResponse
-      })
+      },[],_k8sMessage._common._message,"80%",1,0,1)
+      _sendCmd(d.value,t._item._name)
     }else if(t._key=="api"){
       _sendAPI(t._item,d)
     }
-    function _updateResponse(v){
+    function _updateResponse(v,_fun){
       _Util._autoScrollToBottom($("textarea")[0],function(){
-        k8s._uiSwitch._response+=v
+        if(v=="BZ-COMPLETE"){
+          _fun&&_fun()
+        }else{
+          k8s._uiSwitch._response+=v
+        }
       },20)
     }
-    function _sendCmd(v,n){
+    function _sendCmd(v,n,e){
+      k8s._uiSwitch._playing=1
       _k8sProxy._send({
         _data:{
           method:"exeCmd",
           data:{
             cmd:v,
             name:n,
-            split:1
+            split:e&&1
           }
         },
-        _success:_updateResponse
+        _success:function(r){
+          _updateResponse(r,function(){
+            if(parseInt(k8s._data._tmpIntervals)&&k8s._uiSwitch._playing){
+              k8s._uiSwitch._exeTmpTimer=setTimeout(()=>{
+                if(e&&e.getBoundingClientRect().width){
+                  _sendCmd(v,n,e)
+                }
+              },k8s._data._tmpIntervals*1000)
+            }else{
+              k8s._uiSwitch._playing=0
+            }
+          })
+        }
       })
     }
     function _sendAPI(t,d){
       k8s._uiSwitch._response=""
       let s=_Util._jsonToCurl(t,d)
+      k8s._data._exeCount=1
       if(s){
         _Util._confirmMessage({
           _tag:"div",
@@ -771,28 +933,54 @@ const k8s={
                 style:'width:calc(100% - 10px);height:440px;'
               },
               _dataModel:'k8s._uiSwitch._response'
+            },
+            {
+              _tag:"div",
+              _attr:{
+                class:"input-group"
+              },
+              _items:[
+                {
+                  _tag:"label",
+                  _attr:{
+                    class:"input-group-addon"
+                  },
+                  _text:"_k8sMessage._common._count"
+                },
+                {
+                  _tag:"input",
+                  _attr:{
+                    class:"form-control",
+                    type:"number"
+                  },
+                  _dataModel:"k8s._data._exeCount"
+                }
+              ]
             }
           ]
         },[{
           _title:_k8sMessage._method._execute,
           _click:function(){
-            _doSend()
+            _doSend(k8s._data._exeCount)
           }
-        }],_k8sMessage._common._message,0,"_close")
+        }],_k8sMessage._common._message,0,"_close",0,1)
         
-        _doSend()
-        function _doSend(){
-          _k8sProxy._send({
-            _data:{
-              method:"exeAPI",
-              data:{
-                api:s
+        _doSend(1)
+        function _doSend(n){
+          if(n){
+            _k8sProxy._send({
+              _data:{
+                method:"exeAPI",
+                data:{
+                  api:s
+                }
+              },
+              _success:function(v){
+                _updateResponse(v)
+                _doSend(n-1)
               }
-            },
-            _success:function(v){
-              _updateResponse(v)
-            }
-          })  
+            })  
+          }
         }
       }
     }
@@ -811,8 +999,8 @@ const k8s={
             _success:function(v){
               d._forwarding=0
             },
-            _error:function(){
-              d._forwarding=0
+            _error:function(v){
+              alert(v)
             }
           })
           c._ctrl._close()
@@ -824,12 +1012,64 @@ const k8s={
     let s=k8s._getServiceByPod(d)
     if(s){
       s=s._port.split("/")[0]
-      let ss=_findPort(s)
-      _Util._promptMessage({
-        _msg:_k8sMessage._info._askPort,
-        _value:ss,
-        _btnText:_k8sMessage._method._forward,
-        _fun:function(c,sv){
+      k8s._data._tmpValue=_findPort(s)
+      k8s._data._tmpChk=k8s._data._config.autoForward[d.gk]&&"on"
+      _Util._confirmMessage({
+        _tag:"div",
+        _items:[
+          {
+            _tag:"div",
+            _text:"_k8sMessage._info._askPort"
+          },
+          {
+            _tag:"input",
+            _attr:{
+              class:"form-control",
+              style:"width:calc(100% - 10px);margin:10px 0;padding:5px;"
+            },
+            _dataModel:"k8s._data._tmpValue"
+          },
+          {
+            _if:function(){
+              return d.gk
+            },
+            _tag:"div",
+            _items:[
+              {
+                _tag:"label",
+                _items:[
+                  {
+                    _tag:"input",
+                    _attr:{
+                      type:"checkbox"
+                    },
+                    _dataModel:"k8s._data._tmpChk"
+                  },
+                  {
+                    _tag:"span",
+                    _text:function(){
+                      return _k8sMessage._common._autoStart+' ('+d.gk+')'
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },[{
+        _title:_k8sMessage._method.forward,
+        _click:function(c){
+          let sv=k8s._data._tmpValue
+
+          if(d.gk){
+            if(k8s._data._tmpChk){
+              k8s._data._config.autoForward[d.gk]=sv+":"+s
+            }else{
+              delete k8s._data._config.autoForward[d.gk]
+            }
+            k8s._saveSetting()
+          }
+          k8s._data._config
           _k8sProxy._send({
             _data:{
               method:"forward",
@@ -840,9 +1080,10 @@ const k8s={
             },
             _success:function(v){
               if(v.startsWith("Forwarding from")||v.startsWith("Handling connection")){
-                if(!d._forwarding){
+                if(v.includes(sv)){
                   d._forwarding=sv+":"+s
-                  alert(v)
+                }else{
+                  alert(_k8sMessage._common._failed+": \n"+v)
                 }
               }else{
                 d._forwarding=0
@@ -853,7 +1094,8 @@ const k8s={
     
           c._ctrl._close()
         }
-      })
+      }],0,400)
+
     }
 
     function _findPort(v){

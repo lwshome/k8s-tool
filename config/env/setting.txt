@@ -1,19 +1,14 @@
 {
   "stars": [],
+  "autoForward": {
+    "eric-pm": "9093:9093"
+  },
   "defaultNS": "mycac",
-  "NSFilter": "mycac|testing",
-  "filter": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm|profile",
+  "NSFilter": "mycac|testing|deploy",
+  "filter": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm|profile|config",
   "log": {
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
     "highlights": [
-      {
-        "value": "xmlPayload",
-        "css": "background-color:yellow;"
-      },
-      {
-        "value": "Exception",
-        "css": "background-color:red;color:yellow;"
-      },
       {
         "css": "background-color:#CCF;color:yellow;",
         "value": "SPP"
@@ -24,7 +19,11 @@
       },
       {
         "css": "background-color:yellow;",
-        "value": "user_identities"
+        "value": "Location Event received the Message"
+      },
+      {
+        "css": "background-color:red;color:yellow;",
+        "value": "Location Event processing result from queue"
       }
     ],
     "autoMerge": "on",
@@ -45,11 +44,33 @@
   "cmd": [
     {
       "name": "Start kafka",
-      "value": "kafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-retry-1\n"
+      "value": "kafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-retry-1\n",
+      "podGroup": "nls-data-message-bus-kf"
     },
     {
-      "name": "test",
-      "value": "ls -l\n"
+      "name": "check queue ",
+      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-lochndlr\n\nkafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-achndlr\n\nkafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-napfltr",
+      "podGroup": "nls-data-message-bus-kf"
+    },
+    {
+      "podGroup": "bz-node-system",
+      "value": "kubectl scale sts nls-data-message-bus-kf -n mycac --replicas 0",
+      "name": "Shut down Kafka"
+    },
+    {
+      "name": "Start Kafka",
+      "podGroup": "bz-node-system",
+      "value": "kubectl scale sts nls-data-message-bus-kf -n mycac --replicas 3"
+    },
+    {
+      "name": "Uninstall cac-nls-lstnrs",
+      "podGroup": "bz-node-system",
+      "value": "helm uninstall cac-nls-lstnrs --namespace mycac"
+    },
+    {
+      "name": "Install cac-nls-lstnrs",
+      "value": "helm install cac-nls-lstnrs -f ../deploy/ews_CAC_NLS_LSTNRS.yaml --namespace mycac ../deploy/eric-tmo-cac-umbrella",
+      "podGroup": "bz-node-system"
     }
   ],
   "api": [

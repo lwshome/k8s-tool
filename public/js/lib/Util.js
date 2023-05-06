@@ -732,6 +732,7 @@ tbody td:first-child,tbody td:last-child{
 
     _waitExe()
     _chkSize()
+    _Util._setToTop(_dialog)
     function _waitExe(i){
       var _timer=$(_body).find(".bz-dlg-timmer-btn")
       if(_timer[0]){
@@ -1112,7 +1113,23 @@ var _DialogViewDef={
           _attr:{
             "class":"bz-modal-header",
           },
-          _text:"_data._title",
+          _items:[
+            {
+              _text:"_data._title"
+            },
+            {
+              _tag:"button",
+              _attr:{
+                style:"margin-top:15px;",
+                class:"btn btn-icon bz-close bz-none-border pull-right"
+              },
+              _jqext:{
+                click:function(){
+                  _Util._closeModelWindow(this)
+                }
+              }
+            }
+          ]
         },
         {
           _tag:"div",
@@ -1238,11 +1255,11 @@ var _Dialog={
     var _this=this;
     setTimeout(function(){
       _this._initLayout();
-      if($(_this._window).hasClass("bz-modal-bg")){
-        _this._window.style.zIndex=10000000
-      }else{
-        _Util._setToTop($(_this._window).find(".bz-modal-window")[0])
-      }
+      // if($(_this._window).hasClass("bz-modal-bg")){
+      //   _this._window.style.zIndex=10000000
+      // }else{
+      //   _Util._setToTop($(_this._window).find(".bz-modal-window")[0])
+      // }
     },100);
   },
   _initLayout:function(){

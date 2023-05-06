@@ -153,6 +153,98 @@ const ui={
           }
         },
         {
+          _tag:"button",
+          _attr:{
+            style:"position: relative;top: 5px;margin-right: 5px;",
+            class:"btn btn-icon bz-none-border bz-cmd"
+          },
+          _jqext:{
+            click:function(e){
+              k8s._uiSwitch._showMenu={
+                _key:'sys-cmd',
+                _element:this,
+                _item:{}
+              }
+              e.stopPropagation()
+            }
+          }
+        },
+        {
+          _if:"k8s._uiSwitch._showMenu._key=='sys-cmd'",
+          _tag:"div",
+          _attr:{
+            style:function(){
+              let r=k8s._uiSwitch._showMenu._element.getBoundingClientRect()
+              return `top:${r.top+20}px;right:${window.innerWidth-r.right}px;`
+            },
+            class:"bz-menu-panel"
+          },
+          _items:[
+            {
+              _tag:"div",
+              _items:[
+                {
+                  _tag:"div",
+                  _attr:{
+                    class:"bz-menu-item"
+                  },
+                  _items:[
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-small-btn bz-none-border bz-cmd",
+                        style:"margin-right:10px;"
+                      }
+                    },
+                    {
+                      _tag:"span",
+                      _text:"_data._item.name"
+                    }
+                  ],
+                  _dataRepeat:function(d){
+                    return k8s._data._config.cmd.filter(x=>x.podGroup=='bz-node-system')
+                  },
+                  _jqext:{
+                    click:function(){
+                      k8s._exeItem(k8s._uiSwitch._showMenu,this._data._item)
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              _if:"k8s._data._config[k8s._uiSwitch._showMenu._key].length",
+              _tag:"hr"
+            },
+            //setting 
+            {
+              _tag:"div",
+              _attr:{
+                class:"bz-menu-item"
+              },
+              _items:[
+                {
+                  _tag:"button",
+                  _attr:{
+                    class:"btn btn-icon bz-small-btn bz-setting bz-none-border",
+                    style:"margin-right:10px;"
+                  }
+                },
+                {
+                  _tag:"span",
+                  _text:"_k8sMessage._setting._title"
+                }
+              ],
+              _jqext:{
+                click:function(){
+                  k8s._data._curGroup="bz-node-system"
+                  k8s._openFunSetting(k8s._uiSwitch._showMenu._key)
+                }
+              }
+            }
+          ]
+        },
+        {
           _tag:"div",
           _attr:{
             class:"input-group bz-item-filter",

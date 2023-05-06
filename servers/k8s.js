@@ -200,32 +200,40 @@ const k8s={
     console.log(d)
     let cs=d.cmd.split("\n")
     cs=cs.filter(x=>x).map(x=>{
-      return {
-        ns:d.ns,
-        name:d.name,
-        cmd:x
+      if(d.name){
+        return _buildRemoteK8sCmd({
+          ns:d.ns,
+          name:d.name,
+          cmd:x
+        })
+      }else{
+        return x
       }
     })
-    _doIt(cs)
-    function _doIt(cs,_split){
+    _exe(cs)
+
+    function _exe(cs,_split){
       let c=cs.shift()
       if(c){
-        let s=_buildRemoteK8sCmd(c).split(" "),_start;
+        console.log(c)
+        let s=c.split(" "),_start;
         _monitor(s.shift(),s,function(v){
           if(v.startsWith("COMPLETE:")){
             _start=0
-            _doIt(cs,1)
+            _exe(cs,1)
           }else{
             if(!_start){
               if(_split||d.split){
-                _split="-".repeat("30")+"\n\n"
+                _split="--- "+new Date()+" "+"-".repeat("30")+"\n\n"
               }
-              v=(_split||"")+c.cmd+":\n"+v
+              v=(_split||"")+c+":\n"+v
               _start=1
             }
             _fun(v)
           }
         })
+      }else{
+        _fun("BZ-COMPLETE")
       }
     }
   }
@@ -253,19 +261,23 @@ function _exe(s,_fun){
 function _monitor(_cmd,_args,_fun){
   console.log("_cmd: "+_cmd)
   console.log("_args: "+_args)
-  let ls = spawn(_cmd, _args);
+  try{
+    let ls = spawn(_cmd, _args);
 
-  ls.stdout.on('data', function (data) {
-    _fun(data.toString());
-  });
-  
-  ls.stderr.on('data', function (data) {
-    _fun(data.toString());
-  });
-  
-  ls.on('exit', function (code) {
-    _fun("COMPLETE: " + code);
-  });
+    ls.stdout.on('data', function (data) {
+      _fun(data.toString());
+    });
+    
+    ls.stderr.on('data', function (data) {
+      _fun(data.toString());
+    });
+    
+    ls.on('exit', function (code) {
+      _fun("COMPLETE: " + code);
+    });
+  }catch(ex){
+    _fun(ex.message)
+  }
 }
 
 exports.k8s=k8s
