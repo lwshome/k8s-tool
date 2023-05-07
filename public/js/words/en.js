@@ -88,6 +88,7 @@ const _k8sMessage={
     formatJSON:"Auto-format JSON Data",
     formatXML:"Auto-format XML Data",
     groupMerge:"Group log by filter",
+    highlightOnly:"Show highlight parts only",
     autoMerge:"Auto merge log (merge duplicate content)",
     _cleanDynamicRegex:"Regular expression to sanitize dynamic characters"
   }

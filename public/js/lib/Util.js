@@ -311,18 +311,25 @@ var _Util={
     try{
       let h="",b="";
       if(v.headers){
-        h=JSON.parse(v.headers)
+        h=JSON.parse(_Util._parseDynamicText(v.headers))
         h=Object.keys(h||{}).map(k=>{
           return `--header '${k}: ${h[k]}'`
         }).join(" ")
       }
       if(v.body){
-        b=`--data-raw '${v.body}'`
+        b=`--data-raw '${_Util._parseDynamicText(v.body)}'`
       }
       let s=`curl --location --request ${v.method} 'http://localhost:${d._forwarding.split(":")[0]}${v.url}' ${h} ${b}`
       return s
     }catch(ex){
       alert(ex.stack)
+    }
+  },
+  _parseDynamicText:function(v){
+    try{
+      return eval("`"+v+"`")
+    }catch(e){
+      return v
     }
   },
   _focusElement:function(o){
@@ -892,12 +899,12 @@ tbody td:first-child,tbody td:last-child{
         if(y>0 && y+_hSize>wh){
           y=wh-_hSize;
         }
-        if(x<0){
-          x=0;
-        }
-        if(y<0){
-          y=0;
-        }
+        // if(x<0){
+        //   x=0;
+        // }
+        // if(y<0){
+        //   y=0;
+        // }
         return _setNewPos(_curDom,x,y)
       }else if(_uiSwitch._inHandleSize){
         this.onmouseup()

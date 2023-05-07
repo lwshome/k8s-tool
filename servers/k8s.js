@@ -224,7 +224,11 @@ const k8s={
           }else{
             if(!_start){
               if(_split||d.split){
-                _split="--- "+new Date()+" "+"-".repeat("30")+"\n\n"
+                let s=d.split||""
+                if(s){
+                  s+=". "
+                }
+                _split="\n--- "+s+new Date()+" "+"-".repeat("30")+"\n\n"
               }
               v=(_split||"")+c+":\n"+v
               _start=1
@@ -259,6 +263,7 @@ function _exe(s,_fun){
 }
 
 function _monitor(_cmd,_args,_fun){
+  console.log(Date.now())
   console.log("_cmd: "+_cmd)
   console.log("_args: "+_args)
   try{

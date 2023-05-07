@@ -36,9 +36,6 @@ const _logHandler={
                 },
                 {
                   _tag:"span",
-                  _attr:{
-                    style:"position: relative;top: -2px;left: 5px;margin-right:5px;"
-                  },
                   _text:"_k8sMessage._log[_data._item]"
                 },
                 {
@@ -95,7 +92,7 @@ const _logHandler={
                   _jqext:{
                     click:function(ex){
                       _logHandler._data._setting.highlights==_logHandler._data._setting.highlights||[]
-                      _logHandler._data._setting.highlights.push({css:"background-color:yellow;"})
+                      _logHandler._data._setting.highlights.push({enable:"on",css:"background-color:yellow;"})
                       _Util._resizeModelWindow()
                       setTimeout(()=>{
                         let os=$(".bz-log-setting-dialog input")
@@ -119,6 +116,13 @@ const _logHandler={
                     style:"display:flex;margin-top:5px;"
                   },
                   _items:[
+                    {
+                      _tag:"input",
+                      _attr:{
+                        type:"checkbox"
+                      },
+                      _dataModel:"_logHandler._data._setting.highlights[_data._idx].enable"
+                    },
                     {
                       _tag:"input",
                       _attr:{
@@ -246,8 +250,11 @@ const _logHandler={
                 if(x.r){
                   r=`<span class="bz-log-repeat">${x.r}</span>`
                 }
-  
-                let o=$(`<pre class="${p._even}">${_highlight(_formatJSON(_formatXML(x.v)))}${r}</pre>`)[0]
+                let h=_highlight(_formatJSON(_formatXML(x.v)))
+                if(!h){
+                  return
+                }
+                let o=$(`<pre class="${p._even}">${h}${r}</pre>`)[0]
                 o.d=x
                 delete x.m
                 e.append(o)
@@ -303,17 +310,26 @@ const _logHandler={
 
     function _highlight(v){
       v=v.replace(/</g,"&lt;").replace(/>/g,"&gt;")
-      let w=""
+      let w="",_match
       _logHandler._data._setting.highlights.forEach(x=>{
+        if(!x.enable){
+          return
+        }
         let ms=v.match(new RegExp(x.value,"gi"))||[]
         ms.forEach(y=>{
           if(y){
+            _match=1
             let i=v.indexOf(y)
             w+=v.substring(0,i)+`<span style='${x.css}'>${y}</span>`
             v=v.substring(i+y.length)
           }
         })
       })
+      
+      if(!_match&&_logHandler._data._setting.highlightOnly){
+        return
+      }
+      
       return w+v
     }
   }

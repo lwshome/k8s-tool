@@ -10,26 +10,28 @@
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
     "highlights": [
       {
-        "css": "background-color:#CCF;color:yellow;",
+        "css": "background-color:#009;color:#FFF;",
         "value": "SPP"
       },
       {
         "css": "background-color:yellow;",
-        "value": "transactionId"
+        "value": "\"message\": \"[^\"]+\"",
+        "enable": "on"
       },
       {
-        "css": "background-color:yellow;",
+        "css": "background-color:#FCC;",
         "value": "Location Event received the Message"
       },
       {
-        "css": "background-color:red;color:yellow;",
+        "css": "background-color:#CFC;",
         "value": "Location Event processing result from queue"
       }
     ],
     "autoMerge": "on",
     "groupMerge": "on",
     "formatJSON": "on",
-    "formatXML": "on"
+    "formatXML": "on",
+    "highlightOnly": "on"
   },
   "link": [
     {
@@ -87,7 +89,7 @@
       "method": "POST",
       "url": "/v4.0/notifications/locationevent",
       "headers": "{\n  \"Content-Type\":\t\"application/json; charset=UTF-8\",\n  \"User-Agent\":\t\"Apache-HttpClient/4.1.1\",\n  \"x-transaction-id\":\t\"a9d4f7d5-b459-42df-98c3-52c0f123309f\"\n}",
-      "body": "{\n  \"user_identities\":{\n    \"msisdn\":\"12223333002\"\n  },\n  \"event\":\"ADDR_UPDATE\",\n  \"service\":\"TMO-WebSheet|CustomerCare\",\n  \"message\":\"Your address information is updated\",\n  \"address\":\"1821 Lincon,Seattle,WA\"\n}"
+      "body": "{\n  \"user_identities\":{\n    \"msisdn\":\"12223333002\"\n  },\n  \"event\":\"ADDR_UPDATE\",\n  \"service\":\"TMO-WebSheet|CustomerCare\",\n  \"message\":\"${window.idx=window.idx||0,++window.idx} Your address information is updated\",\n  \"address\":\"1821 Lincon,Seattle,WA\"\n}"
     }
   ],
   "ns": "mycac"

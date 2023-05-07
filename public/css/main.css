@@ -683,3 +683,23 @@ label>input[type=checkbox]{
   position: relative;
   top: 2px;
 }
+.bz-precentage-bar{
+  background: green;
+  position: relative;
+  height: 27px;
+}
+.bz-precentage-bar:after{
+  content:attr(precentage);
+  color: #FFF;
+  overflow:hidden;
+  white-space: nowrap;
+  margin-top: -21px;
+  margin-right: 5px;
+  float: right;
+}
+.input-group-btn .btn-icon{
+  width: 24px !important;
+  height: 24px !important;
+  margin: 2px !important;
+  border-radius: 20px !important;
+}

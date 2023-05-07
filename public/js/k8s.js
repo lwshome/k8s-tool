@@ -1,6 +1,6 @@
 //Machine learn
 const k8s={
-  _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods"}),
+  _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods",_playing:0}),
   _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[],autoForward:{}}}),
   _getKey:function(){
     k8s._key=k8s._key||Date.now()
@@ -747,7 +747,7 @@ const k8s={
             _attr:{
               readonly:1,
               placeholder:'_k8sMessage._common._waiting',
-              style:'width:calc(100% - 10px);height:650px;'
+              style:'width:calc(100% - 10px);height:350px;'
             },
             _dataModel:'k8s._uiSwitch._response'
           },
@@ -793,7 +793,7 @@ const k8s={
                 _tag:"div",
                 _attr:{
                   class:"input-group",
-                  style:"width:220px;"
+                  style:"width:200px;"
                 },
                 _items:[
                   {
@@ -814,15 +814,15 @@ const k8s={
                   {
                     _tag:"div",
                     _attr:{
-                      class:"input-group-btn",
-                      style:"left: 12px;"
+                      class:"input-group-btn"
                     },
                     _items:[
+                      //play/stop button
                       {
                         _tag:"button",
                         _attr:{
                           class:function(){
-                            let c="bz-none-border btn btn-icon bz-small-btn "
+                            let c="bz-none-border btn btn-icon "
                             if(k8s._uiSwitch._playing){
                               c+="bz-stop"
                             }else{
@@ -830,7 +830,6 @@ const k8s={
                             }
                             return c
                           },
-                          style:"width: 24px;height:24px;margin:2px;border-radius:20px;",
                           title:"k8s._uiSwitch._playing?'_k8sMessage._method._stop':'_k8sMessage._method._play'"
                         },
                         _jqext:{
@@ -844,29 +843,16 @@ const k8s={
                           }
                         }
                       },
+                      //clean response text
                       {
                         _tag:"button",
                         _attr:{
-                          class:"bz-none-border btn btn-icon bz-delete bz-small-btn",
-                          style:"width: 24px;height:24px;margin:2px;",
+                          class:"bz-none-border btn btn-icon bz-delete",
                           title:"_k8sMessage._method._clean"
                         },
                         _jqext:{
                           click:function(){
                             k8s._uiSwitch._response=""
-                          }
-                        }
-                      },
-                      {
-                        _tag:"button",
-                        _attr:{
-                          class:"bz-none-border btn btn-icon bz-close bz-small-btn",
-                          style:"width: 24px;height:24px;margin:2px;",
-                          title:"_k8sMessage._method._close"
-                        },
-                        _jqext:{
-                          click:function(){
-                            _Util._closeModelWindow(this)
                           }
                         }
                       }
@@ -892,14 +878,14 @@ const k8s={
       },20)
     }
     function _sendCmd(v,n,e){
-      k8s._uiSwitch._playing=1
+      k8s._uiSwitch._playing+=1
       _k8sProxy._send({
         _data:{
           method:"exeCmd",
           data:{
             cmd:v,
             name:n,
-            split:e&&1
+            split:e&&k8s._uiSwitch._playing
           }
         },
         _success:function(r){
@@ -930,7 +916,7 @@ const k8s={
               _attr:{
                 readonly:1,
                 placeholder:'_k8sMessage._common._waiting',
-                style:'width:calc(100% - 10px);height:440px;'
+                style:'width:calc(100% - 10px);height:240px;'
               },
               _dataModel:'k8s._uiSwitch._response'
             },
@@ -951,28 +937,68 @@ const k8s={
                   _tag:"input",
                   _attr:{
                     class:"form-control",
+                    style:function(){
+                      let c="background-color:transparent;color:"
+                      if(k8s._data._remain){
+                        c+="transparent;"
+                      }else{
+                        c+="#000;"
+                      }
+                      return c
+                    },
                     type:"number"
                   },
                   _dataModel:"k8s._data._exeCount"
+                },
+                {
+                  _if:"k8s._data._remain",
+                  _tag:"div",
+                  _attr:{
+                    class:"bz-precentage-bar",
+                    style:function(){
+                      let c=(1-k8s._data._remain/k8s._data._exeCount)*100+"%"
+                      
+                      return "width:"+c
+                    },
+                    precentage:function(){
+                      return parseInt((1-k8s._data._remain/k8s._data._exeCount)*100)+"%"
+                    }
+                  }
+                },
+                {
+                  _tag:"div",
+                  _attr:{
+                    class:"input-group-btn"
+                  },
+                  _items:[
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-play bz-none-border",
+                        style:"margin-left:5px;"
+                      },
+                      _jqext:{
+                        click:function(){
+                          _doSend(k8s._data._exeCount)
+                        }
+                      }
+                    }
+                  ]
                 }
               ]
             }
           ]
-        },[{
-          _title:_k8sMessage._method._execute,
-          _click:function(){
-            _doSend(k8s._data._exeCount)
-          }
-        }],_k8sMessage._common._message,0,"_close",0,1)
+        },[],_k8sMessage._common._message,400,1,0,1)
         
         _doSend(1)
         function _doSend(n){
+          k8s._data._remain=n
           if(n){
             _k8sProxy._send({
               _data:{
                 method:"exeAPI",
                 data:{
-                  api:s
+                  api:_Util._jsonToCurl(t,d)
                 }
               },
               _success:function(v){
