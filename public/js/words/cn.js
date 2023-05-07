@@ -9,7 +9,13 @@ const _k8sMessage={
     _waiting:"等待中 ...",
     _question:"问题",
     _empty:"空值",
-    _autoStart:"自动启动"
+    _autoStart:"自动启动",
+    _success:"成功",
+    _failed:"失败",
+    _allPods:"全部 Pods",
+    _system:"系统",
+    _scope:"区域",
+    _intervals:"间隔时间"
   },
   _info:{
     _title:"Boozang K8s-工具",
@@ -20,7 +26,8 @@ const _k8sMessage={
     _askFileName:"请问文件名是什么？",
     _importFileError:"导入文件时出错:{0}",
     _noMoreAsk:"不再询问",
-    _askSearchFile:"需要搜索的文件"
+    _askSearchFile:"需要搜索的文件",
+    _missExePod:"未发现可以执行此任务的 pod。请在适合的 pod 上建立端口转发，然后重试。"
   },
   _method:{
     _execute:"执行",
@@ -48,6 +55,8 @@ const _k8sMessage={
     _cancel:"取消",
     _close:"关闭",
     _clean:"干净",
+    _play:"执行任务",
+    _stop:"停止任务",
     _addItem:"添加项目",
     _try:"试测",
     "add-folder":"添加文件夹",
@@ -78,6 +87,7 @@ const _k8sMessage={
     formatJSON:"自动格式化 JSON 数据",
     formatXML:"自动格式化 XML 数据",
     groupMerge:"按过滤器分组日志",
+    highlightOnly:"只显示高亮语句",
     autoMerge:"自动合并日志（合并重复内容）",
     _cleanDynamicRegex:"清理动态字符的正则表达式"
   }

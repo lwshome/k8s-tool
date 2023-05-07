@@ -39,7 +39,7 @@ const _k8sProxy={
   _send:function(_msg){
     _k8sProxy._msgQueue.push(_msg);
     if(_msg._data.data){
-      _msg._data.data.ns=k8s._data._config.defaultNS
+      _msg._data.data.ns=k8s._data._config.ns
     }
     _k8sProxy._lanuch();
   },

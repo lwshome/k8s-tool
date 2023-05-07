@@ -15,7 +15,6 @@ const _k8sMessage={
     _allPods:"All Pods",
     _system:"System",
     _scope:"Scope",
-    _count:"Execute count",
     _intervals:"Intervals"
   },
   _info:{
@@ -56,8 +55,8 @@ const _k8sMessage={
     _cancel:"Cancel",
     _close:"Close",
     _clean:"Clean",
-    _play:"Play",
-    _stop:"Stop",
+    _play:"Execute task",
+    _stop:"Stop task",
     _addItem:"Add Item",
     _try:"Try",
     "add-folder":"Add Folder",

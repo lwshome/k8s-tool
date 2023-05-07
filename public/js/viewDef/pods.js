@@ -298,7 +298,7 @@ const _listViewDef={
                         {
                           _tag:"span",
                           _html:function(d){
-                            return _attachHighlight(d._item._name,k8s._data._config.filter,d._item)
+                            return _attachHighlight(d._item._name,k8s._data._config.filter[k8s._data._config.ns],d._item)
                           }
                         },
                         //age
@@ -578,7 +578,7 @@ const _listViewDef={
             _buildTreeNode()
           ],
           _dataRepeat:function(){
-            return (k8s._data._podList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter))
+            return (k8s._data._podList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter[k8s._data._config.ns]))
           }
         }
       ]    

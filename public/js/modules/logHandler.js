@@ -44,7 +44,7 @@ const _logHandler={
                   _attr:{
                     style:"position: relative;top: -2px;left: 5px;color:#666;"
                   },
-                  _text:"'('+(k8s._data._config.filter||_k8sMessage._common._empty)+')'"
+                  _text:"'('+(k8s._data._config.filter[k8s._data._config.ns]||_k8sMessage._common._empty)+')'"
                 }
               ]
             }

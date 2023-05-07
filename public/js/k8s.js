@@ -1,7 +1,7 @@
 //Machine learn
 const k8s={
   _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods",_playing:0}),
-  _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[],autoForward:{}}}),
+  _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[],autoForward:{},filter:{}}}),
   _getKey:function(){
     k8s._key=k8s._key||Date.now()
     return k8s._key++
@@ -13,7 +13,7 @@ const k8s={
     d._serviceList=0
 
     k8s._getNameSpaceList(function(){
-      if(!k8s._data._config.defaultNS){
+      if(!k8s._data._config.ns){
         k8s._getConfig(function(){
           _loadData()
         })
@@ -23,6 +23,7 @@ const k8s={
     })
 
     function _loadData(){
+      k8s._data._config.filter[k8s._data._config.ns]=k8s._data._config.filter[k8s._data._config.ns]||""
       k8s._getServices(function(){
         k8s._getPods(function(){
           k8s._loadStar()
@@ -31,7 +32,7 @@ const k8s={
     }
   },
   _getShowList:function(s,f){
-    f=f||k8s._data._config.filter
+    f=f||k8s._data._config.filter[k8s._data._config.ns]
     if(f){
       s=s.filter(x=>k8s._isShowItem(x,f))
     }
@@ -176,7 +177,7 @@ const k8s={
                                 value:"_data._item"
                               },
                               _text:"_data._item",
-                              _dataRepeat:"k8s._data._config.filter.split('|')"
+                              _dataRepeat:"k8s._data._config.filter[k8s._data._config.ns].split('|')"
                             },
                             {
                               _tag:"option",
@@ -578,7 +579,7 @@ const k8s={
 
         _logHandler._data._setting=v.log
         setTimeout(()=>{
-          _CtrlDriver._refreshData(k8s._data._config,"defaultNS")
+          _CtrlDriver._refreshData(k8s._data._config,"ns")
         },500)
         _fun&&_fun()
       }
@@ -931,7 +932,7 @@ const k8s={
                   _attr:{
                     class:"input-group-addon"
                   },
-                  _text:"_k8sMessage._common._count"
+                  _text:"_k8sMessage._common._repeat"
                 },
                 {
                   _tag:"input",

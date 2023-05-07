@@ -83,7 +83,7 @@ const ui={
                       }
                     }
                   ],
-                  _dataModel:"k8s._data._config.defaultNS"
+                  _dataModel:"k8s._data._config.ns"
                 }
               ]
             },
@@ -276,7 +276,7 @@ const ui={
                 class:"form-control",
                 placeholder:"_k8sMessage._method._itemFilter"
               },
-              _dataModel:"k8s._data._config.filter"
+              _dataModel:"k8s._data._config.filter[k8s._data._config.ns]"
             }
           ]
         }

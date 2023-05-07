@@ -3,9 +3,11 @@
   "autoForward": {
     "eric-pm": "9093:9093"
   },
-  "defaultNS": "mycac",
+  "filter": {
+    "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm|profile|config",
+    "ms-testing": ""
+  },
   "NSFilter": "mycac|testing|deploy",
-  "filter": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm|profile|config",
   "log": {
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
     "highlights": [

@@ -31,7 +31,7 @@ const _servicesViewDef={
                     {
                       _tag:"span",
                       _html:function(d){
-                        return _attachHighlight(d._item._name,k8s._data._config.filter)
+                        return _attachHighlight(d._item._name,k8s._data._config.filter[k8s._data._config.ns])
                       }
                     },
                     //age
@@ -54,7 +54,7 @@ const _servicesViewDef={
         }
       ],
       _dataRepeat:function(){
-        return (k8s._data._serviceList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter))
+        return (k8s._data._serviceList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter[k8s._data._config.ns]))
       }
     }
   ]

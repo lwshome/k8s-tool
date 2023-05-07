@@ -52,7 +52,7 @@ const _deploymentsViewDef={
                     {
                       _tag:"span",
                       _html:function(d){
-                        return _attachHighlight(d._item._name,k8s._data._config.filter)
+                        return _attachHighlight(d._item._name,k8s._data._config.filter[k8s._data._config.ns])
                       }
                     },
                     //age
@@ -123,7 +123,7 @@ const _deploymentsViewDef={
         _buildTreeNode()
       ],
       _dataRepeat:function(){
-        return (k8s._data._podList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter))
+        return (k8s._data._podList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter[k8s._data._config.ns]))
       }
     }
   ]
