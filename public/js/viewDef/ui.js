@@ -156,7 +156,8 @@ const ui={
           _tag:"button",
           _attr:{
             style:"position: relative;top: 5px;margin-right: 5px;",
-            class:"btn btn-icon bz-none-border bz-cmd"
+            class:"btn btn-icon bz-none-border bz-cmd",
+            title:"_k8sMessage._method.cmd+' ('+_k8sMessage._common._system+')'"
           },
           _jqext:{
             click:function(e){
@@ -213,7 +214,6 @@ const ui={
               ]
             },
             {
-              _if:"k8s._data._config[k8s._uiSwitch._showMenu._key].length",
               _tag:"hr"
             },
             //setting 
