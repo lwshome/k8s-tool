@@ -703,3 +703,7 @@ label>input[type=checkbox]{
   margin: 2px !important;
   border-radius: 20px !important;
 }
+
+.bz-highlight{
+  background-color: yellow;
+}

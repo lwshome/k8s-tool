@@ -26,10 +26,29 @@ const k8s={
       k8s._data._config.filter[k8s._data._config.ns]=k8s._data._config.filter[k8s._data._config.ns]||""
       k8s._getServices(function(){
         k8s._getPods(function(){
-          k8s._loadStar()
+          setTimeout(()=>{
+            k8s._loadForwards(function(){
+              k8s._loadStar()
+            })
+          },100)
         })
       })
     }
+  },
+  _loadForwards:function(){
+    let a=k8s._data._config.autoForward
+    Object.keys(a).forEach(k=>{
+      let v=a[k]
+      if(v){
+        let o=k8s._data._podList.find(x=>x.gk==k&&x._forwarding)
+        if(!o){
+          o=k8s._data._podList.find(x=>x.gk==k)
+          if(o){
+            k8s._sendForward(o,v,v.split(":")[0])
+          }
+        }
+      }
+    })
   },
   _getShowList:function(s,f){
     f=f||k8s._data._config.filter[k8s._data._config.ns]
@@ -1096,28 +1115,7 @@ const k8s={
             }
             k8s._saveSetting()
           }
-          k8s._data._config
-          _k8sProxy._send({
-            _data:{
-              method:"forward",
-              data:{
-                serverName:d._name,
-                port:sv+":"+s
-              }
-            },
-            _success:function(v){
-              if(v.startsWith("Forwarding from")||v.startsWith("Handling connection")){
-                if(v.includes(sv)){
-                  d._forwarding=sv+":"+s
-                }else{
-                  alert(_k8sMessage._common._failed+": \n"+v)
-                }
-              }else{
-                d._forwarding=0
-                alert(v)
-              }
-            }
-          })
+          k8s._sendForward(d,sv+":"+s,sv)
     
           c._ctrl._close()
         }
@@ -1137,6 +1135,30 @@ const k8s={
         return _findPort(parseInt(v)+1)
       }
     }
+  },
+  _sendForward:function(d,f,sv){
+    _k8sProxy._send({
+      _data:{
+        method:"forward",
+        data:{
+          serverName:d._name,
+          port:f
+        }
+      },
+      _success:function(v){
+        if(v.startsWith("Forwarding from")||v.startsWith("Handling connection")){
+          if(v.includes(sv)){
+            d._forwarding=f
+          }else{
+            alert(_k8sMessage._common._failed+": \n"+v)
+          }
+        }else{
+          d._forwarding=0
+          alert(v)
+        }
+      }
+    })
+
   },
   _isShowItem:function(x,v){
     return !v||x._name.match(new RegExp(v,"i"))

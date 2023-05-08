@@ -128,6 +128,7 @@ const k8s={
     _monitor(s.shift(),s,_fun)
     // _exe(s,_fun)
   },
+  //Load stars(files)
   searchStars:function(_data,_fun){
     let s=_data.stars.map(x=>`ls -ltr ${x}`).join(" && ")
     s=_buildRemoteK8sCmd({ns:_data.ns,name:_data.serverName,cmd:s}).split(" ")

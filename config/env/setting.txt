@@ -1,15 +1,17 @@
 {
   "stars": [],
   "autoForward": {
-    "eric-pm": "9093:9093"
+    "eric-pm": "9093:9093",
+    "naplstnr": "8080:8080",
+    "e911lstnr": "8081:8080"
   },
   "filter": {
     "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm|profile|config",
-    "ms-testing": ""
+    "ms-testing": "kafka"
   },
   "NSFilter": "mycac|testing|deploy",
   "log": {
-    "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}",
+    "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}| --- \\[[^\\]]+\\]",
     "highlights": [
       {
         "css": "background-color:#009;color:#FFF;",
@@ -32,8 +34,7 @@
     "autoMerge": "on",
     "groupMerge": "on",
     "formatJSON": "on",
-    "formatXML": "on",
-    "highlightOnly": "on"
+    "formatXML": "on"
   },
   "link": [
     {

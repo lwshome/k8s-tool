@@ -20,7 +20,7 @@ const _logViewDef={
         {
           _tag:"div",
           _attr:{
-            class:"bz-panel-header"
+            class:"'bz-panel-header '+(_logHandler._data._setting.highlightOnly?'bz-highlight':'')"
           },
           _items:[
             {
@@ -61,6 +61,7 @@ const _logViewDef={
                 }
               ],
             },
+            //download
             {
               _tag:"button",
               _attr:{
@@ -74,6 +75,7 @@ const _logViewDef={
                 }
               }
             },
+            //delete
             {
               _tag:"button",
               _attr:{
@@ -87,6 +89,7 @@ const _logViewDef={
                 }
               }
             },
+            //setting
             {
               _tag:"button",
               _attr:{
@@ -100,6 +103,7 @@ const _logViewDef={
                 }
               }
             },
+            //close
             {
               _tag:"button",
               _attr:{

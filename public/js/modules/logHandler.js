@@ -201,6 +201,7 @@ const _logHandler={
         return 1
       }
     })
+    _CtrlDriver._refreshData(_logHandler._data,"_logList")
   },
   _addLog:function(v,p){
     let _regex;
