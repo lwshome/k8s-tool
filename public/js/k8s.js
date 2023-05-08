@@ -1423,6 +1423,8 @@ const k8s={
 $(document).keydown(x=>{
   if(x.keyCode==27){
     $(".bz-modal-bg").click()
+    $(".bz-close").click()
+    k8s._uiSwitch._showMenu=0
     // if(!_Util._isStdInputElement($(":focus")[0]||document.body)){
       
     // }
