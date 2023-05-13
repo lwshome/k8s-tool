@@ -229,7 +229,7 @@ const k8s={
                 if(s){
                   s+=". "
                 }
-                _split="\n--- "+s+new Date()+" "+"-".repeat("30")+"\n\n"
+                _split="\n=== "+s+new Date()+" "+"=".repeat("30")+"\n\n"
               }
               v=(_split||"")+c+":\n"+v
               _start=1

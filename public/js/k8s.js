@@ -748,6 +748,7 @@ const k8s={
     return v
   },
   _exeItem:function(t,d){
+    let id=Date.now()
     if(!t._item){
       t=k8s._getItemByGroup(d,t)
       if(!t){
@@ -758,18 +759,33 @@ const k8s={
       window.open(t._item._host+d.value)
     }else if(t._key=="cmd"||t._key=="sys-cmd"){
       k8s._uiSwitch._response=""
-
+      k8s._data._tmpCmd=d.value
+      
       _Util._confirmMessage({
         _tag:"div",
+        _attr:{
+          id:id,
+          style:"height:100%;min-height:400px;"
+        },
         _items:[
           {
-            _tag:"textarea",
+            _tag:"pre",
+            // _tag:"textarea",
             _attr:{
               readonly:1,
               placeholder:'_k8sMessage._common._waiting',
-              style:'width:calc(100% - 10px);height:350px;'
+              style:'width:calc(100% - 10px);height:calc(100% - 60px);',
+              class:"textarea"
             },
-            _dataModel:'k8s._uiSwitch._response'
+            _dataModel:'k8s._uiSwitch._response',
+            _jqext:{
+              mousedown:function(e){
+                e.stopPropagation()
+              },
+              mousemove:function(e){
+                e.stopPropagation()
+              }
+            }
           },
           {
             _tag:"div",
@@ -793,14 +809,16 @@ const k8s={
                     _text:"˃"
                   },
                   {
-                    _tag:"input",
+                    _tag:"textarea",
                     _attr:{
                       disabled:"k8s._uiSwitch._playing",
-                      class:"form-control"
+                      class:"form-control",
+                      style:"height:26px;padding:5px;width:calc(100% - 12px);",
+                      placeholder:"Support mutiple line cmd, press ctrl or shite + enter to add new line"
                     },
                     _jqext:{
                       keydown:function(e){
-                        if(e.keyCode==13){
+                        if(e.keyCode==13&&!e.shiftKey&&!e.ctrlKey){
                           $(".bz-play").click()
                         }
                       }
@@ -827,7 +845,9 @@ const k8s={
                     _tag:"input",
                     _attr:{
                       type:"number",
-                      class:"form-control"
+                      class:"form-control",
+                      min:0,
+                      style:"height:36px;"
                     },
                     _dataModel:"k8s._data._tmpIntervals"
                   },
@@ -873,6 +893,12 @@ const k8s={
                         _jqext:{
                           click:function(){
                             k8s._uiSwitch._response=""
+                            let o=$("#"+id+" .textarea")[0]
+                            if(o){
+                              o._history=0
+                              o._curText=0
+                              o.innerHTML=""
+                            }
                           }
                         }
                       }
@@ -885,17 +911,59 @@ const k8s={
         ]
       },[],_k8sMessage._common._message,"80%",1,0,1)
       _sendCmd(d.value,t._item._name)
+      _attachResize()
     }else if(t._key=="api"){
       _sendAPI(t._item,d)
     }
     function _updateResponse(v,_fun){
-      _Util._autoScrollToBottom($("textarea")[0],function(){
+      let o=$("#"+id+" pre.textarea")[0]||$("#"+id+" textarea")[0];
+
+      _Util._autoScrollToBottom(o,function(){
         if(v=="BZ-COMPLETE"){
+          o._history=(o._curText||[]).filter(x=>x)
+          o._curText=0
           _fun&&_fun()
         }else{
-          k8s._uiSwitch._response+=v
+          if(o.tagName=="TEXTAREA"){
+            v=k8s._uiSwitch._response+v
+            k8s._uiSwitch._response=v.substring(v.length-1048576)
+          }else{
+            if(o._curText){
+              v=v.trim()
+            }
+            o._curText=o._curText||[]
+            o._history=o._history||[]
+            v=v.split("\n")
+            o._curText.push(...v)
+            v.forEach(x=>{
+              if(!x){
+                $(o).append("<div style='height:10px;'></div>")
+                return 
+              }
+              let y=o._history.shift();
+              if(y){
+                y=y.match(/(^ *)?([^ ]+)( +|$)/g)
+                x=x.match(/(^ *)?([^ ]+)( +|$)/g)
+                x=x.map((z,i)=>{
+                  let zz=y[i]||""
+                  if(z.trim()!=zz.trim()){
+                    zz=z.split(/[^ ]+/)
+                    return (zz[0]||"")+"<span class='bz-highlight'>"+z.trim()+"</span>"+(zz[1]||"")
+                  }else{
+                    return z
+                  }
+                }).join("")
+              }
+              $(o).append("<div class='bz-cmd-item'>"+x+"</div>")
+            })
+            while(o.children.length>5000){
+              o.children[0].remove()
+            }
+          }
         }
       },20)
+
+      
     }
     function _sendCmd(v,n,e){
       k8s._uiSwitch._playing+=1
@@ -903,7 +971,7 @@ const k8s={
         _data:{
           method:"exeCmd",
           data:{
-            cmd:v,
+            cmd:v.trim(),
             name:n,
             split:e&&k8s._uiSwitch._playing
           }
@@ -930,13 +998,17 @@ const k8s={
       if(s){
         _Util._confirmMessage({
           _tag:"div",
+          _attr:{
+            id:id,
+            style:"min-height:240px;height:100%;"
+          },
           _items:[
             {
               _tag:"textarea",
               _attr:{
                 readonly:1,
                 placeholder:'_k8sMessage._common._waiting',
-                style:'width:calc(100% - 10px);height:240px;'
+                style:'width:calc(100% - 10px);height:calc(100% - 45px);'
               },
               _dataModel:'k8s._uiSwitch._response'
             },
@@ -966,7 +1038,8 @@ const k8s={
                       }
                       return c
                     },
-                    type:"number"
+                    type:"number",
+                    min:0
                   },
                   _dataModel:"k8s._data._exeCount"
                 },
@@ -1002,6 +1075,18 @@ const k8s={
                           _doSend(k8s._data._exeCount)
                         }
                       }
+                    },
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-delete bz-none-border",
+                        style:"margin-left:5px;"
+                      },
+                      _jqext:{
+                        click:function(){
+                          k8s._uiSwitch._response=""
+                        }
+                      }
                     }
                   ]
                 }
@@ -1011,6 +1096,7 @@ const k8s={
         },[],_k8sMessage._common._message,400,1,0,1)
         
         _doSend(1)
+        _attachResize()
         function _doSend(n){
           k8s._data._remain=n
           if(n){
@@ -1029,6 +1115,15 @@ const k8s={
           }
         }
       }
+    }
+
+    function _attachResize(){
+      setTimeout(()=>{
+        let o=$("#"+id)[0]
+        $(o).css({"min-height":"unset"})
+        o=_Util._getParentElementByCss(".bz-modal-window",o)
+        _Util._attachResizeWindow(o)
+      },100)
     }
   },
   _forward:function(d){

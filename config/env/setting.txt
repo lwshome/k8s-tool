@@ -1,15 +1,26 @@
 {
-  "stars": [],
+  "stars": [
+    {
+      "s": "cac-nls-lstnrs-eric-tmo-des-ms-lochndlr-855b6b6f45-56xzv",
+      "p": "etc/../config/application.yaml"
+    },
+    {
+      "s": "cac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858fd9899-5dpfc",
+      "p": "etc/../conf/cac-configs/cac-aca-conf/v0.0.2/ses.properties"
+    }
+  ],
   "autoForward": {
-    "eric-pm": "9093:9093",
+    "eric-pm-alert": "9093:9093",
+    "eric-pm-server": "9090:9090",
     "naplstnr": "8080:8080",
     "e911lstnr": "8081:8080"
   },
   "filter": {
-    "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm|profile|config",
-    "ms-testing": "kafka"
+    "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config",
+    "ms-testing": "kafka",
+    "staging-umbrella-test": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config"
   },
-  "NSFilter": "mycac|testing|deploy",
+  "NSFilter": "mycac|testing|deploy|staging-umbrella-test",
   "log": {
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}| --- \\[[^\\]]+\\]",
     "highlights": [
@@ -24,11 +35,23 @@
       },
       {
         "css": "background-color:#FCC;",
-        "value": "Location Event received the Message"
+        "value": "Location Event received the Message",
+        "enable": "on"
       },
       {
         "css": "background-color:#CFC;",
-        "value": "Location Event processing result from queue"
+        "value": "DLT message",
+        "enable": "on"
+      },
+      {
+        "enable": "on",
+        "css": "background-color:yellow;",
+        "value": "Listener receiving the Message End"
+      },
+      {
+        "enable": "on",
+        "css": "background-color:yellow;color:red;",
+        "value": "Message processing failed from queue"
       }
     ],
     "autoMerge": "on",
@@ -53,8 +76,8 @@
       "podGroup": "nls-data-message-bus-kf"
     },
     {
-      "name": "check queue ",
-      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-lochndlr\n\nkafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-achndlr\n\nkafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-napfltr",
+      "name": "check queue (achndlr)",
+      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-achndlr",
       "podGroup": "nls-data-message-bus-kf"
     },
     {
@@ -76,6 +99,15 @@
       "name": "Install cac-nls-lstnrs",
       "value": "helm install cac-nls-lstnrs -f ../deploy/ews_CAC_NLS_LSTNRS.yaml --namespace mycac ../deploy/eric-tmo-cac-umbrella",
       "podGroup": "bz-node-system"
+    },
+    {
+      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-lochndlr",
+      "name": "check queue (lochndlr)",
+      "podGroup": "nls-data-message-bus-kf"
+    },
+    {
+      "name": "ps",
+      "value": "ps -auwx"
     }
   ],
   "api": [
@@ -93,7 +125,14 @@
       "url": "/v4.0/notifications/locationevent",
       "headers": "{\n  \"Content-Type\":\t\"application/json; charset=UTF-8\",\n  \"User-Agent\":\t\"Apache-HttpClient/4.1.1\",\n  \"x-transaction-id\":\t\"a9d4f7d5-b459-42df-98c3-52c0f123309f\"\n}",
       "body": "{\n  \"user_identities\":{\n    \"msisdn\":\"12223333002\"\n  },\n  \"event\":\"ADDR_UPDATE\",\n  \"service\":\"TMO-WebSheet|CustomerCare\",\n  \"message\":\"${window.idx=window.idx||0,++window.idx} Your address information is updated\",\n  \"address\":\"1821 Lincon,Seattle,WA\"\n}"
+    },
+    {
+      "podGroup": "naplstnr",
+      "name": "Test IAM",
+      "method": "POST",
+      "url": "/ckfigimjlkjlhugyfcxdxzaresrtftf?partnerID=1234&Password=password&Timestamp=2023-02-27%2012:12:12&xmlPayload=%3CCustomerTransactions%3E%3CCustomerTransaction%3E%3CTransactionInfo%3E%3CRequestedAction%3Eupdate%3C/RequestedAction%3E%3CFieldsModified%3EAccountStatus%3C/FieldsModified%3E%3CCustomerID%3E374731705%3C/CustomerID%3E%3Cmsisdn%3E4343362133%3C/msisdn%3E%3CVersion%3E1.4%3C/Version%3E%3CTransactionID%3E7703794741015003626%3C/TransactionID%3E%3CVendorID%3E36%3C/VendorID%3E%3C/TransactionInfo%3E%3CAccountInfo%3E%3CAccountStatus%3Esuspended%3C/AccountStatus%3E%3CCustomerID%3E374731705%3C/CustomerID%3E%3Cmsisdn%3E4343362133%3C/msisdn%3E%3Cimsi%3E310260135691434%3C/imsi%3E%3Cban%3E957113154%3C/ban%3E%3CaccountType%3EI%3C/accountType%3E%3CaccountSubType%3ER%3C/accountSubType%3E%3CmultiLineIndicator%3ENPAH_NP%3C/multiLineIndicator%3E%3CbillCyclePeriod%3E13%3C/billCyclePeriod%3E%3CCustomerType%3E1%3C/CustomerType%3E%3CsimSerial%3E8901260138756914341%3C/simSerial%3E%3C/AccountInfo%3E%3CServiceInfo%3E%3CVendorID%3E36%3C/VendorID%3E%3CServiceLevel%3E1%3C/ServiceLevel%3E%3CFeatures%3E%3CFeature%3E%3CName%3ENACANMEX%3C/Name%3E%3C/Feature%3E%3CFeature%3E%3CName%3EB52ROAM%3C/Name%3E%3C/Feature%3E%3CFeature%3E%3CName%3ESCUNL-LITT%3C/Name%3E%3C/Feature%3E%3C/Features%3E%3C/ServiceInfo%3E%3C/CustomerTransaction%3E%3C/CustomerTransactions%3E",
+      "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}"
     }
   ],
-  "ns": "mycac"
+  "ns": "staging-umbrella-test"
 }

@@ -60,7 +60,7 @@ body{
   overflow:auto;
 }
 
-textarea{
+textarea,.textarea{
   font-family:'Roboto Mono', monospace;
   padding: 5px;
   font-size: 11px;
@@ -383,7 +383,7 @@ select.form-control{
 .bz-node-title:hover{
   text-decoration: underline;
 }
-textarea,
+textarea,.textarea,
 pre {
   -moz-tab-size : 2;
   -o-tab-size : 2;
@@ -706,4 +706,24 @@ label>input[type=checkbox]{
 
 .bz-highlight{
   background-color: yellow;
+}
+
+.bz-corner-resize{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  z-index: 11111;
+  cursor: se-resize;
+}
+.textarea{
+  overflow-y: auto;
+}
+.bz-cmd-item{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  tab-size : 2;
+  font-family: monospace;
 }

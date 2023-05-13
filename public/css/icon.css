@@ -215,3 +215,15 @@
   left: 9px;
   margin: 0;
 }
+.bz-corner-resize:before{
+  content:"◢";
+  font-size: 18px;
+  color: transparent;
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  top: -2px;
+}
+.bz-corner-resize:hover:before{
+  color:#999;
+}

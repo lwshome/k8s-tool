@@ -649,6 +649,12 @@ tbody td:first-child,tbody td:last-child{
       }
     }],d._title||_k8sMessage._common._question,400)
   },
+  _getParentElementByCss:function(p,o){
+    p=$(p).toArray();
+    return p.find(a=>{
+      return $(a).find(o)[0]
+    })
+  },
   _confirmMessage:function(_msg,_btns,_title,_width,_noCancel,_cancelFun,_noModal,_body,_noMoreAsk){
     let _loading=_msg
     var d=_Util._clone(_Dialog),
@@ -765,6 +771,48 @@ tbody td:first-child,tbody td:last-child{
       }
       _Util._resizeModelWindow(_dialog,_body.ownerDocument)
     }
+  },
+  _attachResizeWindow:function(w){
+    let o=$("<div class='bz-corner-resize'></div>").appendTo(w)
+    let p,wr=w.getBoundingClientRect();
+    $(w).css({"max-width":"unset",left:wr.left+"px",top:wr.top+"px",transform:"unset"})
+    o.mousedown(function(e){
+      p=_Util._getMouseXY(e)
+      wr=w.getBoundingClientRect()
+      e.preventDefault()
+      e.stopPropagation()
+
+      if(!o._setEvent){
+        o._setEvent=1
+        o.mousemove(function(e){
+          e.preventDefault()
+          e.stopPropagation()
+          if(p&&e.buttons){
+            let q=_Util._getMouseXY(e)
+            let wl=(q.x-p.x),
+                wh=(q.y-p.y)
+            if(wl>0){
+              wl+=2
+            }else if(wl<0){
+              wl-=2
+            }
+            if(wh>0){
+              wh+=2
+            }else if(wh<0){
+              wh-=2
+            }
+            wl+=wr.width
+            wh+=wr.height
+            $(w).css({width:wl+"px",height:wh+"px"})
+          }
+        })
+        o.mouseup(function(e){
+          e.preventDefault()
+          e.stopPropagation()
+          p=0
+        })
+      }
+    })
   },
   _getTopZIndex:function(_curDom){
     _curDom=_curDom||document.body
