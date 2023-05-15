@@ -915,6 +915,8 @@ const k8s={
     }else if(t._key=="api"){
       _sendAPI(t._item,d)
     }
+
+    let _highlight=0
     function _updateResponse(v,_fun){
       let o=$("#"+id+" pre.textarea")[0]||$("#"+id+" textarea")[0];
 
@@ -935,6 +937,8 @@ const k8s={
             o._history=o._history||[]
             v=v.split("\n")
             o._curText.push(...v)
+            _highlight++
+            let h=_highlight%15+1
             v.forEach(x=>{
               if(!x){
                 $(o).append("<div style='height:10px;'></div>")
@@ -942,17 +946,21 @@ const k8s={
               }
               let y=o._history.shift();
               if(y){
-                y=y.match(/(^ *)?([^ ]+)( +|$)/g)
-                x=x.match(/(^ *)?([^ ]+)( +|$)/g)
-                x=x.map((z,i)=>{
-                  let zz=y[i]||""
-                  if(z.trim()!=zz.trim()){
-                    zz=z.split(/[^ ]+/)
-                    return (zz[0]||"")+"<span class='bz-highlight'>"+z.trim()+"</span>"+(zz[1]||"")
-                  }else{
-                    return z
-                  }
-                }).join("")
+                if(!y.match(/^=== [^=]+=+$/)&&x.match(/^=== [^=]+=+$/)){
+                  o._history.unshift(y)
+                }else{
+                  y=y.match(/(^ *)?([^ ]+)( +|$)/g)
+                  x=x.match(/(^ *)?([^ ]+)( +|$)/g)
+                  x=x.map((z,i)=>{
+                    let zz=y[i]||""
+                    if(z.trim()!=zz.trim()){
+                      zz=z.split(/[^ ]+/)
+                      return (zz[0]||"")+"<span class='g-"+h+"'>"+z.trim()+"</span>"+(zz[1]||"")
+                    }else{
+                      return z
+                    }
+                  }).join("")
+                }
               }
               $(o).append("<div class='bz-cmd-item'>"+x+"</div>")
             })
