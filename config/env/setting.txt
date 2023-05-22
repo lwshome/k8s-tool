@@ -16,7 +16,7 @@
     "e911lstnr": "8081:8080"
   },
   "filter": {
-    "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config",
+    "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config|perm",
     "ms-testing": "kafka",
     "staging-umbrella-test": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config"
   },
@@ -54,10 +54,9 @@
         "value": "Message processing failed from queue"
       }
     ],
-    "autoMerge": "on",
     "groupMerge": "on",
-    "formatJSON": "on",
-    "formatXML": "on"
+    "formatXML": "on",
+    "formatJSON": "on"
   },
   "link": [
     {
@@ -134,5 +133,5 @@
       "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}"
     }
   ],
-  "ns": "staging-umbrella-test"
+  "ns": "mycac"
 }

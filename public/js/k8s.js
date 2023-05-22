@@ -6,11 +6,43 @@ const k8s={
     k8s._key=k8s._key||Date.now()
     return k8s._key++
   },
+  _getAlarmInfo:function(){
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:"kubectl get hpa -n "+k8s._data._config.ns
+        }
+      },
+      _success:function(r){
+        if(v!="BZ-COMPLETE"){
+          v=v.split("\n")
+          v.forEach(x=>{
+            x=x.split(/\s+/)
+            k8s._data._config.alarms
+          })
+        }
+      }
+    })
+  },
+  _getGroupKey:function(v,ff){
+    if(ff){
+      let fs=ff.split("|");
+      f=new RegExp(ff,"g")
+      f=v.match(f)
+      if(f){
+        let g=fs.indexOf(f[0])+1
+        return {g:g,gk:f[0]}
+      }
+    }
+  },
   _getInitData:function(){
     let d=k8s._data
     d._loading=1
     d._podList=0
     d._serviceList=0
+    d._configMap=d._curConfig=0
+    k8s._uiSwitch._curMainTab='_pods'
 
     k8s._getNameSpaceList(function(){
       if(!k8s._data._config.ns){
@@ -129,7 +161,7 @@ const k8s={
               _items:[
                 {
                   _if:function(d){
-                    return !d._idx||(t=="cmd")
+                    return !d._idx
                   },
                   _tag:"hr"
                 },
@@ -139,6 +171,18 @@ const k8s={
                     style:"display:flex;"
                   },
                   _items:[
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"'btn btn-icon bz-none-border bz-middle-btn bz-'+(_data._item.open?'open-item':'close-item')",
+                        title:"_k8sMessage._method[_data._item.open?'_close':'_open']"
+                      },
+                      _jqext:{
+                        click:function(){
+                          this._data._item.open=!this._data._item.open
+                        }
+                      }
+                    },
                     {
                       _tag:"div",
                       _attr:{
@@ -213,7 +257,7 @@ const k8s={
                     {
                       _tag:"button",
                       _attr:{
-                        class:"btn btn-icon bz-play bz-none-border",
+                        class:"btn btn-icon bz-play bz-none-border bz-middle-btn",
                         title:"_k8sMessage._method._try"
                       },
                       _jqext:{
@@ -226,7 +270,7 @@ const k8s={
                       _tag:"button",
                       _attr:{
                         title:"_k8sMessage._method.delete",
-                        class:"btn btn-icon bz-delete bz-none-border"
+                        class:"btn btn-icon bz-delete bz-none-border bz-middle-btn"
                       },
                       _jqext:{
                         click:function(){
@@ -245,8 +289,8 @@ const k8s={
                   ]
                 },
                 {
-                  _if:function(){
-                    return t=="link"
+                  _if:function(d){
+                    return t=="link"&&d._item.open
                   },
                   _tag:"div",
                   _attr:{
@@ -271,8 +315,8 @@ const k8s={
                   ]
                 },
                 {
-                  _if:function(){
-                    return t=="cmd"
+                  _if:function(d){
+                    return t=="cmd"&&d._item.open
                   },
                   _tag:"textarea",
                   _attr:{
@@ -283,8 +327,8 @@ const k8s={
                   _dataModel:`k8s._uiSwitch._configList[_data._idx].value`
                 },
                 {
-                  _if:function(){
-                    return t=="api"
+                  _if:function(d){
+                    return t=="api"&&d._item.open
                   },
                   _tag:"div",
                   _attr:{
@@ -910,7 +954,8 @@ const k8s={
           }
         ]
       },[],_k8sMessage._common._message,"80%",1,0,1)
-      _sendCmd(d.value,t._item._name)
+      
+      _sendCmd(d.value,t._item?t._item._name:0)
       _attachResize()
     }else if(t._key=="api"){
       _sendAPI(t._item,d)
@@ -924,6 +969,7 @@ const k8s={
         if(v=="BZ-COMPLETE"){
           o._history=(o._curText||[]).filter(x=>x)
           o._curText=0
+          _highlight++
           _fun&&_fun()
         }else{
           if(o.tagName=="TEXTAREA"){
@@ -937,7 +983,7 @@ const k8s={
             o._history=o._history||[]
             v=v.split("\n")
             o._curText.push(...v)
-            _highlight++
+            
             let h=_highlight%15+1
             v.forEach(x=>{
               if(!x){
@@ -974,6 +1020,7 @@ const k8s={
       
     }
     function _sendCmd(v,n,e){
+      v=k8s._replaceVariable(v)
       k8s._uiSwitch._playing+=1
       _k8sProxy._send({
         _data:{
@@ -1134,6 +1181,11 @@ const k8s={
       },100)
     }
   },
+  _replaceVariable:function(v){
+    $NS=k8s._data._config.ns
+    v=eval("`"+v+"`")
+    return v
+  },
   _forward:function(d){
     if(d._forwarding){
       _Util._confirmMessage(_k8sMessage._info._confirmStopForwarding+d._name,[{
@@ -1266,6 +1318,95 @@ const k8s={
   _isShowItem:function(x,v){
     return !v||x._name.match(new RegExp(v,"i"))
   },
+  _deleteNS:function(){
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:`kubectl delete namespace ${k8s._data._config.ns}`
+        }
+      },
+      _success:function(v){
+        alert("Done!")
+        let ns=k8s._data._namespaceList,
+            c=k8s._data._config
+        ns.splice(ns.indexOf(c.ns),1)
+        c.ns=ns[0]
+        k8s._saveSetting()
+        k8s._getInitData()
+      }
+    })
+  },
+  _getConfigMap:function(p){
+    k8s._data._configMap=[]
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:`kubectl get configmap -n ${k8s._data._config.ns}`
+        }
+      },
+      _success:function(v){
+        if(v!="BZ-COMPLETE"){
+          v=v.split("\n")
+          v.shift()
+          v.shift()
+          v.forEach(k=>{
+            if(k){
+              k=k.trim().split(/ +/)
+              k.pop()
+              k.pop()
+              k=k.join(" ")
+              k8s._data._configMap.push({
+                _name:k
+              })
+            }
+          })
+        }
+      }
+    })
+  },
+  _getConfigDetails:function(k){
+    k8s._data._curConfig._content=""
+    
+    k8s._uiSwitch._curPodDetails='_details'
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:`kubectl describe configmap ${k} -n ${k8s._data._config.ns}`
+        }
+      },
+      _success:function(v){
+        if(v!="BZ-COMPLETE"){
+          v=v.split("\n")
+          v.shift()
+          k8s._data._curConfig._content+=v.join("\n")
+        }
+      }
+    })
+  },
+  _getPodDetails:function(p){
+    k8s._data._curPodDetails={
+      _name:p._name,
+      _content:""
+    }
+    k8s._uiSwitch._curPodDetails='_details'
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:`kubectl describe pods ${p._name} -n ${k8s._data._config.ns}`
+        }
+      },
+      _success:function(v){
+        if(v!="BZ-COMPLETE"){
+          k8s._data._curPodDetails._content+=v  
+        }
+      }
+    })
+
+  },
   _getNameSpaceList:function(_fun){
     _k8sProxy._send({
       _data:{
@@ -1282,7 +1423,7 @@ const k8s={
   },
   _getLog:function(d,p){
     _logHandler._data._showLog=1
-    k8s._data._curFile=0
+    k8s._uiSwitch._curPodDetails='_log'
     let ls=_logHandler._data._logList,
         pl=p._log||{
           _name:p._name,

@@ -1,4 +1,56 @@
 var _Util={
+  _getSplitter:function(t,_if){
+    return {
+      _if:_if,
+      _tag:"div",
+      _attr:{
+        class:"bz-splitter-"+t,
+      },
+      _jqext:{
+        mousedown:function(e){
+          let o=this
+          o._start=_Util._getMouseXY(e,this)
+          let a=this.previousElementSibling,
+              b=this.nextElementSibling,
+              ar=a.getBoundingClientRect(),
+              br=b.getBoundingClientRect()
+          if(t=="v"){
+            ar=ar.width
+            br=br.width
+          }else{
+            ar=ar.height
+            br=br.height
+          }
+          o.style.backgroundColor="var(--active-color)"
+          let _onmousemove=document.body.onmousemove
+          document.body.onmousemove=function(e){
+            if(o._start&&e.buttons){
+              let xy=_Util._getMouseXY(e,o)
+              if(!$(document.body).hasClass("prevent-select")){
+                $(document.body).addClass("prevent-select")
+              }
+              if(t=="v"){
+                a.style.width="unset"
+                b.style.width="unset"
+                a.style.flex=ar+(xy.x-o._start.x)
+                b.style.flex=br-(xy.x-o._start.x)
+              }else{
+                a.style.height="unset"
+                b.style.height="unset"
+                a.style.flex=ar+(xy.y-o._start.y)
+                b.style.flex=br-(xy.y-o._start.y)
+              }
+            }else{
+              o._start=0
+              document.body.onmousemove=_onmousemove
+              $(document.body).removeClass("prevent-select")
+              o.style.backgroundColor="transparent"
+            }
+          }
+        }
+      }
+    }
+  },
   _clone:function(o){
     if($.type(o)=="array"){
       return $.extend(true,[],o);
@@ -777,40 +829,31 @@ tbody td:first-child,tbody td:last-child{
     let p,wr=w.getBoundingClientRect();
     $(w).css({"max-width":"unset",left:wr.left+"px",top:wr.top+"px",transform:"unset"})
     o.mousedown(function(e){
-      p=_Util._getMouseXY(e)
+      let x=this
+      o.p=_Util._getMouseXY(e)
       wr=w.getBoundingClientRect()
       e.preventDefault()
       e.stopPropagation()
 
-      if(!o._setEvent){
-        o._setEvent=1
-        o.mousemove(function(e){
-          e.preventDefault()
-          e.stopPropagation()
-          if(p&&e.buttons){
-            let q=_Util._getMouseXY(e)
-            let wl=(q.x-p.x),
-                wh=(q.y-p.y)
-            if(wl>0){
-              wl+=2
-            }else if(wl<0){
-              wl-=2
-            }
-            if(wh>0){
-              wh+=2
-            }else if(wh<0){
-              wh-=2
-            }
-            wl+=wr.width
-            wh+=wr.height
-            $(w).css({width:wl+"px",height:wh+"px"})
+
+      let _onmousemove=document.body.onmousemove
+      document.body.onmousemove=function(e){
+        if(o.p&&e.buttons){
+          if(!$(document.body).hasClass("prevent-select")){
+            $(document.body).addClass("prevent-select")
           }
-        })
-        o.mouseup(function(e){
-          e.preventDefault()
-          e.stopPropagation()
-          p=0
-        })
+          let q=_Util._getMouseXY(e)
+          let wl=(q.x-o.p.x),
+              wh=(q.y-o.p.y)
+
+          wl+=wr.width
+          wh+=wr.height
+          $(w).css({width:wl+"px",height:wh+"px"})
+        }else{
+          o.p=0
+          document.body.onmousemove=_onmousemove
+          $(document.body).removeClass("prevent-select")
+        }
       }
     })
   },

@@ -1,5 +1,5 @@
-const _podDetailsViewDef={
-  _if:"k8s._uiSwitch._curMainTab=='_pods'&&k8s._data._curPodDetails&&k8s._uiSwitch._curPodDetails=='_details'",
+const _configDetailsViewDef={
+  _if:"k8s._uiSwitch._curMainTab=='_config'&&k8s._data._curConfig",
   _tag:"div",
   _attr:{
     class:"bz-details-panel"
@@ -26,7 +26,7 @@ const _podDetailsViewDef={
             },
             {
               _tag:"header",
-              _text:"k8s._data._curPodDetails._name"
+              _text:"k8s._data._curConfig._name"
             },
             {
               _tag:"button",
@@ -37,8 +37,8 @@ const _podDetailsViewDef={
               },
               _jqext:{
                 click:function(){
-                  let d=k8s._data._curFile
-                  k8s._openFile(d._pod,d)
+                  k8s._data._curConfig._content=""
+                  k8s._getConfigDetails(k8s._data._curConfig._name)
                 }
               }
             },
@@ -51,7 +51,7 @@ const _podDetailsViewDef={
               },
               _jqext:{
                 click:function(){
-                  k8s._uiSwitch._curPodDetails=''
+                  k8s._data._curConfig=0
                 }
               }
             }
@@ -60,10 +60,9 @@ const _podDetailsViewDef={
         {
           _tag:"textarea",
           _attr:{
-            style:"flex:1;margin-bottom:-5px;",
-            readonly:1
+            style:"flex:1;margin-bottom:-5px;"
           },
-          _dataModel:"k8s._data._curPodDetails._content"
+          _dataModel:"k8s._data._curConfig._content"
         }
       ]
     }    

@@ -47,12 +47,12 @@ const _k8sMessage={
     star:"Favor",
     _refresh:"Refresh",
     _download:"Download",
-    _close:"Close",
     _copy:"Copy item name",
     download:"Download",
     delete:"Delete",
     _save:"Save",
     _cancel:"Cancel",
+    _open:"Open",
     _close:"Close",
     _clean:"Clean",
     _play:"Execute task",
@@ -65,10 +65,12 @@ const _k8sMessage={
   },
   _main:{
     _tabs:{
-      _namespace:"Namespace",
+      // _namespace:"Namespace",
       _pods:"Pods",
-      _services:"Services",
-      _deployments:"Deployments"
+      _config:"ConfigMap",
+      _alarm:"Alarm",
+      // _services:"Services",
+      // _deployments:"Deployments"
     }
   },
   _setting:{

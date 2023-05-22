@@ -40,6 +40,7 @@ const ui={
             class:"bz-namespace-box"
           },
           _items:[
+            //namespace
             {
               _tag:"div",
               _attr:{
@@ -87,6 +88,18 @@ const ui={
                 }
               ]
             },
+            {
+              _tag:"button",
+              _attr:{
+                class:"btn btn-icon bz-delete bz-none-border bz-middle-btn"
+              },
+              _jqext:{
+                click:function(){
+                  k8s._deleteNS()
+                }
+              }
+            },
+            //filter
             {
               _tag:"div",
               _attr:{
@@ -144,7 +157,7 @@ const ui={
             }
           },
           _text:"_k8sMessage._main._tabs[_data._item]",
-          _dataRepeat:["_pods","_services","_deployments"]
+          _dataRepeat:["_pods","_config","_alarm"]
         },
         {
           _tag:"div",
@@ -290,9 +303,28 @@ const ui={
       },
       _items:[
         _listViewDef,
+        _configMapViewDef,
+        _Util._getSplitter("v",function(){
+          if(k8s._uiSwitch._curMainTab=='_config'){
+            return k8s._data._curConfig
+          }else if(k8s._uiSwitch._curMainTab=='_pods'){
+            if(_logHandler._data._showLog&&k8s._uiSwitch._curPodDetails=='_log'){
+
+            }else if(k8s._data._curFile&&k8s._uiSwitch._curPodDetails=='_file'){
+
+            }else if(k8s._data._curPodDetails&&k8s._uiSwitch._curPodDetails=='_details'){
+
+            }else{
+              return
+            }
+            return 1
+          }
+        }),
         _logViewDef,
-        _detailsViewDef,
-        _servicesViewDef
+        _fileViewDef,
+        _podDetailsViewDef,
+        _servicesViewDef,
+        _configDetailsViewDef
       ]
     }
   ]

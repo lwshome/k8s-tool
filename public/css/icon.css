@@ -227,3 +227,11 @@
 .bz-corner-resize:hover:before{
   color:#999;
 }
+
+.bz-pod:before{
+  content: "🧊";
+}
+
+.bz-bell:before{
+  content: "🔔";
+}

@@ -47,12 +47,12 @@ const _k8sMessage={
     star:"青睐",
     _refresh:"刷新",
     _download:"下载",
-    _close:"关闭",
     _copy:"复制物品名称",
     download:"下载",
     delete:"删除",
     _save:"保存",
     _cancel:"取消",
+    _open:"打开",
     _close:"关闭",
     _clean:"干净",
     _play:"执行任务",
@@ -65,10 +65,12 @@ const _k8sMessage={
   },
   _main:{
     _tabs:{
-      _namespace:"命名空间",
+      // _namespace:"命名空间",
       _pods:"豆荚",
-      _services:"服务",
-      _deployments:"部署"
+      _config:"ConfigMap",
+      _alarm:"报警",
+      // _services:"服务",
+      // _deployments:"部署"
     }
   },
   _setting:{

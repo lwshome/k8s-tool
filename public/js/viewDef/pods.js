@@ -91,7 +91,8 @@ function _buildTreeNode(){
                         }
                       }else{
                         k8s._data._curFile=d
-                        _logHandler._data._showLog=0
+                        k8s._uiSwitch._curPodDetails='_file'
+                        
                         if(!d._content){
                           k8s._openFile(d._pod,d)
                         }
@@ -223,7 +224,14 @@ const _listViewDef={
             {
               _tag:"div",
               _attr:{
-                class:"bz-list-row"
+                class:function(d){
+                  let c=k8s._data._curPodDetails,
+                      v="bz-list-row";
+                  if(c&&c._name==d._item._name){
+                    v+= " bz-highlight"
+                  }
+                  return v
+                }
               },
               _items:[
                 {
@@ -255,6 +263,18 @@ const _listViewDef={
                           return c
                         },
                         style:"'font-size: 18px;font-family: monospace;visibility:'+(_data._item._status=='Running'?'visible':'hidden')"
+                      },
+                      _jqext:{
+                        click:function(e){
+                          let d=this._data._item
+                          if(d._status=="Running"){
+                            d._open=!d._open
+                            if(d._open&&!d._subList){
+                              k8s._getFileList(d,d)
+                            }
+                          }
+                          e.stopPropagation()
+                        }
                       }
                     },
                     //icon
@@ -345,16 +365,11 @@ const _listViewDef={
                   ],
                   _jqext:{
                     click:function(){
-                      let d=this._data._item
-                      if(d._status=="Running"){
-                        d._open=!d._open
-                        if(d._open&&!d._subList){
-                          k8s._getFileList(d,d)
-                        }
-                      }
+                      k8s._getPodDetails(this._data._item)
                     }
                   }
                 },
+                //ctrl-panel
                 {
                   _if:function(d){
                     return k8s._data._curCtrl._data==d._item
@@ -438,6 +453,7 @@ const _listViewDef={
                     }
                   ]
                 },
+                //cur-show-items
                 {
                   _if:"['cmd','link','api'].includes(k8s._uiSwitch._showMenu._key)&&k8s._uiSwitch._showMenu._item==_data._item",
                   _tag:"div",
@@ -598,20 +614,16 @@ function _setCurCtrl(o,_focus){
 
 function _attachHighlight(v,ff,d){
   if(ff){
-    let fs=ff.split("|");
-    f=new RegExp(ff,"g")
-    f=v.match(f)
-    if(f){
-      let j=0,w="",t=""
-      f=f[0]
-      let g=fs.indexOf(f)+1
-      if(d.g!==g){
-        d.g=g
-        d.gk=f
-      }
-      let i=v.indexOf(f)
-      w+=v.substring(j,i)+"<span class='g-"+g+"'>"+f+"</span>"
-      v=v.substring(i+f.length)
+    ff=k8s._getGroupKey(v,ff)
+    if(ff){
+      let j=0,w=""
+
+      d.g=ff.g
+      d.gk=ff.gk
+
+      let i=v.indexOf(d.gk)
+      w+=v.substring(j,i)+"<span class='g-"+d.g+"'>"+d.gk+"</span>"
+      v=v.substring(i+d.gk.length)
 
       v="<span>"+w+v+"</span>"
     }

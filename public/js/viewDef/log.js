@@ -1,5 +1,5 @@
 const _logViewDef={
-  _if:"_logHandler._data._showLog",
+  _if:"k8s._uiSwitch._curMainTab=='_pods'&&_logHandler._data._showLog&&k8s._uiSwitch._curPodDetails=='_log'",
   _tag:"div",
   _attr:{
     class:"bz-details-panel"
