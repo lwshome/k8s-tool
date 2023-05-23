@@ -20,7 +20,7 @@ const _configDetailsViewDef={
             {
               _tag:"span",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-pod",
+                class:"btn btn-icon bz-small-btn bz-setting",
                 style:"cursor:default;margin-right:5px;"
               }
             },
