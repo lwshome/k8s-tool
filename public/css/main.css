@@ -751,6 +751,10 @@ label>input[type=checkbox]{
 .textarea{
   overflow-y: auto;
 }
+.bz-list-box{
+  flex:1;
+  overflow:auto;
+}
 .bz-cmd-item{
   overflow: hidden;
   text-overflow: ellipsis;
@@ -766,6 +770,7 @@ label>input[type=checkbox]{
 }
 
 .bz-list-row.bz-highlight{
+  color: var(--word-color);
   background-color: var(--hightlight-color);
 }
 .bz-hover-item{
@@ -844,9 +849,6 @@ label>input[type=checkbox]{
   ::-webkit-scrollbar-thumb:hover {
     background: #999; 
   }
-  .bz-list-row.bz-highlight{
-    color: #300;
-  }
 
   .bz-menu-panel{
     background-color: #111;
@@ -854,5 +856,9 @@ label>input[type=checkbox]{
   }
   .bz-menu-item:hover {
     background-color: #333;
+  }
+
+  .bz-logo{
+    background-image: url(/css/logo-s-dark.png) !important;
   }
 }

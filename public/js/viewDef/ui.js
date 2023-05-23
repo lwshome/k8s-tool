@@ -305,8 +305,13 @@ const ui={
         _listViewDef,
         _configMapViewDef,
         _Util._getSplitter("v",function(){
+          let d=Math.max(...$(".bz-details-panel").toArray().map(x=>parseInt($(x).css("flex")))),
+              l=Math.max(...$(".bz-list-box").toArray().map(x=>parseInt($(x).css("flex"))))
           if(k8s._uiSwitch._curMainTab=='_config'){
-            return k8s._data._curConfig
+            if(!k8s._data._curConfig){
+              $(".bz-list-box").css({flex:1})
+              return
+            }
           }else if(k8s._uiSwitch._curMainTab=='_pods'){
             if(_logHandler._data._showLog&&k8s._uiSwitch._curPodDetails=='_log'){
 
@@ -315,10 +320,15 @@ const ui={
             }else if(k8s._data._curPodDetails&&k8s._uiSwitch._curPodDetails=='_details'){
 
             }else{
+              $(".bz-list-box").css({flex:1})
               return
             }
-            return 1
           }
+          setTimeout(()=>{
+            $(".bz-details-panel").css({flex:d})
+            $(".bz-list-box").css({flex:l})
+          },20)
+          return 1
         }),
         _logViewDef,
         _fileViewDef,

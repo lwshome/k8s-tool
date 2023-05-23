@@ -209,7 +209,7 @@ const _listViewDef={
   _if:"k8s._uiSwitch._curMainTab=='_pods'",
   _tag:"div",
   _attr:{
-    style:"flex:1;overflow:auto;"
+    class:"bz-list-box"
   },
   _items:[
     {

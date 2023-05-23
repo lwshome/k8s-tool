@@ -7,7 +7,7 @@ const _configMapViewDef={
     }
   },
   _attr:{
-    style:"flex:1;overflow:auto;"
+    class:"bz-list-box"
   },
   _items:[
     {

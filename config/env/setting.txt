@@ -56,7 +56,8 @@
     ],
     "groupMerge": "on",
     "formatXML": "on",
-    "formatJSON": "on"
+    "formatJSON": "on",
+    "autoMerge": "on"
   },
   "link": [
     {
