@@ -18,7 +18,8 @@
   "filter": {
     "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config|perm",
     "ms-testing": "kafka",
-    "staging-umbrella-test": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config"
+    "staging-umbrella-test": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config",
+    "staging-umbrella-test1": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config|perm"
   },
   "NSFilter": "mycac|testing|deploy|staging-umbrella-test",
   "log": {
@@ -134,5 +135,5 @@
       "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}"
     }
   ],
-  "ns": "mycac"
+  "ns": "staging-umbrella-test1"
 }

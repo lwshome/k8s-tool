@@ -2,6 +2,7 @@
   --bz-shadow:2px 2px 9px rgba(0,0,0,0.3);
   --active-color:#0069FF;
   --hightlight-color:#CFF;
+  --hightlight-background-color:#FFF;
   --border-color: #ccc;
   --bz-border:1px solid #ccc;
   --pillbox-color: #f1f1f1;
@@ -117,10 +118,10 @@ hr{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border: 1px solid transparent;
+  border: 1px solid;
   padding: 5px 10px;
   font-size: var(--bz-font-size);
-  color: #21242C; /*replaced #21242C; /*replaced #082A45 */ /*#6F7A89, tmp change*/
+  color: var(--word-color);
   letter-spacing: 0.25px;
   border-radius: var(--bz-border-radius);
   font-weight: bold;
@@ -510,7 +511,7 @@ pre {
   max-width: 100%;
   height: 600px;
   max-height: 100%;
-  background-color: var(--background-color);
+  background-color: var(--hightlight-background-color);
   border: var(--bz-border);
   border-radius: 3px;
   box-shadow: var(--bz-shadow);
@@ -820,6 +821,7 @@ label>input[type=checkbox]{
     --active-color:#494;
     --border-color: #333;
     --hightlight-color:#300;
+    --hightlight-background-color:#111;
     --bz-border:1px solid #333;
     --pillbox-color: #333;
     --background-color:#1f1f1f;
@@ -863,5 +865,14 @@ label>input[type=checkbox]{
     background-repeat: no-repeat;
     background-size: 60px;
   }
-  
+  .bz-modal-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255,255,255, 0.15);
+    z-index:2147;
+  }
+   
 }
