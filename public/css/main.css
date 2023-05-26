@@ -874,5 +874,9 @@ label>input[type=checkbox]{
     background-color: rgba(255,255,255, 0.15);
     z-index:2147;
   }
+
+  .bz-press::before{
+    color:#00f !important;
+  }
    
 }
