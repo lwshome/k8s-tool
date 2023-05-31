@@ -669,7 +669,7 @@ const k8s={
       _success:function(v){
         v=v.trim().split("\n").map(x=>x.split(/\s+/))
         v.shift()
-        v=v.filter(x=>x[2]!="Completed")
+        // v=v.filter(x=>x[2]!="Completed")
         v=v.map(x=>{
           return {
             _name:x[0],
@@ -792,7 +792,8 @@ const k8s={
     return v
   },
   _exeItem:function(t,d){
-    let id=Date.now()
+    let id=Date.now(),
+        _highlight=0
     if(!t._item){
       t=k8s._getItemByGroup(d,t)
       if(!t){
@@ -961,7 +962,6 @@ const k8s={
       _sendAPI(t._item,d)
     }
 
-    let _highlight=0
     function _updateResponse(v,_fun){
       let o=$("#"+id+" pre.textarea")[0]||$("#"+id+" textarea")[0];
 
@@ -1415,7 +1415,7 @@ const k8s={
       _success:function(v){
         v=v.trim().split("\n").map(x=>x.split(/\s+/))
         v.shift()
-        v=v.filter(x=>x[1]=="Active").map(x=>x[0])
+        v=v.map(x=>x[0])
         k8s._data._namespaceList=v
         _fun&&_fun()
       }

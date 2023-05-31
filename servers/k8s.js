@@ -51,6 +51,7 @@ const k8s={
   },
   getList:function(d,_fun){
     let s=`${_getK8sCmdHeader(d)} get ${d.type}`
+    console.log(s)
     _exe(s,_fun)
   },
   getPSList:function(d,_fun){

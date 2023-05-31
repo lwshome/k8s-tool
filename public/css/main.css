@@ -814,11 +814,11 @@ label>input[type=checkbox]{
     color:#CCC;
   }
   *{
-    border-color:#333 !important;
+    border-color:#333;
   }
   :root {
     --bz-shadow:2px 2px 9px rgba(255,255,255,0.3);
-    --active-color:#494;
+    --active-color:darkorange;
     --border-color: #333;
     --hightlight-color:#300;
     --hightlight-background-color:#111;
