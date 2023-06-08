@@ -63,7 +63,7 @@
 .bz-save:before{
   content:"💾";
   font-weight: bold;
-  font-size:11px;
+  font-size:13px;
 }
 .bz-forward:before{
   content:"⮞";
@@ -110,6 +110,7 @@
 .bz-download:before{
   content:"⇪";
   font-size:15px;
+  border-top:2px solid var(--word-color);
 }
 
 .bz-open-item{
@@ -141,7 +142,6 @@
 
 .bz-star.on:before{
   content:"⭐";
-  font-size:11px;
 }
 
 .bz-delete:before{
@@ -230,6 +230,7 @@
 
 .bz-pod:before{
   content: "🧊";
+  font-size: 13px;
 }
 
 .bz-bell:before{

@@ -7,6 +7,25 @@
     {
       "s": "cac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858fd9899-5dpfc",
       "p": "etc/../conf/cac-configs/cac-aca-conf/v0.0.2/ses.properties"
+    },
+    {
+      "s": "cac-nls-lstnrs-eric-tmo-des-ms-e911lstnr-779f78466f-gbs2h",
+      "p": "etc/../config/application.yaml"
+    },
+    {
+      "s": "data",
+      "p": "etc/../bin",
+      "fd": true
+    },
+    {
+      "s": "data",
+      "p": "etc/../docker-entrypoint.sh",
+      "fd": false
+    },
+    {
+      "s": "kafka",
+      "p": "etc/../etc/apt/apt.conf.d/01autoremove",
+      "fd": false
     }
   ],
   "autoForward": {
@@ -19,44 +38,60 @@
     "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config|perm",
     "ms-testing": "kafka",
     "staging-umbrella-test": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config",
-    "staging-umbrella-test1": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config|perm"
+    "staging-umbrella-test1": "data",
+    "cattle-fleet-system": "",
+    "cattle-impersonation-system": "",
+    "cattle-prometheus": "",
+    "cattle-system": "",
+    "deploy-code-sd-mana-tmo-adp-profilechange": "",
+    "default": "",
+    "eric-dist-cord-crd": "",
+    "deploy-code-sd-mana-tmo-adp-permnotifications": "",
+    "ns-cm-env": "",
+    "eric-mesh-crd": "",
+    "eric-sec-sip-tls-crd": "",
+    "gatekeeper-system": "",
+    "ingress-nginx": "",
+    "deploy-code-sd-mana-tmo-adp-locationeventhandler": "",
+    "deploy-code-sd-mana-tmo-adp-configserver": "",
+    "deploy-code-sd-mana-tmo-adp-e911listener": "",
+    "testing": ""
   },
   "NSFilter": "mycac|testing|deploy|staging-umbrella-test",
   "log": {
-    "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{5,10}| --- \\[[^\\]]+\\]",
+    "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{1,10}| --- \\[[^\\]]+\\]",
     "highlights": [
       {
         "css": "background-color:#009;color:#FFF;",
         "value": "SPP"
       },
       {
-        "css": "background-color:yellow;",
+        "css": "background-color:yellow;color:#000;",
         "value": "\"message\": \"[^\"]+\"",
         "enable": "on"
       },
       {
-        "css": "background-color:#FCC;",
+        "css": "background-color:#FCC;color:#000;",
         "value": "Location Event received the Message",
         "enable": "on"
       },
       {
-        "css": "background-color:#CFC;",
+        "css": "background-color:#CFC;color:#000;",
         "value": "DLT message",
         "enable": "on"
       },
       {
         "enable": "on",
-        "css": "background-color:yellow;",
+        "css": "background-color:yellow;color:#000;",
         "value": "Listener receiving the Message End"
       },
       {
         "enable": "on",
-        "css": "background-color:yellow;color:red;",
+        "css": "background-color:#FFF;color:red;",
         "value": "Message processing failed from queue"
       }
     ],
     "groupMerge": "on",
-    "formatXML": "on",
     "formatJSON": "on",
     "autoMerge": "on"
   },
@@ -109,6 +144,18 @@
     {
       "name": "ps",
       "value": "ps -auwx"
+    },
+    {
+      "name": "Check Resource",
+      "podGroup": "bz-node-system",
+      "open": false,
+      "value": "kubectl get hpa -n ${$NS}"
+    },
+    {
+      "name": "Delete Terminating Namespace",
+      "podGroup": "bz-node-system",
+      "open": true,
+      "value": "for ns in $(kubectl get ns --field-selector status.phase=Terminating -o jsonpath='{.items[*].metadata.name}')\ndo\n  kubectl get ns $ns -ojson | jq '.spec.finalizers = []' | kubectl replace --raw \"/api/v1/namespaces/$ns/finalize\" -f -\ndone\n\nfor ns in $(kubectl get ns --field-selector status.phase=Terminating -o jsonpath='{.items[*].metadata.name}')\ndo\n  kubectl get ns $ns -ojson | jq '.metadata.finalizers = []' | kubectl replace --raw \"/api/v1/namespaces/$ns/finalize\" -f -\ndone"
     }
   ],
   "api": [
@@ -135,5 +182,5 @@
       "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}"
     }
   ],
-  "ns": "staging-umbrella-test1"
+  "ns": "deploy-code-sd-mana-tmo-adp-locationeventhandler"
 }

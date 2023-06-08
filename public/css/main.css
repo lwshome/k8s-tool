@@ -25,7 +25,9 @@ body{
 *{
   border-color: var(--border-color);
 }
-
+a{
+  cursor:pointer;
+}
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -217,6 +219,7 @@ input:focus {
 .input-group-btn,
 .input-group .form-control {
   display: table-cell;
+  z-index: 111;
 }
 .input-group-addon:not(:first-child):not(:last-child),
 .input-group-btn:not(:first-child):not(:last-child),
@@ -356,7 +359,7 @@ td.input-group{
 }
 
 .input-group input.form-control{
-  height:25px;
+  height:27px;
   width:calc(100% - 12px);
 }
 select.form-control{

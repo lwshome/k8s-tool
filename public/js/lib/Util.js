@@ -400,8 +400,11 @@ var _Util={
       }
     })
   },
-  _closeModelWindow:function(e){
-     setTimeout(function(){
+  _closeModelWindow:function(o){
+    if(o){
+      return o._ctrl._close()
+    }
+    setTimeout(function(){
       if($(".bz-large-editor")[0]){
         $(".bz-textarea-ctr").click()
       }else if($(".bz-large")[0]){
@@ -409,10 +412,8 @@ var _Util={
       }else{
         while(_dialogList.find((v,i)=>{
           if(v&&!v._noEsc){
-            if(!e||(e.target&&(e.target==document.body||v._isSameDlg(e.target)))||$(v).find(e)){
-              v._close()
-              return v
-            }
+            v._close()
+            return v
           }
         })&&Date.now()-_lastCloseDlgTime<50){}
         _lastCloseDlgTime=Date.now()
@@ -792,7 +793,8 @@ tbody td:first-child,tbody td:last-child{
     if(!_dialog._buttons.length){
       _dialog._height-=55
     }
-    _dialog=d._showMe(_content[0],_dialog,_body,_winTagClass);
+    d._showMe(_content[0],_dialog,_body,_winTagClass);
+    _dialog=$(d._window).find(".bz-modal-window")[0]
     _content.css({opacity:1,position:"unset"})
 
     _waitExe()
@@ -1359,6 +1361,7 @@ var _Dialog={
       //   _Util._setToTop($(_this._window).find(".bz-modal-window")[0])
       // }
     },100);
+    return _this._window
   },
   _initLayout:function(){
     var d=this._data;

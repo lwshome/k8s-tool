@@ -59,9 +59,7 @@ const k8s={
       k8s._getServices(function(){
         k8s._getPods(function(){
           setTimeout(()=>{
-            k8s._loadForwards(function(){
-              k8s._loadStar()
-            })
+            k8s._loadForwards()
           },100)
         })
       })
@@ -427,124 +425,6 @@ const k8s={
       }
     })
   },
-  _loadStar:function(pp){
-    if(!k8s._data._loading&&k8s._data._serviceList&&k8s._data._podList){
-      if(k8s._data._config.stars.length){
-        let gs={},s=k8s._getShowList(k8s._data._podList)
-        k8s._data._config.stars.forEach(x=>{
-          gs[x.s]=gs[x.s]||[]
-          gs[x.s].push(x.p)
-        })
-        Object.keys(gs).forEach(x=>{
-          let k=x
-          if(!s.find(z=>z._name==x)){
-            x=0
-            let ss=k8s._getServiceByPod(k)
-            if(ss){
-              ss=k8s._getPodByService(ss)//.filter(y=>s.includes(y))
-              if(ss.length){
-                x=ss.find(y=>y._ready)
-                if(x){
-                  x=x._name
-                  k8s._data._config.stars.forEach(y=>{
-                    if(y.s==k){
-                      y.s=x
-                    }
-                  })
-                  k8s._saveSetting()
-                }
-              }
-            }
-          }
-          if(x&&(!pp||pp.includes(x))){
-            x=k8s._data._podList.find(y=>y._name==x)
-            _searchStars(x,gs[k])
-          }
-        })
-      }
-      return
-    }
-    setTimeout(()=>{
-      k8s._loadStar()
-    },1000)
-
-    function _searchStars(d,s){
-      d._loading=1
-      d._subList=[]
-      let r=""
-      _k8sProxy._send({
-        _data:{
-          method:"searchStars",
-          data:{
-            serverName:d._name,
-            stars:s
-          }
-        },
-        _success:function(v){
-          if(!v.startsWith("COMPLETE: ")){
-            r+=v+"\n"
-            return
-          }
-          v=r
-          v=v.trim().split("\n").filter(x=>x&&!x.startsWith("ls: ")&&!x.startsWith("command terminated with")).map(x=>x.trim().split(/\s+/))
-
-          let i=0,gs={},g,k,os=[]
-          v.forEach(x=>{
-            if(x.length<9){
-              g=[]
-              if(x[0].endsWith(":")){
-                k=x[0].substring(0,x[0].length-1)
-              }else{
-                k=s.shift()
-              }
-              gs[k]=g
-            }else{
-              let n=x.pop()
-              if(x[x.length-1]=="->"){
-                x.pop()
-                n=x.pop()
-              }
-              n= {
-                _name:n,
-                _date:([x.pop(),x.pop(),x.pop()]).reverse().join(" "),
-                _size:x.pop(),
-                _folder:x[0][0]=="d",
-                _chmod:x[0],
-                _pod:d,
-                _path:n
-              }
-              if(s.includes(n._name)){
-                os.push(n)
-                s.splice(s.indexOf(n._name),1)
-              }else{
-                g.push(n)
-              }
-              n._name=n._name.replace("etc/../","")
-            }
-          })
-          
-          Object.keys(gs).map(k=>{
-            gs[k].forEach(x=>x._path=k+"/"+x._path)
-            let o={
-              _name:k.replace("etc/../",""),
-              _date:"xxx",
-              _size:"xxx",
-              _folder:1,
-              _chmod:"xxx",
-              _pod:d,
-              _path:k,
-              _subList:gs[k],
-              _open:1
-            }
-            os.push(o)
-          })
-
-          d._subList=os
-          k8s._orderFileList(d)
-        }
-      })
-    }  
-  },
   _orderFileList:function(d){
     d._subList.sort((a,b)=>{
       if(a._folder){
@@ -615,9 +495,12 @@ const k8s={
     return k8s._data._podList.filter(x=>x._name.includes(d._name||d))
   },
   _setStar:function(d){
+    if(!d._pod.gk){
+      return alert(_k8sMessage._info._missFilterForFavorite)
+    }
     let c=k8s._data._config
     c.stars=c.stars||[]
-    let v={s:d._pod._name,p:d._path}
+    let v={s:d._pod.gk,p:d._path,fd:d._folder}
     if(!k8s._isStar(d)){
       c.stars.push(v)
     }else{
@@ -627,7 +510,7 @@ const k8s={
   },
   _isStar:function(d){
     let c=k8s._data._config
-    let v={s:d._pod._name,p:d._path}
+    let v={s:d._pod.gk,p:d._path}
     return c.stars.find(x=>x.s==v.s&&x.p==v.p)
   },
   _getConfig:function(_fun){
@@ -683,15 +566,11 @@ const k8s={
           k8s._data._podList=v
           k8s._assignPSList()
         }else{
-          let _toLoadStar
           k8s._data._podList.forEach(x=>{
             v.find((y,i)=>{
               if(y._name==x._name){
                 x._status=y._status
-                if(x._ready!=y._ready&&y._ready){
-                  _toLoadStar=_toLoadStar||[]
-                  _toLoadStar.push(x._name)
-                }
+
                 x._ready=y._ready
                 x._age=y._age
                 v[i]=x
@@ -699,9 +578,6 @@ const k8s={
             })
           })
           k8s._data._podList=v
-          if(_toLoadStar){
-            k8s._loadStar(_toLoadStar)
-          }
         }
         _fun&&_fun()
       }
@@ -1089,7 +965,7 @@ const k8s={
                       if(k8s._data._remain){
                         c+="transparent;"
                       }else{
-                        c+="#000;"
+                        c+="var(--word-color);"
                       }
                       return c
                     },
@@ -1389,7 +1265,9 @@ const k8s={
   _getPodDetails:function(p){
     k8s._data._curPodDetails={
       _name:p._name,
-      _content:""
+      gk:p.gk,
+      _content:"",
+      _pod:p
     }
     k8s._uiSwitch._curPodDetails='_details'
     _k8sProxy._send({
@@ -1418,6 +1296,82 @@ const k8s={
         v=v.map(x=>x[0])
         k8s._data._namespaceList=v
         _fun&&_fun()
+      }
+    })
+  },
+  _searchStars:function(d,s){
+    d._loading=1
+    d._subList=[]
+    let r=""
+    _k8sProxy._send({
+      _data:{
+        method:"searchStars",
+        data:{
+          serverName:d._name,
+          stars:s
+        }
+      },
+      _success:function(v){
+        if(!v.startsWith("COMPLETE: ")){
+          r+=v+"\n"
+          return
+        }
+        v=r
+        v=v.trim().split("\n").filter(x=>x&&!x.startsWith("ls: ")&&!x.startsWith("command terminated with")).map(x=>x.trim().split(/\s+/))
+
+        let i=0,gs={},g,k,os=[]
+        v.forEach(x=>{
+          if(x.length<9){
+            g=[]
+            if(x[0].endsWith(":")){
+              k=x[0].substring(0,x[0].length-1)
+            }else{
+              k=s.shift()
+            }
+            gs[k]=g
+          }else{
+            let n=x.pop()
+            if(x[x.length-1]=="->"){
+              x.pop()
+              n=x.pop()
+            }
+            n= {
+              _name:n,
+              _date:([x.pop(),x.pop(),x.pop()]).reverse().join(" "),
+              _size:x.pop(),
+              _folder:x[0][0]=="d",
+              _chmod:x[0],
+              _pod:d,
+              _path:n
+            }
+            if(s.includes(n._name)){
+              os.push(n)
+              s.splice(s.indexOf(n._name),1)
+            }else{
+              g.push(n)
+            }
+            n._name=n._name.replace("etc/../","")
+          }
+        })
+        
+        Object.keys(gs).map(k=>{
+          gs[k].forEach(x=>x._path=k+"/"+x._path)
+          let o={
+            _name:k.replace("etc/../",""),
+            _date:"xxx",
+            _size:"xxx",
+            _folder:1,
+            _chmod:"xxx",
+            _pod:d,
+            _path:k,
+            _subList:gs[k],
+            _open:1
+          }
+          os.push(o)
+        })
+
+        d._subList=os
+        k8s._orderFileList(d)
       }
     })
   },
@@ -1509,7 +1463,7 @@ const k8s={
         method:"openFile",
         data:{
           serverName:d._name,
-          path:p._path
+          path:p._path||p.p
         }
       },
       _success:function(v){

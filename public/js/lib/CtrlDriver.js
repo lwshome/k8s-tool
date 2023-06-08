@@ -1129,7 +1129,12 @@ var _CtrlDriver={
       for(var i=0;_items&&i<_items.length;i++){
         _hasItems=1
         var r=_items[i];
-        _CtrlDriver._drawView(_dom._ctrl,_dom._data,r,_dom);
+        if(r){
+          if(r.constructor==String){
+            r=_CtrlDriver._parseViewDef(r)
+          }
+          _CtrlDriver._drawView(_dom._ctrl,_dom._data,r,_dom);
+        }
       }
     }
     if(_hasItems){

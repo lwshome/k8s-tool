@@ -15,7 +15,8 @@ const _k8sMessage={
     _allPods:"All Pods",
     _system:"System",
     _scope:"Scope",
-    _intervals:"Intervals"
+    _intervals:"Intervals",
+    _favor:"Favor"
   },
   _info:{
     _title:"Boozang K8s-Tool",
@@ -27,6 +28,7 @@ const _k8sMessage={
     _importFileError:"Error importing file: {0}",
     _noMoreAsk: "Don't ask again",
     _askSearchFile:"What's file are you looking for?",
+    _missFilterForFavorite:"Only can be set favor in filtered pod",
     _missExePod:"There is not a pod to execute the task. Please forwarding a suitable pod first, and try again."
   },
   _method:{
