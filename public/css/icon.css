@@ -14,9 +14,7 @@
 }
 .bz-search:before{
   content: "🔎";
-  font-size: 11px;
-  position: relative;
-  top: -2px;
+  font-size: 13px;
 }
 .bz-folder-open:before{
   content:"📂";
@@ -201,18 +199,18 @@
 }
 .bz-filter:before{
   content: "🞃";
-  font-size: 22px;
+  font-size: 17px;
   position: absolute;
-  top: -4px;
-  left: 2px;
+  top: -3px;
+  left: 5px;
   margin: 0;
 }
 .bz-filter:after{
   content: "𝅛";
   font-size: 15px;
   position: absolute;
-  top: 8px;
-  left: 9px;
+  top: 5px;
+  left: 10px;
   margin: 0;
 }
 .bz-corner-resize:before{

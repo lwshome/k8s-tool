@@ -118,20 +118,10 @@ function _buildTreeNode(){
                   },
                   _items:[
                     {
-                      _if:"_data._item._folder",
-                      _tag:"input",
-                      _attr:{
-                        class:"form-control",
-                        style:"margin-left:10px;padding:5px;padding: 4px;width:150px;",
-                        placeholder:"_k8sMessage._method._filter"
-                      },
-                      _dataModel:"_data._item.filter"
-                    },
-                    {
                       _tag:"button",
                       _attr:{
                         title:"_k8sMessage._method[_data._item]",
-                        style:"margin-right:3px;",
+                        style:"margin-left:3px !important;margin-right: 0 !important;",
                         class:function(d){
                           let c='btn btn-icon bz-none-border bz-'+d._item
                           if(k8s._isStar(d._supData._item)){
@@ -155,6 +145,8 @@ function _buildTreeNode(){
                               return k8s._download(d._pod,d)
                             case "star":
                               return k8s._setStar(d)
+                            case "filter":
+                              return d._showFilter=1
                             case "search":
                               return k8s._searchFile(d)
                             case "refresh":
@@ -175,10 +167,33 @@ function _buildTreeNode(){
                         let s=["download","star","delete"]
                         if(d._item._folder){
                           s.splice(1,0,"add-folder","add-file")
-                          s.unshift("search","refresh")
+                          // s.unshift("filter","search","refresh")
+                          s.unshift("refresh")
                         }
                         return s
                       }
+                    },
+                    {
+                      _if:"_data._item._showFilter",
+                      _tag:"div",
+                      _items:[
+                        {
+                          _tag:"input",
+                          _attr:{
+                            class:"form-control",
+                            style:"margin-left:10px;padding:5px;padding: 4px;width:150px;",
+                            placeholder:"_k8sMessage._method._filter"
+                          },
+                          _dataModel:"_data._item.filter",
+                          _jqext:{
+                            keydown:function(e){
+                              if(e.keyCode==13){
+                                this._data._item._showFilter=0
+                              }
+                            }
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -380,15 +395,6 @@ const _listViewDef={
                   },
                   _items:[
                     {
-                      _tag:"input",
-                      _attr:{
-                        class:"form-control",
-                        style:"margin-left:10px;padding:5px;padding: 4px;width:150px;",
-                        placeholder:"_k8sMessage._method._filter"
-                      },
-                      _dataModel:"_data._item.filter"
-                    },
-                    {
                       _tag:"button",
                       _attr:{
                         title:function(d){
@@ -400,7 +406,7 @@ const _listViewDef={
                           }
                           return v
                         },
-                        style:"margin-right:3px;",
+                        style:"margin-left:3px !important;margin-right: 0 !important;",
                         disabled:function(d){
                           return !d._supData._item._forwarding&&(d._item=='link'||d._item=='api')
                         },
@@ -418,6 +424,8 @@ const _listViewDef={
                           switch(this._data._item){
                             case "forward":
                               return k8s._forward(d)
+                            case "filter":
+                              return d._showFilter=1
                             case "search":
                               return k8s._searchFile(d)
                             case "refresh":
@@ -448,8 +456,30 @@ const _listViewDef={
                         }
                       },
                       _dataRepeat:function(d){
-                        return ["search","refresh","forward","log","cmd","link","api","delete-pod"]
+                        return ["refresh","forward","log","cmd","link","api","delete-pod"]
                       }
+                    },
+                    {
+                      _if:"_data._item._showFilter",
+                      _tag:"div",
+                      _items:[
+                        {
+                          _tag:"input",
+                          _attr:{
+                            class:"form-control",
+                            style:"margin-left:10px;padding:5px;padding: 4px;width:150px;",
+                            placeholder:"_k8sMessage._method._filter"
+                          },
+                          _dataModel:"_data._item.filter",
+                          _jqext:{
+                            keydown:function (e) {
+                              if(e.keyCode==13){
+                                this._data._item._showFilter=0
+                              }
+                            }
+                          }
+                        }
+                      ]
                     }
                   ]
                 },

@@ -16,7 +16,7 @@ const _k8sMessage={
     _system:"System",
     _scope:"Scope",
     _intervals:"Intervals",
-    _favor:"Favor"
+    _favor:"Bookmark"
   },
   _info:{
     _title:"Boozang K8s-Tool",
@@ -46,7 +46,7 @@ const _k8sMessage={
     search:"Search file / folder",
     refresh:"Refresh",
     log:"Monitor Logging",
-    star:"Favor",
+    star:"Bookmark",
     _refresh:"Refresh",
     _download:"Download",
     _copy:"Copy item name",
@@ -70,7 +70,7 @@ const _k8sMessage={
       // _namespace:"Namespace",
       _pods:"Pods",
       _config:"ConfigMap",
-      _alarm:"Alarm",
+      _alarm:"Alarms",
       // _services:"Services",
       // _deployments:"Deployments"
     }
@@ -91,7 +91,7 @@ const _k8sMessage={
     formatJSON:"Auto-format JSON Data",
     formatXML:"Auto-format XML Data",
     groupMerge:"Group log by filter",
-    highlightOnly:"Show highlight parts only",
+    highlightOnly:"Show highlighted parts only",
     autoMerge:"Auto merge log (merge duplicate content)",
     _cleanDynamicRegex:"Regular expression to sanitize dynamic characters"
   }

@@ -363,7 +363,7 @@ td.input-group{
   width:calc(100% - 12px);
 }
 select.form-control{
-  height:27px;
+  height:29px;
 }
 .re-generate-btn{
   margin: 10px 30px;

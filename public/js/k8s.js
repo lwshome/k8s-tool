@@ -178,6 +178,7 @@ const k8s={
                       _jqext:{
                         click:function(){
                           this._data._item.open=!this._data._item.open
+                          _Util._resizeModelWindow()
                         }
                       }
                     },
@@ -198,8 +199,7 @@ const k8s={
                         {
                           _tag:"input",
                           _attr:{
-                            class:"form-control",
-                            placeholder:"_k8sMessage._common._name"
+                            class:"form-control"
                           },
                           _dataModel:`k8s._uiSwitch._configList[_data._idx].name`
                         },
