@@ -80,6 +80,10 @@ var _CtrlDriver={
     }
     for(let i=0;i<vs.length;i++){
       c=vs[i]
+      if(c=="/"&&vs[i+1]==">"){
+        vs=vs.substring(0,i)+"></"+vs.match(/^<([^ \/>]+)/)[1]+">"+vs.substring(i+2)
+        c=">"
+      }
       if(c=="\\"){
         b=!b
       }else if(b){
@@ -260,7 +264,7 @@ var _CtrlDriver={
           return s
         }
       }
-      if(_Util._isFunction(s)){
+      if(_CtrlDriver._isFunction(s)){
         eval("s="+s)
         return s
       }
@@ -1396,7 +1400,7 @@ var _CtrlDriver={
                 _last=_dom;
               }
             }else if(_data.includes(d)){
-              var _newData=_Util._simpleClone(o._data)
+              var _newData=_CtrlDriver._simpleClone(o._data)
               _newData._item=dd
               var _dom=_CtrlDriver._drawView(o._ctrl,_newData,o._viewDef);
               $(_dom).insertBefore(o);
@@ -1767,6 +1771,28 @@ var _CtrlDriver={
         }
       }
     }
+  },
+  _isFunction:function(s){
+    s=s.trim()
+    return s.match(/^\(?(function|\([^\)]*\) *=> *)/)
+  },
+  _simpleClone:function(o){
+    if(o){
+      let n={}
+      if(o.constructor==Array){
+        n=[]
+      }else if(o.cloneNode){
+        return o.cloneNode()
+      }else if(o.constructor!=Object){
+        return o
+      }
+
+      for(var k in o){
+        n[k]=o[k]
+      }
+      return n
+    }
+    return o
   },
   _sign:/[^\$\_\-\wÀ-Üà-øoù-ÿŒœ\u4E00-\u9FCC]+/,
   _setBZCommonBehavior:function(jq){
