@@ -1050,9 +1050,10 @@ tbody td:first-child,tbody td:last-child{
     return {x:_posx,y:_posy};
   },
   _setToTop:function(_curDom){
-    // if($(".bz-bg").find(_curDom).length){
-      // return
-    // }
+    if($(_curDom.parentElement).hasClass("bz-modal-bg")){
+      _curDom=_curDom.parentElement
+    }
+
     var z=this._getTopZIndex(_curDom)||200;
     var zz=parseInt($(_curDom).css("z-index"))||200;
     if(!zz || z>zz){

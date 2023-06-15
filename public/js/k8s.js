@@ -668,6 +668,7 @@ const k8s={
     return v
   },
   _exeItem:function(t,d){
+    d=_Util._clone(d)
     let id=Date.now(),
         _highlight=0
     if(!t._item){
@@ -799,7 +800,7 @@ const k8s={
                               k8s._uiSwitch._playing=0
                               clearTimeout(k8s._uiSwitch._exeTmpTimer)
                             }else{
-                              _sendCmd(k8s._data._tmpCmd,t._item._name,this)
+                              _sendCmd(k8s._data._tmpCmd,t._item._name,this,{_data:k8s._data,_value:"_tmpCmd"})
                             }
                           }
                         }
@@ -832,7 +833,7 @@ const k8s={
         ]
       },[],_k8sMessage._common._message,"80%",1,0,1)
       
-      _sendCmd(d.value,t._item?t._item._name:0)
+      _sendCmd(d.value,t._item?t._item._name:0,0,{_data:d,_value:"value"})
       _attachResize()
     }else if(t._key=="api"){
       _sendAPI(t._item,d)
@@ -895,31 +896,35 @@ const k8s={
 
       
     }
-    function _sendCmd(v,n,e){
-      v=k8s._replaceVariable(v)
-      k8s._uiSwitch._playing+=1
-      _k8sProxy._send({
-        _data:{
-          method:"exeCmd",
-          data:{
-            cmd:v.trim(),
-            name:n,
-            split:e&&k8s._uiSwitch._playing
-          }
-        },
-        _success:function(r){
-          _updateResponse(r,function(){
-            if(parseInt(k8s._data._tmpIntervals)&&k8s._uiSwitch._playing){
-              k8s._uiSwitch._exeTmpTimer=setTimeout(()=>{
-                if(e&&e.getBoundingClientRect().width){
-                  _sendCmd(v,n,e)
-                }
-              },k8s._data._tmpIntervals*1000)
-            }else{
-              k8s._uiSwitch._playing=0
-            }
-          })
+    function _sendCmd(vv,n,e,_setValue){
+      k8s._replaceVariable(vv,function(v){
+        if(_setValue){
+          _setValue._data[_setValue._value]=v
         }
+        k8s._uiSwitch._playing+=1
+        _k8sProxy._send({
+          _data:{
+            method:"exeCmd",
+            data:{
+              cmd:v.trim(),
+              name:n,
+              split:e&&k8s._uiSwitch._playing
+            }
+          },
+          _success:function(r){
+            _updateResponse(r,function(){
+              if(parseInt(k8s._data._tmpIntervals)&&k8s._uiSwitch._playing){
+                k8s._uiSwitch._exeTmpTimer=setTimeout(()=>{
+                  if(e&&e.getBoundingClientRect().width){
+                    _sendCmd(v,n,e)
+                  }
+                },k8s._data._tmpIntervals*1000)
+              }else{
+                k8s._uiSwitch._playing=0
+              }
+            })
+          }
+        })
       })
     }
     function _sendAPI(t,d){
@@ -1057,10 +1062,107 @@ const k8s={
       },100)
     }
   },
-  _replaceVariable:function(v){
+  _replaceVariable:function(v,_fun){
     $NS=k8s._data._config.ns
     v=eval("`"+v+"`")
-    return v
+    let _alarm
+    if(v.startsWith("$alarm\n")){
+      v=v.replace("$alarm\n","").trim()
+      _alarm=1
+    }
+    let ps=v.match(/\{\$parameter:[^\}]+\}/g)
+    if(ps){
+      ps=[...new Set(ps)]
+      k8s._data._tmpParameters=ps.map(x=>{
+        let xx=x.replace("{$parameter:","").replace(/\}$/,"").trim();
+        xx=xx.split("=");
+        let vv=(xx[1]||"").trim().split("|")
+
+        return {
+          _map:x,
+          _name:xx[0].trim(),
+          _value:vv[0],
+          _options:vv
+        }
+      })
+
+      _Util._confirmMessage({
+        _tag:"div",
+        _items:[
+          {
+            _tag:"div",
+            _attr:{
+              class:"input-group"
+            },
+            _items:[
+              {
+                _tag:"label",
+                _attr:{
+                  class:"input-group-addon"
+                },
+                _text:"_data._item._name"
+              },
+              {
+                _if:"_data._item._options.length==1",
+                _tag:"input",
+                _attr:{
+                  class:"form-control"
+                },
+                _dataModel:"k8s._data._tmpParameters[_data._idx]._value",
+                _updateEvent:"blur"
+              },
+              {
+                _if:"_data._item._options.length>1",
+                _tag:"select",
+                _attr:{
+                  class:"form-control"
+                },
+                _dataModel:"k8s._data._tmpParameters[_data._idx]._value",
+                _items:[
+                  {
+                    _tag:"option",
+                    _attr:{
+                      value:"_data._item"
+                    },
+                    _text:"_data._item",
+                    _dataRepeat:"k8s._data._tmpParameters[_data._idx]._options"
+                  }
+                ]
+              }
+            ],
+            _dataRepeat:"k8s._data._tmpParameters"
+          }
+        ]
+      },[{
+        _title:_k8sMessage._method._execute,
+        _class:"btn btn-primary",
+        _click:function(c){
+          k8s._data._tmpParameters.forEach(x=>{
+            let vv;
+            while(vv!==v){
+              vv=v
+              v=v.replace(x._map,x._value)
+            }
+          })
+          _fun(v)
+          c._ctrl._close()
+        }
+      }],_k8sMessage._common._parameters,500,0,function(c){
+        c._ctrl._close()
+        _Util._closeModelWindow()
+      })
+      return
+    }else if(_alarm){
+      return _Util._confirmMessage(_k8sMessage._info._confirmExe,[{
+        _title:_k8sMessage._method._execute,
+        _class:"btn btn-primary",
+        _click:function(c){
+          _fun(v)
+          c._ctrl._close()
+        }
+      }],_k8sMessage._method._confirm,500)
+    }
+    _fun(v)
   },
   _forward:function(d){
     if(d._forwarding){
@@ -1551,7 +1653,7 @@ const k8s={
         method:"saveFile",
         data:{
           serverName:d._name,
-          path:p._path,
+          path:p._path||p.p,
           content:p._content
         }
       },

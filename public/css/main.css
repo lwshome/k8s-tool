@@ -10,6 +10,7 @@
   --word-color:#333;
   --even-color:#EEE;
   --header-color:#CCF;
+  --bz-tmp-panel-color:#FFC;
 }
 html,body{
   height: 100%;
@@ -432,6 +433,7 @@ pre {
   white-space: nowrap;
   height:20px;
   padding: 5px 0;
+  background-color: var(--bz-tmp-panel-color);
 }
 .bz-ex-ctl-panel input{
   min-width:100px;
@@ -443,6 +445,10 @@ pre {
   position: relative;
   top: -5px;
 }
+.bz-in-details .bz-ex-ctl-panel{
+  
+}
+
 .bz-list-row{
   display: flex;
 }
@@ -557,7 +563,7 @@ header{
   font-style: normal;
   font-size: 13px;
   font-weight: 400;
-  height:100%;
+  height:calc(100% - 5px);
 }
 
 .bz-modal-window .bz-modal-footer {
@@ -810,7 +816,6 @@ label>input[type=checkbox]{
   background-color: var(--active-color) !important;
 }
 
-
 @media (prefers-color-scheme: dark) {
   body,textarea,input,select{
     background-color:var(--background-color);
@@ -830,15 +835,10 @@ label>input[type=checkbox]{
     --background-color:#1f1f1f;
     --word-color:#CCC;
     --even-color:#111;
-    --header-color:#CCC;
+    --header-color:#333;
+    --bz-tmp-panel-color:#223;
   }
   
-  .bz-item-row:nth-child(even) {
-    background-color: #111;
-  }
-  .bz-panel-header{
-    background-color: #333;
-  }  
   .btn-icon:before{
     color:#CCC !important;
   }

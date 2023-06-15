@@ -397,15 +397,6 @@ const _listViewDef={
                     {
                       _tag:"button",
                       _attr:{
-                        title:function(d){
-                          let s=d._supData._item
-                          d=d._item
-                          let v=_k8sMessage._method[d]
-                          if(d=="forward"){
-                            v+=" ("+s._forwarding+")"
-                          }
-                          return v
-                        },
                         style:"margin-left:3px !important;margin-right: 0 !important;",
                         disabled:function(d){
                           return !d._supData._item._forwarding&&(d._item=='link'||d._item=='api')
@@ -490,7 +481,7 @@ const _listViewDef={
                   _attr:{
                     style:function(){
                       let r=k8s._uiSwitch._showMenu._element.getBoundingClientRect()
-                      return `top:${r.top+20}px;right:${window.innerWidth-r.right}px;`
+                      return `top:${r.top+20}px;right:${window.innerWidth-r.right-100}px;`
                     },
                     class:"bz-menu-panel"
                   },

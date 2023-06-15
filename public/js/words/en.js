@@ -16,7 +16,8 @@ const _k8sMessage={
     _system:"System",
     _scope:"Scope",
     _intervals:"Intervals",
-    _favor:"Bookmark"
+    _favor:"Bookmark",
+    _parameters:"Parameters"
   },
   _info:{
     _title:"Boozang K8s-Tool",
@@ -29,7 +30,8 @@ const _k8sMessage={
     _noMoreAsk: "Don't ask again",
     _askSearchFile:"What's file are you looking for?",
     _missFilterForFavorite:"Only can be set favor in filtered pod",
-    _missExePod:"There is not a pod to execute the task. Please forwarding a suitable pod first, and try again."
+    _missExePod:"There is not a pod to execute the task. Please forwarding a suitable pod first, and try again.",
+    _confirmExe:"Please confirm to execute"
   },
   _method:{
     _execute:"Execute",
