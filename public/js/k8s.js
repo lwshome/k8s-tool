@@ -1,6 +1,6 @@
 //Machine learn
 const k8s={
-  _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods",_playing:0}),
+  _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods"}),
   _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[],autoForward:{},filter:{}}}),
   _getKey:function(){
     k8s._key=k8s._key||Date.now()
@@ -670,7 +670,13 @@ const k8s={
   _exeItem:function(t,d){
     d=_Util._clone(d)
     let id=Date.now(),
-        _highlight=0
+        _highlight=0,
+        _response="r"+id,
+        _tmpCmd="c"+id,
+        _playing="p"+id,
+        _tmpIntervals="i"+id,
+        _waiting="w"+id
+    k8s._uiSwitch[_playing]=1
     if(!t._item){
       t=k8s._getItemByGroup(d,t)
       if(!t){
@@ -680,8 +686,8 @@ const k8s={
     if(t._key=="link"){
       window.open(t._item._host+d.value)
     }else if(t._key=="cmd"||t._key=="sys-cmd"){
-      k8s._uiSwitch._response=""
-      k8s._data._tmpCmd=d.value
+      k8s._uiSwitch[_response]=""
+      k8s._data[_tmpCmd]=d.value
       
       _Util._confirmMessage({
         _tag:"div",
@@ -699,7 +705,7 @@ const k8s={
               style:'width:calc(100% - 10px);height:calc(100% - 60px);',
               class:"textarea"
             },
-            _dataModel:'k8s._uiSwitch._response',
+            _dataModel:'k8s._uiSwitch.'+_response,
             _jqext:{
               mousedown:function(e){
                 e.stopPropagation()
@@ -725,7 +731,7 @@ const k8s={
                   {
                     _tag:"label",
                     _attr:{
-                      class:"input-group-addon",
+                      class:"input-group-addon bz-shell-mark",
                       style:"min-width: 0;font-family: monospace;font-size: 12px;font-weight: bold;"
                     },
                     _text:"˃"
@@ -733,7 +739,7 @@ const k8s={
                   {
                     _tag:"textarea",
                     _attr:{
-                      disabled:"k8s._uiSwitch._playing",
+                      disabled:"k8s._uiSwitch."+_playing,
                       class:"form-control",
                       style:"height:26px;padding:5px;width:calc(100% - 12px);",
                       placeholder:"Support mutiple line cmd, press ctrl or shite + enter to add new line"
@@ -745,7 +751,7 @@ const k8s={
                         }
                       }
                     },
-                    _dataModel:"k8s._data._tmpCmd"
+                    _dataModel:"k8s._data."+_tmpCmd
                   }
                 ]
               },
@@ -759,7 +765,8 @@ const k8s={
                   {
                     _tag:"label",
                     _attr:{
-                      class:"input-group-addon"
+                      class:"input-group-addon",
+                      style:"z-index:2222222;"
                     },
                     _text:"_k8sMessage._common._intervals+'(s)'"
                   },
@@ -769,10 +776,34 @@ const k8s={
                       type:"number",
                       class:"form-control",
                       min:0,
-                      style:"height:36px;"
+                      style:"height:36px;",
+                      step:10
                     },
-                    _dataModel:"k8s._data._tmpIntervals"
+                    _dataModel:"k8s._data."+_tmpIntervals
                   },
+                  {
+                    _if:"k8s._uiSwitch."+_waiting,
+                    _after:function(){
+                      let t=setInterval(function(){
+                        k8s._uiSwitch[_waiting]--
+                        if(!k8s._uiSwitch[_waiting]){
+                          clearInterval(t)
+                        }
+                      },1000)
+                    },
+                    _tag:"div",
+                    _attr:{
+                      class:"bz-precentage-bar",
+                      style:function(){
+                        let c=(1-k8s._uiSwitch[_waiting]/k8s._data[_tmpIntervals])*100+"%"
+                        
+                        return "height:37px;width:"+c
+                      },
+                      precentage:function(){
+                        return k8s._uiSwitch[_waiting]+"s"
+                      }
+                    }
+                  },  
                   {
                     _tag:"div",
                     _attr:{
@@ -785,22 +816,22 @@ const k8s={
                         _attr:{
                           class:function(){
                             let c="bz-none-border btn btn-icon "
-                            if(k8s._uiSwitch._playing){
+                            if(k8s._uiSwitch[_playing]){
                               c+="bz-stop"
                             }else{
                               c+="bz-play"
                             }
                             return c
                           },
-                          title:"k8s._uiSwitch._playing?'_k8sMessage._method._stop':'_k8sMessage._method._play'"
+                          title:"k8s._uiSwitch."+_playing+"?_k8sMessage._method._stop:_k8sMessage._method._play"
                         },
                         _jqext:{
                           click:function(){
-                            if(k8s._uiSwitch._playing){
-                              k8s._uiSwitch._playing=0
+                            if(k8s._uiSwitch[_playing]){
+                              k8s._uiSwitch[_playing]=0
                               clearTimeout(k8s._uiSwitch._exeTmpTimer)
                             }else{
-                              _sendCmd(k8s._data._tmpCmd,t._item._name,this,{_data:k8s._data,_value:"_tmpCmd"})
+                              _sendCmd(k8s._data[_tmpCmd],t._item._name,this,{_data:k8s._data,_value:_tmpCmd})
                             }
                           }
                         }
@@ -814,7 +845,7 @@ const k8s={
                         },
                         _jqext:{
                           click:function(){
-                            k8s._uiSwitch._response=""
+                            k8s._uiSwitch[_response]=""
                             let o=$("#"+id+" .textarea")[0]
                             if(o){
                               o._history=0
@@ -831,7 +862,11 @@ const k8s={
             ]
           }
         ]
-      },[],_k8sMessage._common._message,"80%",1,0,1)
+      },[],_k8sMessage._common._message,"80%",1,function(){
+        delete k8s._uiSwitch[_response]
+        delete k8s._data[_tmpCmd]
+        delete k8s._uiSwitch[_playing]
+      },1)
       
       _sendCmd(d.value,t._item?t._item._name:0,0,{_data:d,_value:"value"})
       _attachResize()
@@ -844,15 +879,24 @@ const k8s={
 
       _Util._autoScrollToBottom(o,function(){
         if(v=="BZ-COMPLETE"){
+          $(".bz-shell-mark").html(">")
+          _insertPanel(o)
+          
           o._history=(o._curText||[]).filter(x=>x)
           o._curText=0
           _highlight++
           _fun&&_fun()
+
         }else{
+          $(".bz-shell-mark").html("<div class='bz-small-loading'></div>")
           if(o.tagName=="TEXTAREA"){
-            v=k8s._uiSwitch._response+v
-            k8s._uiSwitch._response=v.substring(v.length-1048576)
+            v=k8s._uiSwitch[_response]+v
+            k8s._uiSwitch[_response]=v.substring(v.length-1048576)
           }else{
+            if(!o.children.length){
+              _insertPanel(o)
+            }
+            let _panel=o.children[o.children.length-1]
             if(o._curText){
               v=v.trim()
             }
@@ -864,7 +908,7 @@ const k8s={
             let h=_highlight%15+1
             v.forEach(x=>{
               if(!x){
-                $(o).append("<div style='height:10px;'></div>")
+                $(_panel).append("<div style='height:10px;'></div>")
                 return 
               }
               let y=o._history.shift();
@@ -875,17 +919,33 @@ const k8s={
                   y=y.match(/(^ *)?([^ ]+)( +|$)/g)
                   x=x.match(/(^ *)?([^ ]+)( +|$)/g)
                   x=x.map((z,i)=>{
-                    let zz=y[i]||""
+                    let zz=y[i]||"",zi
                     if(z.trim()!=zz.trim()){
                       zz=z.split(/[^ ]+/)
-                      return (zz[0]||"")+"<span class='g-"+h+"'>"+z.trim()+"</span>"+(zz[1]||"")
+                      z=z.trim()
+                      if(z.match(/^[0-9]{3,}$/)&&y[i].trim().match(/^[0-9]{3,}$/)){
+                        let zi=parseInt(z)-parseInt(y[i].trim()),
+                            _size=(Math.abs(zi)+"").length+3
+                        if(zi&&zz[1].length>_size){
+                          zz[1]=zz[1].substring(_size)
+                          if(zi>0){
+                            zi="+"+zi
+                          }
+                          z+="<span class='g-"+h+"'>("+zi+")</span>"
+                        }else{
+                          z="<span class='g-"+h+"'>"+z+"</span>"
+                        }
+                      }else{
+                        z="<span class='g-"+h+"'>"+z+"</span>"
+                      }
+                      return (zz[0]||"")+z+(zz[1]||"")
                     }else{
                       return z
                     }
                   }).join("")
                 }
               }
-              $(o).append("<div class='bz-cmd-item'>"+x+"</div>")
+              $(_panel).append("<div class='bz-cmd-item'>"+x+"</div>")
             })
             while(o.children.length>5000){
               o.children[0].remove()
@@ -893,34 +953,38 @@ const k8s={
           }
         }
       },20)
-
-      
     }
+
+    function _insertPanel(o){
+      $(o).append("<div class='bz-camera-panel' onclick='_Util._takeScreenshot(this,event)'></div>")
+    }
+
     function _sendCmd(vv,n,e,_setValue){
       k8s._replaceVariable(vv,function(v){
         if(_setValue){
           _setValue._data[_setValue._value]=v
         }
-        k8s._uiSwitch._playing+=1
+        k8s._uiSwitch[_playing]+=1
         _k8sProxy._send({
           _data:{
             method:"exeCmd",
             data:{
               cmd:v.trim(),
               name:n,
-              split:e&&k8s._uiSwitch._playing
+              split:e&&k8s._uiSwitch[_playing]
             }
           },
           _success:function(r){
             _updateResponse(r,function(){
-              if(parseInt(k8s._data._tmpIntervals)&&k8s._uiSwitch._playing){
+              if(parseInt(k8s._data[_tmpIntervals])&&k8s._uiSwitch[_playing]){
                 k8s._uiSwitch._exeTmpTimer=setTimeout(()=>{
                   if(e&&e.getBoundingClientRect().width){
                     _sendCmd(v,n,e)
                   }
-                },k8s._data._tmpIntervals*1000)
+                },k8s._data[_tmpIntervals]*1000)
+                k8s._uiSwitch[_waiting]=parseInt(k8s._data[_tmpIntervals])
               }else{
-                k8s._uiSwitch._playing=0
+                k8s._uiSwitch[_playing]=0
               }
             })
           }
@@ -928,7 +992,7 @@ const k8s={
       })
     }
     function _sendAPI(t,d){
-      k8s._uiSwitch._response=""
+      k8s._uiSwitch[_response]=""
       let s=_Util._jsonToCurl(t,d)
       k8s._data._exeCount=1
       if(s){
@@ -946,7 +1010,7 @@ const k8s={
                 placeholder:'_k8sMessage._common._waiting',
                 style:'width:calc(100% - 10px);height:calc(100% - 45px);'
               },
-              _dataModel:'k8s._uiSwitch._response'
+              _dataModel:'k8s._uiSwitch.'+_response
             },
             {
               _tag:"div",
@@ -1020,7 +1084,7 @@ const k8s={
                       },
                       _jqext:{
                         click:function(){
-                          k8s._uiSwitch._response=""
+                          k8s._uiSwitch[_response]=""
                         }
                       }
                     }
@@ -1297,23 +1361,29 @@ const k8s={
     return !v||x._name.match(new RegExp(v,"i"))
   },
   _deleteNS:function(){
-    _k8sProxy._send({
-      _data:{
-        method:"exeCmd",
-        data:{
-          cmd:`kubectl delete namespace ${k8s._data._config.ns}`
-        }
-      },
-      _success:function(v){
-        alert("Done!")
-        let ns=k8s._data._namespaceList,
-            c=k8s._data._config
-        ns.splice(ns.indexOf(c.ns),1)
-        c.ns=ns[0]
-        k8s._saveSetting()
-        k8s._getInitData()
+    _Util._confirmMessage(_k8sMessage._info._confirmDeleteNS+": "+k8s._data._config.ns,[{
+      _title:_k8sMessage._method._confirm,
+      _class:"btn btn-warn",
+      _click:function(){
+        _k8sProxy._send({
+          _data:{
+            method:"exeCmd",
+            data:{
+              cmd:`kubectl delete namespace ${k8s._data._config.ns}`
+            }
+          },
+          _success:function(v){
+            alert("Done!")
+            let ns=k8s._data._namespaceList,
+                c=k8s._data._config
+            ns.splice(ns.indexOf(c.ns),1)
+            c.ns=ns[0]
+            k8s._saveSetting()
+            k8s._getInitData()
+          }
+        })
       }
-    })
+    }])
   },
   _getConfigMap:function(p){
     k8s._data._configMap=[]
@@ -1722,7 +1792,7 @@ const k8s={
 }
 $(document).keydown(x=>{
   if(x.keyCode==27){
-    $(".bz-modal-bg").click()
+    $(".bz-modal-bg").mousedown()
     $(".bz-close").click()
     k8s._uiSwitch._showMenu=0
     // if(!_Util._isStdInputElement($(":focus")[0]||document.body)){

@@ -25,7 +25,7 @@ const _fileContentViewDef=[
             if(!k8s._data._curFile._loading){
               c+="bz-save"
             }else{
-              c+="bz-loading"
+              c+="bz-small-loading"
             }
             return c
           }

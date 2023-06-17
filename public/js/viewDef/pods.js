@@ -36,7 +36,7 @@ function _buildTreeNode(){
                           if(d._folder){
                             if(d._open||d._loading){
                               if(!d._subList||d._loading){
-                                c+="bz-loading"
+                                c+="bz-small-loading"
                               }else{
                                 c+="bz-folder-open"
                               }
@@ -268,7 +268,7 @@ const _listViewDef={
                           d=d._item
                           if(d._open||d._loading){
                             if(!d._subList||d._loading){
-                              c+="bz-loading"
+                              c+="bz-small-loading"
                             }else{
                               c+="bz-open-item"
                             }
@@ -304,7 +304,7 @@ const _listViewDef={
                           }else if(d._status!="Running"){
                             c+="bz-failed"
                           }else{
-                            c+="bz-loading"
+                            c+="bz-small-loading"
                           }
                           
                           return c

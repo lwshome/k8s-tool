@@ -728,6 +728,7 @@ label>input[type=checkbox]{
   background: green;
   position: relative;
   height: 27px;
+  z-index: 1111;
 }
 .bz-precentage-bar:after{
   content:attr(precentage);
@@ -747,6 +748,7 @@ label>input[type=checkbox]{
 
 .bz-highlight{
   background-color: yellow;
+  color: #000;
 }
 
 .bz-corner-resize{
@@ -826,7 +828,7 @@ label>input[type=checkbox]{
   }
   :root {
     --bz-shadow:2px 2px 9px rgba(255,255,255,0.3);
-    --active-color:darkorange;
+    --active-color:darkgreen;
     --border-color: #333;
     --hightlight-color:#300;
     --hightlight-background-color:#111;
@@ -882,4 +884,15 @@ label>input[type=checkbox]{
     color:#00f !important;
   }
    
+}
+
+.bz-panel-header.bz-highlight *::before{
+  color:#000 !important;
+  border-color:#000 !important;
+}
+.bz-panel-header.bz-highlight *::after{
+  color:#000 !important;
+}
+.bz-panel-header.bz-highlight button.btn.bz-none-border:hover {
+  background-color: var(--word-color);
 }

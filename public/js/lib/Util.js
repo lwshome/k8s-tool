@@ -736,6 +736,7 @@ tbody td:first-child,tbody td:last-child{
       _modal:!_noModal,
       _moveable:1,
       _destroyOnClose:true,
+      _cancelFun:_cancelFun,
       _buttons:_noCancel&&_noCancel!='_close'?[]:[
         {
           _title:_btns.length?_k8sMessage._method[_noCancel||!_btns.length?"_close":'_cancel']:_k8sMessage._method._close,
@@ -1158,6 +1159,18 @@ tbody td:first-child,tbody td:last-child{
         }
       }
     }
+  },
+  _takeScreenshot:function(o,e){
+    let r=o.getBoundingClientRect()
+    if(e.x>r.x+r.width-30&&e.y<r.y+30){
+      $(o).removeClass("bz-camera-panel")
+      $(o).addClass("bz-taking-picture")
+      html2canvas(o).then(canvas => {
+        canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]));
+        $(o).addClass("bz-camera-panel")
+        $(o).removeClass("bz-taking-picture")
+      });
+    }
   }
 };
 
@@ -1225,8 +1238,10 @@ var _DialogViewDef={
                 class:"btn btn-icon bz-close bz-none-border pull-right"
               },
               _jqext:{
-                click:function(){
+                click:function(e){
                   _Util._closeModelWindow(this)
+                  let f=this._data._cancelFun
+                  f&&f.constructor==Function&&f(e)
                 }
               }
             }
@@ -1324,7 +1339,7 @@ var _DialogViewDef={
     }
   ],
   _jqext:{
-    click:function(e){
+    mousedown:function(e){
       if(e.target==this){
         _Util._closeModelWindow()
       }

@@ -31,7 +31,7 @@ const _deploymentsViewDef={
                         if(d._subList){
                           c+="bz-open-item"
                         }else{
-                          c+="bz-loading"
+                          c+="bz-small-loading"
                         }
                       }else{
                         c+="bz-close-item"

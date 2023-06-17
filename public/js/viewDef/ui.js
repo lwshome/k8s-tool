@@ -91,7 +91,8 @@ const ui={
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-delete bz-none-border bz-middle-btn"
+                class:"btn btn-icon bz-delete bz-none-border bz-middle-btn",
+                title:"_k8sMessage._method._deleteNameSpace"
               },
               _jqext:{
                 click:function(){

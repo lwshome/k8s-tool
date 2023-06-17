@@ -29,7 +29,7 @@ const _logViewDef={
             {
               _tag:"span",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-log",
+                class:"btn btn-icon bz-small-btn bz-none-border bz-log",
                 style:"cursor:default;margin-right:5px;"
               }
             },
