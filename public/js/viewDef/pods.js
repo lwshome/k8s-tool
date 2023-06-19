@@ -47,8 +47,7 @@ function _buildTreeNode(){
                             c+="bz-file"
                           }
                           return c
-                        },
-                        style:"position: relative;top: -1px;"
+                        }
                       }
                     },
                     //info
@@ -57,6 +56,11 @@ function _buildTreeNode(){
                       _attr:{
                         style:function(d){
                           let c="margin-left:5px;"
+                          if(!parseInt(d._item._size)){
+                            c+="color:grey;"
+                          }else{
+                            c+="color:unset;"
+                          }
                           return c
                         }
                       },
@@ -74,7 +78,7 @@ function _buildTreeNode(){
                           _attr:{
                             style:"margin-left:10px;color:grey;"
                           },
-                          _text:"'('+_data._item._date+', '+_data._item._size+', '+_data._item._chmod+')'"
+                          _text:"'('+_data._item._date+', '+_Util._formatFileSize(_data._item._size)+', '+_data._item._chmod+')'"
                         }
                       ]
                     }
@@ -138,9 +142,15 @@ function _buildTreeNode(){
                         }
                       ],
                       _jqext:{
-                        click:function(){
+                        click:function(e){
                           let d=this._data._supData._item
                           switch(this._data._item){
+                            case "copy":
+                              e.stopPropagation()
+                              debugger
+                              e=this.parentElement.parentElement.children[0].children[1].children[0]
+                              _Util._copyText(this._data._supData._item._path.replace("etc/../",""),document,e)
+                              return
                             case "download":
                               return k8s._download(d._pod,d)
                             case "star":
@@ -160,12 +170,16 @@ function _buildTreeNode(){
                               return k8s._addFile(d._pod,d,1)
                             case "add-file":
                               return k8s._addFile(d._pod,d)
+                            case "sweap":
+                              return k8s._sweap(d._pod,d)
                           }
                         }
                       },
                       _dataRepeat:function(d){
-                        let s=["download","star","delete"]
-                        if(d._item._folder){
+                        let s=["copy","download","star","sweap"]
+                        if(!d._item._folder){
+                          s.push("delete")
+                        }else{
                           s.splice(1,0,"add-folder","add-file")
                           // s.unshift("filter","search","refresh")
                           s.unshift("refresh")
@@ -343,21 +357,6 @@ const _listViewDef={
                             style:"margin-left:10px;color:grey;"
                           },
                           _text:"'('+_data._item._age+')'"
-                        },
-                        {
-                          _if:"_data._item==k8s._data._curCtrl._data",
-                          _tag:"button",
-                          _attr:{
-                            class:"btn btn-icon bz-none-border bz-copy",
-                            style:"position: relative;top: -1px;left: 5px;",
-                            title:"_k8sMessage._method._copy"
-                          },
-                          _jqext:{
-                            click:function(e){
-                              e.stopPropagation()
-                              _Util._copyText(this.parentElement.children[0].innerText.trim(),document,this.parentElement.children[0])
-                            }
-                          }
                         }
                       ]
                     },
@@ -413,6 +412,11 @@ const _listViewDef={
                         click:function(e){
                           let d=this._data._supData._item
                           switch(this._data._item){
+                            case "copy":
+                              e.stopPropagation()
+                              e=this.parentElement.parentElement.children[0].children[2]
+                              _Util._copyText(e.innerText.trim(),document,e)
+                              return
                             case "forward":
                               return k8s._forward(d)
                             case "filter":
@@ -447,7 +451,7 @@ const _listViewDef={
                         }
                       },
                       _dataRepeat:function(d){
-                        return ["refresh","forward","log","cmd","link","api","delete-pod"]
+                        return ["copy","refresh","forward","log","cmd","link","api","delete-pod"]
                       }
                     },
                     {

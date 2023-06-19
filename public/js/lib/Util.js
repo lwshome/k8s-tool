@@ -1171,6 +1171,18 @@ tbody td:first-child,tbody td:last-child{
         $(o).removeClass("bz-taking-picture")
       });
     }
+  },
+  _formatFileSize:function(v){
+    v=parseInt(v)
+    let u=["B","K","M","G","T"]
+    while(1){
+      if(v>1024){
+        u.shift()
+        v=parseInt(v/1024)
+      }else{
+        return v+u[0]
+      }
+    }
   }
 };
 

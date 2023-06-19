@@ -39,8 +39,7 @@ const _podDetailsViewDef={
                 {
                   _tag:"button",
                   _attr:{
-                    class:"'btn btn-icon bz-none-border '+(_data._item.fd?'bz-folder-close':'bz-file')",
-                    style:"position: relative;top: -1px;"
+                    class:"'btn btn-icon bz-none-border '+(_data._item.fd?'bz-folder-close':'bz-file')"
                   }
                 },
                 {
@@ -49,7 +48,7 @@ const _podDetailsViewDef={
                     style:"margin-left:5px;line-height:25px;"
                   },
                   _text:function(d){
-                    return d._item.p.replace("/etc/..","")
+                    return d._item.p.replace("etc/..","")
                   },
                   _jqext:{
                     click:function(){

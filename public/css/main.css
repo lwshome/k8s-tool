@@ -99,7 +99,7 @@ a{
 textarea,.textarea{
   font-family:'Roboto Mono', monospace;
   padding: 5px;
-  font-size: 11px;
+  font-size: 15px;
   border:var(--bz-border);
   white-space:pre;
   resize: none;
@@ -774,7 +774,19 @@ label>input[type=checkbox]{
   tab-size : 2;
   font-family: monospace;
 }
-
+.bz-cmd-item .bz-copy{
+  display: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.bz-cmd-item:hover .bz-copy{
+  display:unset;
+}
+.bz-cmd-header{
+  background-color: var(--active-color);
+  font-weight: bold;
+}
 .bz-middle-btn{
   width: 20px;
   height: 20px;

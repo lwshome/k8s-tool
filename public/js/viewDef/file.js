@@ -6,10 +6,26 @@ const _fileContentViewDef=[
     },
     _items:[
       {
-        _tag:"span",
+        _tag:"button",
         _attr:{
-          class:"btn btn-icon bz-small-btn bz-file",
-          style:"cursor:default;margin-right:5px;"
+          class:function(){
+            let c="btn btn-icon bz-small-btn "
+            if(!k8s._data._curFile._loading){
+              c+="bz-file"
+            }else{
+              c+="bz-small-loading"
+            }
+            return c
+          },
+          style:function(){
+            let c="cursor:default;";
+            if(!k8s._data._curFile._loading){
+              c+="margin-top:0;margin-right:5px;"
+            }else{
+              c+="margin-top:4px;margin-right:8px;"
+            }
+            return c
+          }
         }
       },
       {
@@ -20,15 +36,7 @@ const _fileContentViewDef=[
         _tag:"button",
         _attr:{
           style:"position: relative;top: 3px;margin-right:10px;",
-          class:function(d){
-            let c="btn btn-icon bz-small-btn bz-none-border "
-            if(!k8s._data._curFile._loading){
-              c+="bz-save"
-            }else{
-              c+="bz-small-loading"
-            }
-            return c
-          }
+          class:"btn btn-icon bz-small-btn bz-none-border bz-save"
         },
         _jqext:{
           click:function(){

@@ -675,7 +675,8 @@ const k8s={
         _tmpCmd="c"+id,
         _playing="p"+id,
         _tmpIntervals="i"+id,
-        _waiting="w"+id
+        _waiting="w"+id,
+        _timer="t"+id
     k8s._uiSwitch[_playing]=1
     if(!t._item){
       t=k8s._getItemByGroup(d,t)
@@ -775,6 +776,7 @@ const k8s={
                     _attr:{
                       type:"number",
                       class:"form-control",
+                      disabled:"k8s._uiSwitch."+_playing,
                       min:0,
                       style:"height:36px;",
                       step:10
@@ -786,8 +788,9 @@ const k8s={
                     _after:function(){
                       let t=setInterval(function(){
                         k8s._uiSwitch[_waiting]--
-                        if(!k8s._uiSwitch[_waiting]){
+                        if(k8s._uiSwitch[_waiting]<=0){
                           clearInterval(t)
+                          k8s._uiSwitch[_waiting]=0
                         }
                       },1000)
                     },
@@ -828,8 +831,9 @@ const k8s={
                         _jqext:{
                           click:function(){
                             if(k8s._uiSwitch[_playing]){
+                              k8s._uiSwitch[_waiting]=0
                               k8s._uiSwitch[_playing]=0
-                              clearTimeout(k8s._uiSwitch._exeTmpTimer)
+                              clearTimeout(k8s._uiSwitch[_timer])
                             }else{
                               _sendCmd(k8s._data[_tmpCmd],t._item._name,this,{_data:k8s._data,_value:_tmpCmd})
                             }
@@ -866,6 +870,8 @@ const k8s={
         delete k8s._uiSwitch[_response]
         delete k8s._data[_tmpCmd]
         delete k8s._uiSwitch[_playing]
+        delete k8s._data[_tmpIntervals]
+        delete k8s._uiSwitch[_waiting]
       },1)
       
       _sendCmd(d.value,t._item?t._item._name:0,0,{_data:d,_value:"value"})
@@ -908,7 +914,7 @@ const k8s={
             let h=_highlight%15+1
             v.forEach(x=>{
               if(!x){
-                $(_panel).append("<div style='height:10px;'></div>")
+                // $(_panel).append("<div style='height:10px;'></div>")
                 return 
               }
               let y=o._history.shift();
@@ -945,7 +951,11 @@ const k8s={
                   }).join("")
                 }
               }
-              $(_panel).append("<div class='bz-cmd-item'>"+x+"</div>")
+              let cc="bz-cmd-item"
+              if(!_panel.children.length||(_panel.children.length==1&&_panel.children[0].innerText.match(/^=== [^=]+=+$/))){
+                cc+=" bz-cmd-header"
+              }
+              $(_panel).append("<div class='"+cc+"'>"+x+"</div>")
             })
             while(o.children.length>5000){
               o.children[0].remove()
@@ -977,13 +987,14 @@ const k8s={
           _success:function(r){
             _updateResponse(r,function(){
               if(parseInt(k8s._data[_tmpIntervals])&&k8s._uiSwitch[_playing]){
-                k8s._uiSwitch._exeTmpTimer=setTimeout(()=>{
+                k8s._uiSwitch[_timer]=setTimeout(()=>{
                   if(e&&e.getBoundingClientRect().width){
                     _sendCmd(v,n,e)
                   }
                 },k8s._data[_tmpIntervals]*1000)
                 k8s._uiSwitch[_waiting]=parseInt(k8s._data[_tmpIntervals])
               }else{
+                k8s._uiSwitch[_waiting]=0
                 k8s._uiSwitch[_playing]=0
               }
             })
@@ -1704,8 +1715,28 @@ const k8s={
             method:"deleteFile",
             data:{
               serverName:d._name,
+              path:p._path
+            }
+          },
+          _success:function(r){
+            k8s._getFileList(d,p._parent||d)
+            c._ctrl._close()
+          }
+        })
+      }
+    }])
+  },
+  _sweap:function(d,p){
+    _Util._confirmMessage(_k8sMessage._info._confirmSweap,[{
+      _title:_k8sMessage._method._yes,
+      _class:"btn btn-warn",
+      _click:function(c){
+        _k8sProxy._send({
+          _data:{
+            method:p._folder?"sweapFiles":"sweapFile",
+            data:{
+              serverName:d._name,
               path:p._path,
-              folder:p._folder
             }
           },
           _success:function(r){
