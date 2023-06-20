@@ -27,10 +27,10 @@ const _logViewDef={
           },
           _items:[
             {
-              _tag:"span",
+              _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-none-border bz-log",
-                style:"cursor:default;margin-right:5px;"
+                class:"btn btn-icon  bz-right-space-5 bz-none-border bz-log",
+                style:"cursor:default;"
               }
             },
             {
@@ -68,8 +68,7 @@ const _logViewDef={
             {
               _tag:"button",
               _attr:{
-                style:"margin-left:10px;position: relative;top: 2px;",
-                class:"btn btn-icon bz-small-btn bz-none-border bz-download",
+                class:"btn btn-icon bz-none-border bz-download bz-left-space-10",
                 title:"_k8sMessage._method._download"
               },
               _jqext:{
@@ -82,8 +81,7 @@ const _logViewDef={
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-none-border bz-delete",
-                style:"margin-left:10px;position: relative;top: 1px;",
+                class:"btn btn-icon bz-left-space-10 bz-none-border bz-delete",
                 title:"_k8sMessage._method._clean"
               },
               _jqext:{
@@ -96,8 +94,7 @@ const _logViewDef={
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-none-border bz-setting",
-                style:"margin-left: 8px;position: relative;top: 1px;",
+                class:"btn btn-icon bz-left-space-10 bz-none-border bz-setting",
                 title:"_k8sMessage._setting._title"
               },
               _jqext:{
@@ -110,8 +107,7 @@ const _logViewDef={
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-none-border bz-close",
-                style:"margin-left:10px;position: relative;top: 1px;",
+                class:"btn btn-icon bz-left-space-10 bz-none-border bz-close",
                 title:"_k8sMessage._method._close"
               },
               _jqext:{

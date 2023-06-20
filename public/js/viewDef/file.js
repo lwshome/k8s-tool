@@ -9,7 +9,7 @@ const _fileContentViewDef=[
         _tag:"button",
         _attr:{
           class:function(){
-            let c="btn btn-icon bz-small-btn "
+            let c="btn btn-icon "
             if(!k8s._data._curFile._loading){
               c+="bz-file"
             }else{
@@ -22,7 +22,7 @@ const _fileContentViewDef=[
             if(!k8s._data._curFile._loading){
               c+="margin-top:0;margin-right:5px;"
             }else{
-              c+="margin-top:4px;margin-right:8px;"
+              c+="margin-top:8px;margin-right:8px;"
             }
             return c
           }
@@ -35,8 +35,7 @@ const _fileContentViewDef=[
       {
         _tag:"button",
         _attr:{
-          style:"position: relative;top: 3px;margin-right:10px;",
-          class:"btn btn-icon bz-small-btn bz-none-border bz-save"
+          class:"btn btn-icon bz-none-border bz-save bz-right-space-10"
         },
         _jqext:{
           click:function(){
@@ -48,8 +47,7 @@ const _fileContentViewDef=[
       {
         _tag:"button",
         _attr:{
-          class:"btn btn-icon bz-small-btn bz-none-border bz-refresh",
-          style:"position: relative;top: 3px;",
+          class:"btn btn-icon bz-none-border bz-refresh",
           title:"_k8sMessage._method._refresh"
         },
         _jqext:{
@@ -77,8 +75,7 @@ const _fileContentViewDef=[
         _if:"k8s._uiSwitch._curPodDetails=='_file'",
         _tag:"button",
         _attr:{
-          class:"btn btn-icon bz-small-btn bz-none-border bz-close",
-          style:"margin-left:10px;position: relative;top: 3px;",
+          class:"btn btn-icon bz-none-border bz-close bz-left-space-10",
           title:"_k8sMessage._method._close"
         },
         _jqext:{

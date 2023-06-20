@@ -86,8 +86,7 @@ const _logHandler={
                 {
                   _tag:"button",
                   _attr:{
-                    class:"btn btn-icon bz-plus bz-none-border bz-small-btn",
-                    style:"margin-top:2px;"
+                    class:"btn btn-icon bz-plus bz-none-border"
                   },
                   _jqext:{
                     click:function(ex){
@@ -148,7 +147,7 @@ const _logHandler={
                           if(o){
                             o.style=""
                           }
-                          return 'margin-left:10px;margin-right:10px;line-height:25px;'+d._item.css
+                          return 'margin-left:10px;margin-right:10px;line-height:30px;'+d._item.css
                         }
                       },
                       _text:"_k8sMessage._log._example"
@@ -156,8 +155,7 @@ const _logHandler={
                     {
                       _tag:"button",
                       _attr:{
-                        style:"margin-top:2px;",
-                        class:"btn btn-icon bz-small-btn bz-delete bz-none-border"
+                        class:"btn btn-icon bz-delete bz-none-border"
                       },
                       _jqext:{
                         click:function(){

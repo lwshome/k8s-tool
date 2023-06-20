@@ -21,9 +21,9 @@ const _configDetailsViewDef={
           },
           _items:[
             {
-              _tag:"span",
+              _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-setting",
+                class:"btn btn-icon bz-none-border bz-setting",
                 style:"cursor:default;margin-right:5px;"
               }
             },
@@ -32,25 +32,25 @@ const _configDetailsViewDef={
               _items:[
                 {
                   _text:"k8s._data._curConfig._name"
-                },
-                {
-                  _tag:"button",
-                  _attr:{
-                    class:"btn btn-icon bz-none-border bz-edit bz-left-space-10 bz-small-btn bz-hover-item"
-                  },
-                  _jqext:{
-                    click:function(){
-                      _Util._copyText("kubectl -n mycac edit configmap "+this._data._curConfig._name,document,this.parentElement)
-                    }
-                  }
                 }
               ]
             },
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-none-border bz-refresh",
-                style:"position: relative;top: 3px;",
+                class:"btn btn-icon bz-none-border bz-save",
+                title:"_k8sMessage._method._refresh"
+              },
+              _jqext:{
+                click:function(){
+                  k8s._updateConfig(JSON.stringify(k8s._data._curConfig._content,0,2))
+                }
+              }
+            },
+            {
+              _tag:"button",
+              _attr:{
+                class:"btn btn-icon bz-none-border bz-refresh bz-left-space-10",
                 title:"_k8sMessage._method._refresh"
               },
               _jqext:{
@@ -63,8 +63,7 @@ const _configDetailsViewDef={
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-small-btn bz-none-border bz-close",
-                style:"margin-left:10px;position: relative;top: 3px;",
+                class:"btn btn-icon bz-none-border bz-close bz-left-space-10",
                 title:"_k8sMessage._method._close"
               },
               _jqext:{
@@ -76,11 +75,52 @@ const _configDetailsViewDef={
           ]
         },
         {
-          _tag:"textarea",
+          _if:"k8s._data._curConfig._content",
+          _tag:"div",
           _attr:{
-            style:"flex:1;margin-bottom:-5px;"
+            style:"flex:1;margin-bottom:-5px;display:flex;flex-direction:column;"
           },
-          _dataModel:"k8s._data._curConfig._content"
+          _items:[
+            {
+              _tag:"div",
+              _attr:{
+                class:"input-group"
+              },
+              _items:[
+                {
+                  _tag:"label",
+                  _attr:{
+                    class:"input-group-addon"
+                  },
+                  _text:"_k8sMessage._common._items"
+                },
+                {
+                  _tag:"select",
+                  _attr:{
+                    class:"form-control"
+                  },
+                  _dataModel:"k8s._data._curConfgItem",
+                  _items:[
+                    {
+                      _tag:"option",
+                      _attr:{
+                        value:"_data._key"
+                      },
+                      _text:"_data._key",
+                      _dataRepeat:"k8s._data._curConfig._content.data"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              _tag:"textarea",
+              _attr:{
+                style:"flex:1;margin-top:5px;"
+              },
+              _dataModel:"k8s._data._curConfig._content.data[k8s._data._curConfgItem]"
+            }
+          ]
         }
       ]
     }    

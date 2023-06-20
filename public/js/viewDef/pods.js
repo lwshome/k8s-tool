@@ -414,7 +414,7 @@ const _listViewDef={
                           switch(this._data._item){
                             case "copy":
                               e.stopPropagation()
-                              e=this.parentElement.parentElement.children[0].children[2]
+                              e=this.parentElement.parentElement.children[0].children[2].children[0]
                               _Util._copyText(e.innerText.trim(),document,e)
                               return
                             case "forward":

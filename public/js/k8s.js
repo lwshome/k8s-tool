@@ -1460,18 +1460,46 @@ const k8s={
     k8s._data._curConfig._content=""
     
     k8s._uiSwitch._curPodDetails='_details'
+    let vv=""
     _k8sProxy._send({
       _data:{
         method:"exeCmd",
         data:{
-          cmd:`kubectl describe configmap ${k} -n ${k8s._data._config.ns}`
+          cmd:`kubectl get configmap ${k} -n ${k8s._data._config.ns} -o json`
         }
       },
       _success:function(v){
         if(v!="BZ-COMPLETE"){
           v=v.split("\n")
-          v.shift()
-          k8s._data._curConfig._content+=v.join("\n")
+          if(!vv){
+            v.shift()
+          }
+          vv+=v.join("\n")
+        }else{
+          vv=JSON.parse(vv)
+          k8s._data._curConfig._content=vv
+          k8s._data._curConfgItem=Object.keys(vv.data)[0]
+        }
+      }
+    })
+  },
+  _updateConfig:function(v){
+    let r=""
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          fileName:"config.json",
+          fileContent:v,
+          cmd:`kubectl -n ${k8s._data._config.ns} apply -f download/config.json`
+        }
+      },
+      _success:function(v){
+        if(v=="BZ-COMPLETE"){
+          alert(r)
+          k8s._getConfigDetails(k8s._data._curConfig._name)
+        }else{
+          r+=v
         }
       }
     })

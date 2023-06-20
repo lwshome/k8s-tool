@@ -88,7 +88,7 @@ a{
 }
 
 .bz-tab-bar .bz-tab.active{
-  border-bottom:2px solid var(--active-color);
+  background-color: var(--hightlight-color);
 }
 
 .bz-tab-content{
@@ -549,6 +549,7 @@ header{
   text-overflow: ellipsis;
   flex:1;
   cursor:default;
+  line-height: 27px;
 }
 .bz-modal-body a{
   text-decoration:underline;

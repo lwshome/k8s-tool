@@ -154,6 +154,56 @@ const k8s={
     s=s.split(" ")
     _monitor(s.shift(),s,_fun)
   },
+  sweapFile:function(d,_fun){
+    console.log("------- Sweap file:")
+    let s=`${_getK8sCmdHeader(d)} exec -i ${d.serverName} -- truncate -s 0 ${d.path}`
+    console.log(s)
+    s=s.split(" ")
+    _monitor(s.shift(),s,_fun)
+  },
+  sweapFiles:function(d,_fun){
+    let f=d.path
+    
+    _handlerFolder(d,f,_fun)
+    function _handlerFolder(d,r,fff){
+      k8s.getFileList(d,function(vs){
+        vs=vs.trim().split("\n").map(x=>x.split(/\s+/)).filter(x=>x.length>5).map(x=>{
+          let n=x.pop()
+          if(x[x.length-1]=="->"){
+            x.pop()
+            n=x.pop()
+          }
+          console.log("Get file: "+d.path+"/"+n)
+          return {
+            name:n,
+            path:d.path+"/"+n,
+            _folder:x[0][0]=="d",
+            serverName:d.serverName,
+            ns:d.ns
+          }
+        })
+        _handlerItem(vs,r,fff)
+      })
+    }
+
+    function _handlerItem(vs,r,fff){
+      let x=vs.shift()
+      if(x){
+        if(x._folder){
+          console.log("Sweap folder: "+r+"/"+x.name)
+          _handlerFolder(x,r+"/"+x.name,function(){
+            _handlerItem(vs,r,fff)
+          })
+        }else{
+          k8s.sweapFile(x,function(v){
+            _handlerItem(vs,r,fff)
+          })
+        }
+      }else{
+        fff()
+      }
+    }
+  },
   addFile:function(d,_fun){
     if(d.folder){
       let s=`${_getK8sCmdHeader(d)} exec -i ${d.serverName} -- mkdir ${d.path}`
@@ -200,6 +250,10 @@ const k8s={
   },
   exeCmd:function(d,_fun){
     console.log(d)
+    if(d.fileName){
+      fs.writeFileSync("download/"+d.fileName,d.fileContent||"");
+    }
+
     let cs=d.cmd.split("\n")
     cs=cs.filter(x=>x).map(x=>{
       if(d.name){
@@ -232,7 +286,7 @@ const k8s={
                 }
                 _split="\n=== "+s+new Date()+" "+"=".repeat("30")+"\n\n"
               }
-              v=(_split||"")+c+":\n"+v
+              v=(_split||"")+c+"\n"+v
               _start=1
             }
             _fun(v)

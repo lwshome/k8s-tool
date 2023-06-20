@@ -24,10 +24,10 @@ const _podDetailsViewDef={
                 class:"bz-panel-header"
               },
               _items:[
-                '<span class="btn btn-icon bz-small-btn bz-star on" style="cursor:default;margin-right:5px;"></span>',
+                '<button class="btn btn-icon bz-star on" style="cursor:default;"></button>',
                 '<header>_k8sMessage._common._favor</header>',
-                `<button _if='k8s._uiSwitch._showFavorFile' style='position: relative;top:3px;margin-right:10px;' onclick='k8s._uiSwitch._showFavorFile=0' class='btn btn-icon bz-none-border bz-small-btn bz-pod'></button>`,
-                `<button onclick='k8s._uiSwitch._curPodDetails=0' style='position: relative;top:3px;' class='btn btn-icon bz-small-btn bz-none-border bz-close'></button>`
+                `<button _if='k8s._uiSwitch._showFavorFile' onclick='k8s._uiSwitch._showFavorFile=0' class='btn btn-icon bz-none-border bz-right-space-5 bz-pod'></button>`,
+                `<button onclick='k8s._uiSwitch._curPodDetails=0' class='btn btn-icon bz-none-border bz-close'></button>`
               ]
             },
             {
@@ -45,7 +45,7 @@ const _podDetailsViewDef={
                 {
                   _tag:"a",
                   _attr:{
-                    style:"margin-left:5px;line-height:25px;"
+                    style:"margin-left:5px;line-height:30px;"
                   },
                   _text:function(d){
                     return d._item.p.replace("etc/..","")
@@ -89,10 +89,10 @@ const _podDetailsViewDef={
               },
               _items:[
                 {
-                  _tag:"span",
+                  _tag:"button",
                   _attr:{
-                    class:"btn btn-icon bz-small-btn bz-computer",
-                    style:"cursor:default;margin-right:5px;"
+                    class:"btn btn-icon bz-computer bz-right-space-5",
+                    style:"cursor:default;"
                   }
                 },
                 {
@@ -102,8 +102,7 @@ const _podDetailsViewDef={
                 {
                   _tag:"button",
                   _attr:{
-                    class:"btn btn-icon bz-small-btn bz-none-border bz-refresh",
-                    style:"position: relative;top: 3px;",
+                    class:"btn btn-icon bz-none-border bz-refresh",
                     title:"_k8sMessage._method._refresh"
                   },
                   _jqext:{

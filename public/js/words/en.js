@@ -18,7 +18,8 @@ const _k8sMessage={
     _intervals:"Intervals",
     _favor:"Bookmark",
     _parameters:"Parameters",
-    _done:"Done!"
+    _done:"Done!",
+    _items:"Items"
   },
   _info:{
     _title:"Boozang K8s-Tool",
