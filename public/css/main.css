@@ -396,10 +396,6 @@ select.form-control{
   float:right;
 }
 
-.bz-space{
-  flex:1;
-}
-
 .bz-small-btn{
   width:20px;
   height:20px;
@@ -432,7 +428,7 @@ pre {
 .bz-ex-ctl-panel{
   white-space: nowrap;
   height:20px;
-  padding: 5px 0;
+  padding: 5px;
   background-color: var(--bz-tmp-panel-color);
 }
 .bz-ex-ctl-panel input{
@@ -751,6 +747,68 @@ label>input[type=checkbox]{
   color: #000;
 }
 
+.bz-space-5{
+  margin: 5px !important;
+}
+.bz-space-10{
+  margin: 10px !important;
+}
+.bz-space-15{
+  margin: 15px !important;
+}
+.bz-space-20{
+  margin: 20px !important;
+}
+.bz-top-space-5{
+  margin-top: 5px !important;
+}
+.bz-top-space-10{
+  margin-top: 10px !important;
+}
+.bz-top-space-15{
+  margin-top: 15px !important;
+}
+.bz-top-space-20{
+  margin-top: 20px !important;
+}
+
+.bz-bottom-space-5{
+  margin-bottom: 5px !important;
+}
+.bz-bottom-space-10{
+  margin-bottom: 10px !important;
+}
+.bz-bottom-space-15{
+  margin-bottom: 15px !important;
+}
+.bz-bottom-space-20{
+  margin-bottom: 20px !important;
+}
+
+.bz-left-space-5{
+  margin-left: 5px !important;
+}
+.bz-left-space-10{
+  margin-left: 10px !important;
+}
+.bz-left-space-15{
+  margin-left: 15px !important;
+}
+.bz-left-space-20{
+  margin-left: 20px !important;
+}
+.bz-right-space-5{
+  margin-right: 5px !important;
+}
+.bz-right-space-10{
+  margin-right: 10px !important;
+}
+.bz-right-space-15{
+  margin-right: 15px !important;
+}
+.bz-right-space-20{
+  margin-right: 20px !important;
+}
 .bz-corner-resize{
   position: absolute;
   bottom: 0;
@@ -773,6 +831,7 @@ label>input[type=checkbox]{
   white-space: pre;
   tab-size : 2;
   font-family: monospace;
+  padding: 0px 10px;
 }
 .bz-cmd-item .bz-copy{
   display: none;
@@ -784,8 +843,15 @@ label>input[type=checkbox]{
   display:unset;
 }
 .bz-cmd-header{
-  background-color: var(--active-color);
+  background-color: var(--hightlight-color);
   font-weight: bold;
+  padding: 5px;
+  cursor:pointer;
+  border-radius: 5px !important;
+  margin: 5px;
+}
+.bz-cmd-header:hover{
+  text-decoration: underline;
 }
 .bz-middle-btn{
   width: 20px;
@@ -800,8 +866,8 @@ label>input[type=checkbox]{
 .bz-hover-item{
   display:none;
 }
-.bz-list-row:hover .bz-hover-item{
-  display:block;
+*:hover>.bz-hover-item{
+  display:unset;
 }
 
 .bz-bell.bz-press{
@@ -842,7 +908,7 @@ label>input[type=checkbox]{
     --bz-shadow:2px 2px 9px rgba(255,255,255,0.3);
     --active-color:darkgreen;
     --border-color: #333;
-    --hightlight-color:#300;
+    --hightlight-color:#262;
     --hightlight-background-color:#111;
     --bz-border:1px solid #333;
     --pillbox-color: #333;

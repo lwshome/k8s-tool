@@ -29,7 +29,22 @@ const _configDetailsViewDef={
             },
             {
               _tag:"header",
-              _text:"k8s._data._curConfig._name"
+              _items:[
+                {
+                  _text:"k8s._data._curConfig._name"
+                },
+                {
+                  _tag:"button",
+                  _attr:{
+                    class:"btn btn-icon bz-none-border bz-edit bz-left-space-10 bz-small-btn bz-hover-item"
+                  },
+                  _jqext:{
+                    click:function(){
+                      _Util._copyText("kubectl -n mycac edit configmap "+this._data._curConfig._name,document,this.parentElement)
+                    }
+                  }
+                }
+              ]
             },
             {
               _tag:"button",

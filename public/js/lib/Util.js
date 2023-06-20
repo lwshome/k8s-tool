@@ -407,18 +407,10 @@ var _Util={
     setTimeout(function(){
       if($(".bz-large-editor")[0]){
         $(".bz-textarea-ctr").click()
-      }else if($(".bz-large")[0]){
-        $(".bz-ui-switch").click()
-      }else{
-        while(_dialogList.find((v,i)=>{
-          if(v&&!v._noEsc){
-            v._close()
-            return v
-          }
-        })&&Date.now()-_lastCloseDlgTime<50){}
-        _lastCloseDlgTime=Date.now()
-     }
-   },10)
+      }else if($(".bz-bg")[0]){
+        $(".bz-close").click()
+      }
+    },10)
   },
   _checkKeycode:function(e) {
     var _keycode;
@@ -702,11 +694,57 @@ tbody td:first-child,tbody td:last-child{
       }
     }],d._title||_k8sMessage._common._question,400)
   },
+  _formatTimestamp:function(t,f){
+    t=t||Date.now()
+    if(t.constructor==String&&!$.isNumeric(t)){
+      f=t
+      t=Date.now()
+    }
+    t=parseInt(t)
+    f=f||"MM-dd hh:mm";
+    var d=new Date(t);
+    var mp={
+      y:d.getFullYear()+"",
+      M:(d.getMonth()+1).toString().padStart(2,"0"),
+      d:d.getDate().toString().padStart(2,"0"),
+      h:d.getHours().toString().padStart(2,"0"),
+      m:d.getMinutes().toString().padStart(2,"0"),
+      s:d.getSeconds().toString().padStart(2,"0")
+    }
+    for(var k in mp){
+      var r= new RegExp("["+k+"]+"),
+          v=mp[k]
+      
+      r=f.match(r)
+      if(r){
+        r=r[0]
+        if(k=="y"){
+          v=v.substring(v.length-r.length)
+        }else if(r.length==1){
+          v=parseInt(v)+""
+        }
+        f=f.replace(r,v)
+      }
+    }
+    return f
+  },
   _getParentElementByCss:function(p,o){
     p=$(p).toArray();
-    return p.find(a=>{
-      return $(a).find(o)[0]
-    })
+    let oo=0
+    while(!oo){
+      oo= p.find(a=>{
+        return $(a).find(o)[0]
+      })
+      if(oo){
+        return oo
+      }
+      p=p[0].parentElement
+      if(!p){
+        return
+      }
+      p=$(p).toArray();
+    }
+    return oo
   },
   _confirmMessage:function(_msg,_btns,_title,_width,_noCancel,_cancelFun,_noModal,_body,_noMoreAsk){
     let _loading=_msg
@@ -746,7 +784,7 @@ tbody td:first-child,tbody td:last-child{
           },
           _click:function(_this){
             if(_cancelFun){
-              if(_cancelFun()===0){
+              if(_cancelFun(_this)===0){
                 return
               }
             }
@@ -1253,7 +1291,7 @@ var _DialogViewDef={
                 click:function(e){
                   _Util._closeModelWindow(this)
                   let f=this._data._cancelFun
-                  f&&f.constructor==Function&&f(e)
+                  f&&f.constructor==Function&&f(this)
                 }
               }
             }

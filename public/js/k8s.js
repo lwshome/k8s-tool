@@ -917,6 +917,7 @@ const k8s={
                 // $(_panel).append("<div style='height:10px;'></div>")
                 return 
               }
+              let _flag=x.match(/^=== [^=]+=+$/)
               let y=o._history.shift();
               if(y){
                 if(!y.match(/^=== [^=]+=+$/)&&x.match(/^=== [^=]+=+$/)){
@@ -951,11 +952,14 @@ const k8s={
                   }).join("")
                 }
               }
-              let cc="bz-cmd-item"
-              if(!_panel.children.length||(_panel.children.length==1&&_panel.children[0].innerText.match(/^=== [^=]+=+$/))){
+              let cc="bz-cmd-item",_click=""
+              if(_flag){
+                cc+=" bz-flag bz-space-10"
+              }else if(!_panel.children.length||(_panel.children[_panel.children.length-1].innerText.match(/^=== [^=]+=+$/))){
                 cc+=" bz-cmd-header"
+                _click=`onmousedown='k8s._clickCmd(this,event)' ondblclick='k8s._dblClickCmd(this)'`
               }
-              $(_panel).append("<div class='"+cc+"'>"+x+"</div>")
+              $(_panel).append("<div class='"+cc+"' "+_click+">"+x+"</div>")
             })
             while(o.children.length>5000){
               o.children[0].remove()
@@ -970,7 +974,7 @@ const k8s={
     }
 
     function _sendCmd(vv,n,e,_setValue){
-      k8s._replaceVariable(vv,function(v){
+      k8s._replaceVariable(vv,t._item?t._item.gk:"",function(v){
         if(_setValue){
           _setValue._data[_setValue._value]=v
         }
@@ -1137,14 +1141,41 @@ const k8s={
       },100)
     }
   },
-  _replaceVariable:function(v,_fun){
+  _clickCmd:function(o,e){
+    e.stopPropagation()
+    e.preventDefault()
+    if(e.button==2){
+      _Util._copyText(o.innerText)
+    }else{
+      let p=_Util._getParentElementByCss(o,"textarea")
+      let v=o.innerText.trim().split("--")
+      v.shift()
+      v=v.join("--").trim()
+      p=$(p).find("textarea")[0]
+      eval(p._viewDef._dataModel+"=v")
+    }
+  },
+  _dblClickCmd:function(o){
+    let p=_Util._getParentElementByCss(o,"textarea")
+    $(p).find(".bz-stop").click()
+    setTimeout(()=>{
+      $(p).find(".bz-play").click()
+    },100)
+  },
+  _replaceVariable:function(v,_group,_fun){
     $NS=k8s._data._config.ns
     v=eval("`"+v+"`")
-    let _alarm
-    if(v.startsWith("$alarm\n")){
-      v=v.replace("$alarm\n","").trim()
-      _alarm=1
+    let _alarm=v.match(/^\$bz-alarm:.+\n/)
+    if(_alarm){
+      _alarm=_alarm[0]
+      v=v.replace(_alarm,"").trim()
     }
+    v=v.replace(/\{\$bz-hhmm\}/g,_Util._formatTimestamp(0,"hhmm"))
+    v=v.replace(/\{\$bz-hhmmss\}/g,_Util._formatTimestamp(0,"hhmmss"))
+    v=v.replace(/\{\$bz-yyyyMMdd\}/g,_Util._formatTimestamp(0,"yyyyMMdd"))
+    v=v.replace(/\{\$bz-timestamp\}/g,_Util._formatTimestamp(0,"yyyyMMddhhmmss"))
+    v=v.replace(/\{\$bz-group\}/g,_group)
+
     let ps=v.match(/\{\$parameter:[^\}]+\}/g)
     if(ps){
       ps=[...new Set(ps)]
@@ -1228,7 +1259,7 @@ const k8s={
       })
       return
     }else if(_alarm){
-      return _Util._confirmMessage(_k8sMessage._info._confirmExe,[{
+      return _Util._confirmMessage(_alarm.replace("$alarm:","").trim()||_k8sMessage._info._confirmExe,[{
         _title:_k8sMessage._method._execute,
         _class:"btn btn-primary",
         _click:function(c){
