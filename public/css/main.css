@@ -188,7 +188,7 @@ input:focus {
   border: 0;
 }
 
-*[disabled]{
+*[disabled],.bz-disabled{
   background-color: var(--border-color) !important;
   cursor: not-allowed;
   color: #888 !important;
@@ -447,6 +447,7 @@ pre {
 
 .bz-list-row{
   display: flex;
+  padding: 0 5px;
 }
 .bz-list-row:hover{
   background-color:var(--hightlight-color);

@@ -45,7 +45,7 @@ const _podDetailsViewDef={
                 {
                   _tag:"a",
                   _attr:{
-                    style:"margin-left:5px;line-height:30px;"
+                    class:"bz-node-title"
                   },
                   _text:function(d){
                     return d._item.p.replace("etc/..","")
@@ -66,11 +66,37 @@ const _podDetailsViewDef={
                       }
                     }
                   }
+                },
+                {
+                  _tag:"div",
+                  _attr:{
+                    style:"flex:1"
+                  }
+                },
+                {
+                  _tag:"button",
+                  _attr:{
+                    class:"btn btn-icon bz-none-border bz-delete"
+                  },
+                  _jqext:{
+                    click:function(){
+                      k8s._setStar(this._data._item,k8s._data._curPodDetails._pod)
+                    }
+                  }
                 }
               ],
               _dataRepeat:function(){
                 return k8s._data._config.stars.filter(x=>x.s==k8s._data._curPodDetails.gk)
               }
+            },
+            {
+              _if:"!k8s._data._config.stars.filter(x=>x.s==k8s._data._curPodDetails.gk).length",
+              _tag:"i",
+              _attr:{
+                class:"bz-list-row bz-disabled",
+                style:"padding: 5px;text-indent: 25px;font-size: 13px;"
+              },
+              _text:"_k8sMessage._info._noteAddFavorites"
             }
           ]
         },

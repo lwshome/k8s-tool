@@ -238,7 +238,8 @@ const _listViewDef={
   _if:"k8s._uiSwitch._curMainTab=='_pods'",
   _tag:"div",
   _attr:{
-    class:"bz-list-box"
+    class:"bz-list-box",
+    style:"margin-bottom: 30px;"
   },
   _items:[
     {
@@ -619,10 +620,40 @@ const _listViewDef={
             _buildTreeNode()
           ],
           _dataRepeat:function(){
-            return (k8s._data._podList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter[k8s._data._config.ns]))
+            let vs= (k8s._data._podList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter[k8s._data._config.ns]))
+            if(k8s._data._config.runningPodOnly){
+              vs=vs.filter(x=>x._status=="Running")
+            }
+            return vs
           }
         }
       ]    
+    },
+    {
+      _tag:"div",
+      _attr:{
+        style:"position: absolute;bottom: 0;line-height: 20px;padding: 5px;"
+      },
+      _items:[
+        {
+          _tag:"label",
+          _update:function(){
+            k8s._saveSetting()
+          },
+          _items:[
+            {
+              _tag:"input",
+              _attr:{
+                type:"checkbox"
+              },
+              _dataModel:"k8s._data._config.runningPodOnly"
+            },
+            {
+              _text:"_k8sMessage._setting._showRunningOnly"
+            }
+          ]
+        }
+      ]
     }
   ]
 };

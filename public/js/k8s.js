@@ -494,23 +494,25 @@ const k8s={
   _getPodByService:function(d){
     return k8s._data._podList.filter(x=>x._name.includes(d._name||d))
   },
-  _setStar:function(d){
-    if(!d._pod.gk){
+  _setStar:function(d,_pod){
+    _pod=d._pod||_pod
+    if(!_pod.gk){
       return alert(_k8sMessage._info._missFilterForFavorite)
     }
     let c=k8s._data._config
     c.stars=c.stars||[]
-    let v={s:d._pod.gk,p:d._path,fd:d._folder}
-    if(!k8s._isStar(d)){
+    let v={s:_pod.gk,p:d._path||d.p,fd:d._folder||d.fd}
+    if(!k8s._isStar(d,_pod)){
       c.stars.push(v)
     }else{
       c.stars=c.stars.filter(x=>x.s!=v.s||x.p!=v.p)
     }
     k8s._saveSetting()
   },
-  _isStar:function(d){
+  _isStar:function(d,_pod){
+    _pod=d._pod||_pod
     let c=k8s._data._config
-    let v={s:d._pod.gk,p:d._path}
+    let v={s:_pod.gk,p:d._path||d.p}
     return c.stars.find(x=>x.s==v.s&&x.p==v.p)
   },
   _getConfig:function(_fun){

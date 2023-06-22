@@ -32,10 +32,11 @@ const _k8sMessage={
     _importFileError:"Error importing file: {0}",
     _noMoreAsk: "Don't ask again",
     _askSearchFile:"What's file are you looking for?",
-    _missFilterForFavorite:"Only can be set favor in filtered pod",
+    _missFilterForFavorite:"Only can be set favorite in filtered pod",
     _missExePod:"There is not a pod to execute the task. Please forwarding a suitable pod first, and try again.",
     _confirmExe:"Please confirm to execute",
-    _confirmDeleteNS:"Do you want to delete NameSpace"
+    _confirmDeleteNS:"Do you want to delete NameSpace",
+    _noteAddFavorites:"Note: Please expend pod file list and click ⭐ to add your favorites."
   },
   _method:{
     _execute:"Execute",
@@ -88,7 +89,8 @@ const _k8sMessage={
     cmd:"Remote Command setting",
     link:"Pod Link setting",
     api:"API setting",
-    _list:"Item list:"
+    _list:"Item list:",
+    _showRunningOnly:"Show Running pod only"
   },
   _log:{
     _title:"Log setting",
