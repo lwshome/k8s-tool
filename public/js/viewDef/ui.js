@@ -165,7 +165,7 @@ const ui={
             }
             return v
           },
-          _dataRepeat:["_pods","_services","_nodes","_deployments","_config","_alarm"]
+          _dataRepeat:["_pods","_services","_deployments","_config","_nodes","_alarm"]
         },
         {
           _tag:"div",
