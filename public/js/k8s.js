@@ -153,7 +153,7 @@ const k8s={
 
               r._title+=`    ${_curValue}`
               if(a.content=="total"){
-                if(lv._percentage>a.value){
+                if((lv._percentage||lv._value)>a.value){
                   lv._alarm=1
                   r._title+="🔔"
                 }
@@ -897,28 +897,91 @@ const k8s={
     })
   },
   _getServices:function(_fun){
+    if(k8s._data._serviceList){
+      return
+    }
+    let vv=""
     _k8sProxy._send({
       _data:{
-        method:"getList",
+        method:"exeCmd",
         data:{
-          type:"services"
+          cmd:"kubectl get services -n "+k8s._data._config.ns
         }
       },
       _success:function(v){
-        v=v.trim().split("\n").map(x=>x.split(/\s+/))
-        v.shift()
-        v=v.map(x=>{
-          return {
-            _name:x[0],
-            _type:x[1],
-            _cip:x[2],
-            _eip:x[3],
-            _port:x[4],
-            _age:x[5]
+        if(v!="BZ-COMPLETE"){
+          vv+=v
+        }else{
+          v=vv.trim().split("\n").map(x=>x.split(/\s+/))
+          v.shift()
+          v=v.map(x=>{
+            return {
+              _name:x[0],
+              _type:x[1],
+              _clusterIp:x[2],
+              _externalIp:x[3],
+              _port:x[4]
+            }
+          })
+          k8s._data._serviceList=v
+          _fun&&_fun()
+        }
+      }
+    })
+  },
+  _getNode:function(d){
+    if(!d._content){
+      let vv=""
+      _k8sProxy._send({
+        _data:{
+          method:"exeCmd",
+          data:{
+            cmd:"kubectl get nodes "+d._name+" -n "+k8s._data._config.ns+" -o yaml"
           }
-        })
-        k8s._data._serviceList=v
-        _fun&&_fun()
+        },
+        _success:function(v){
+          if(v!="BZ-COMPLETE"){
+            vv+=v
+          }else{
+            vv=vv.split("\n")
+            vv.shift()
+            
+            d._content=vv.join("\n")
+          }
+        }
+      })
+    }
+  },
+  _getNodes:function(_fun){
+    if(k8s._data._nodeList){
+      return
+    }
+    let vv=""
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:"kubectl get nodes -n "+k8s._data._config.ns
+        }
+      },
+      _success:function(v){
+        if(v!="BZ-COMPLETE"){
+          vv+=v
+        }else{
+          v=vv.trim().split("\n").map(x=>x.split(/\s+/))
+          v.shift()
+          v.shift()
+          v=v.map(x=>{
+            return {
+              _name:x[0],
+              _status:x[1],
+              _roles:x[2],
+              _version:x[4]
+            }
+          })
+          k8s._data._nodeList=v
+          _fun&&_fun()
+        }
       }
     })
   },

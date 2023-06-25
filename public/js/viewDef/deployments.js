@@ -28,7 +28,9 @@ const _deploymentsViewDef={
                   _attr:{
                     class:"bz-node-title"
                   },
-                  _text:"_data._item._name",
+                  _html:function(d){
+                    return _attachHighlight(d._item._name,k8s._data._config.filter[k8s._data._config.ns],d._item)
+                  },
                   _jqext:{
                     click:function(){
                       k8s._data._curDeployment=this._data._item
@@ -84,7 +86,13 @@ const _deploymentsViewDef={
               ]
             }
           ],
-          _dataRepeat:"k8s._data._deployments"
+          _dataRepeat:function(){
+            let r=k8s._data._config.filter[k8s._data._config.ns]
+            r=r&&new RegExp(r)
+            return (k8s._data._deployments||[]).filter(x=>{
+              return r?x._name.match(r):1
+            })
+          }
         }
       ]
     }

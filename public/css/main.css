@@ -242,6 +242,10 @@ table.bz-data-table input.form-control{
 .input-group .form-control:focus {
   z-index: 3;
 }
+.bz-attach-info{
+  margin-left:10px;
+  color:grey;
+}
 .input-group-addon,
 .input-group-btn,
 .input-group .form-control {

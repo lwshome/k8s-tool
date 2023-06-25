@@ -76,7 +76,7 @@ function _buildTreeNode(){
                         {
                           _tag:"i",
                           _attr:{
-                            style:"margin-left:10px;color:grey;"
+                            class:"bz-attach-info"
                           },
                           _text:"'('+_data._item._date+', '+_Util._formatFileSize(_data._item._size)+', '+_data._item._chmod+')'"
                         }
@@ -355,7 +355,7 @@ const _listViewDef={
                         {
                           _tag:"i",
                           _attr:{
-                            style:"margin-left:10px;color:grey;"
+                            class:"bz-attach-info"
                           },
                           _text:"'('+_data._item._age+')'"
                         }

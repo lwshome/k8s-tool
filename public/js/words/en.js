@@ -86,7 +86,8 @@ const _k8sMessage={
       _pods:"Pods",
       _config:"ConfigMap",
       _alarm:"Alarms",
-      // _services:"Services",
+      _services:"Services",
+      _nodes:"Nodes",
       _deployments:"Deployments"
     }
   },

@@ -37,7 +37,9 @@ const _configMapViewDef={
                   _attr:{
                     class:"bz-node-title"
                   },
-                  _text:"_data._item._name",
+                  _html:function(d){
+                    return _attachHighlight(d._item._name,k8s._data._config.filter[k8s._data._config.ns],d._item)
+                  },
                   _jqext:{
                     click:function(){
                       k8s._data._curConfig=this._data._item

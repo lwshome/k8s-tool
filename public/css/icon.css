@@ -355,3 +355,11 @@ button.bz-folder-close{
 .bz-bell:before{
   content: "🔔";
 }
+
+.bz-deployment::before{
+  content: "⟳";
+}
+
+.bz-deployment::after{
+  content: "⟳";
+}

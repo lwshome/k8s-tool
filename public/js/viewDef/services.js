@@ -1,61 +1,77 @@
 const _servicesViewDef={
   _if:"k8s._uiSwitch._curMainTab=='_services'",
   _tag:"div",
+  _after:function(){
+    k8s._getServices()
+  },
   _attr:{
-    class:"bz-v-panel"
+    class:"bz-list-box"
   },
   _items:[
     {
       _tag:"div",
+      _attr:{
+        class:"bz-v-panel"
+      },
       _items:[
         {
           _tag:"div",
-          _attr:{
-            class:"bz-list-row"
-          },
           _items:[
             {
-              _tag:"a",
+              _tag:"div",
               _attr:{
-                class:"bz-node-title"
+                class:"'bz-list-row '+(_data._item==k8s._data._curService?'bz-highlight':'')"
               },
               _items:[
-                //info
                 {
                   _tag:"a",
                   _attr:{
-                    style:"margin-left:5px;"
+                    class:"bz-node-title"
                   },
                   _items:[
-                    //name
+                    {
+                      _tag:"span",
+                      _attr:{
+                        style:"font-size:11px;margin-right:10px;"
+                      },
+                      _text:"'['+_data._item._type+']'"
+                    },
                     {
                       _tag:"span",
                       _html:function(d){
-                        return _attachHighlight(d._item._name,k8s._data._config.filter[k8s._data._config.ns])
+                        return _attachHighlight(d._item._name,k8s._data._config.filter[k8s._data._config.ns],d._item)
                       }
                     },
-                    //age
                     {
                       _tag:"i",
                       _attr:{
-                        style:"margin-left:10px;color:grey;"
+                        class:"bz-attach-info"
                       },
                       _text:function(d){
                         d=d._item
-                        d=[d._type,d._cip,d._eip,d._port]
-                        return `(${d})`
+                        return `(${d._clusterIp}, ${d._externalIp}, ${d._port})`
                       }
                     }
-                  ]
+                  ],
+                  _jqext:{
+                    click:function(){
+                      k8s._data._curService=this._data._item
+                      k8s._getDeployment(k8s._data._curService)
+                    }
+                  }
                 }
               ]
             }
-          ]
+          ],
+          _dataRepeat:function(){
+            let r=k8s._data._config.filter[k8s._data._config.ns]
+            r=r&&new RegExp(r)
+            return (k8s._data._serviceList||[]).filter(x=>{
+              return r?x._name.match(r):1
+            })
+          }
         }
-      ],
-      _dataRepeat:function(){
-        return (k8s._data._serviceList||[]).filter(x=>k8s._isShowItem(x,k8s._data._config.filter[k8s._data._config.ns]))
-      }
+      ]
     }
   ]
 };

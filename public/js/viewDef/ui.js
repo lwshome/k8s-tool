@@ -165,7 +165,7 @@ const ui={
             }
             return v
           },
-          _dataRepeat:["_pods","_config","_deployments","_alarm"]
+          _dataRepeat:["_pods","_services","_nodes","_deployments","_config","_alarm"]
         },
         {
           _tag:"div",
@@ -312,6 +312,8 @@ const ui={
       _items:[
         _listViewDef,
         _configMapViewDef,
+        _servicesViewDef,
+        _nodesViewDef,
         _deploymentsViewDef,
         _Util._getSplitter("v",function(){
           let d=Math.max(...$(".bz-details-panel").toArray().map(x=>parseInt($(x).css("flex")))),
@@ -349,9 +351,10 @@ const ui={
         _logViewDef,
         _fileViewDef,
         _podDetailsViewDef,
-        _servicesViewDef,
         _configDetailsViewDef,
         _deploymentDetailsViewDef,
+        _nodeDetailsViewDef,
+        _serviceDetailsViewDef,
         _alarmViewDef
       ]
     }
