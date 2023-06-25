@@ -48,17 +48,35 @@ const _logViewDef={
               _items:[
                 {
                   _tag:"label",
+                  _attr:{
+                    title:function(){
+                      if(_logHandler._data._setting.highlightOnly){
+                        return _Util._formatMessage(_k8sMessage._log._passLogAfterHighlight,[k8s._data._highlightCount])
+                      }
+                    }
+                  },
                   _items:[
                     {
                       _tag:"input",
                       _attr:{
                         type:"checkbox"
                       },
-                      _dataModel:"_logHandler._data._setting.highlightOnly"
+                      _dataModel:"_logHandler._data._setting.highlightOnly",
+                      _jqext:{
+                        click:function(){
+                          k8s._data._highlightCount=0
+                        }
+                      }
                     },
                     {
                       _tag:"span",
-                      _text:"_k8sMessage._log.highlightOnly"
+                      _text:function(){
+                        let c=_k8sMessage._log._highlightOnly
+                        if(_logHandler._data._setting.highlightOnly){
+                          c+=" ("+k8s._data._highlightCount+")"
+                        }
+                        return c
+                      }
                     }
                   ]
                 }

@@ -26,19 +26,46 @@
       "s": "kafka",
       "p": "etc/../etc/apt/apt.conf.d/01autoremove",
       "fd": false
+    },
+    {
+      "s": "achndlr",
+      "p": "etc/../conf/cac-configs/cac-aca-conf/v0.0.5/ses.properties",
+      "fd": false
+    },
+    {
+      "s": "achndlr",
+      "p": "etc/../conf/cac-configs/cac-aca-conf/v0.0.5/permission_management.properties",
+      "fd": false
+    },
+    {
+      "s": "achndlr",
+      "p": "etc/../conf/cac-configs/cac-location-event-handler-conf/v0.0.3/SppAdapter.properties",
+      "fd": false
+    },
+    {
+      "s": "napfltr",
+      "p": "etc/../config/application.yaml",
+      "fd": false
+    },
+    {
+      "s": "napfltr",
+      "p": "etc/../napeventfilter.jar",
+      "fd": false
+    },
+    {
+      "s": "lochndlr",
+      "p": "etc/../conf/cac-configs/cac-location-messaging-adapter-conf/v0.0.2/SppAdapter.properties"
     }
   ],
   "autoForward": {
     "eric-pm-alert": "9093:9093",
-    "eric-pm-server": "9090:9090",
-    "naplstnr": "8080:8080",
-    "e911lstnr": "8081:8080"
+    "eric-pm-server": "9090:9090"
   },
   "filter": {
     "mycac": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config|perm",
     "ms-testing": "kafka",
     "staging-umbrella-test": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config",
-    "staging-umbrella-test1": "data",
+    "staging-umbrella-test1": "achndlr|napfltr|naplstnr|lochndlr|e911lstnr|nls-data-message-bus-kf|eric-pm-alert|eric-pm-server|profile|config|perm",
     "cattle-fleet-system": "",
     "cattle-impersonation-system": "",
     "cattle-prometheus": "",
@@ -55,7 +82,121 @@
     "deploy-code-sd-mana-tmo-adp-locationeventhandler": "",
     "deploy-code-sd-mana-tmo-adp-configserver": "",
     "deploy-code-sd-mana-tmo-adp-e911listener": "",
-    "testing": ""
+    "testing": "",
+    "appdynamics": "",
+    "deploy-code-sd-mana-tmo-adp-naplistener": "",
+    "deploy-code-sd-mana-tmo-adp-napeventfilter": ""
+  },
+  "alarms": {
+    "ms-testing": [],
+    "mycac": [
+      {
+        "type": "cpu",
+        "content": "total",
+        "value": "95",
+        "frequency": "300",
+        "scope": {
+          "achndlr": "on",
+          "napfltr": "on",
+          "nls-data-message-bus-kf": "on"
+        },
+        "_result": {
+          "achndlr": {
+            "_title": "Update time: 20:53:39\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-rk725:\n    2% (14)\n    -0.2%  (-1)\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-xm4fp:\n    2% (12)\n    -0.2%  (-1)\n",
+            "_curValue": {
+              "_time": 1687654419487,
+              "_value": 14,
+              "_percentage": 2,
+              "_increase": -1,
+              "_increasePercentage": -0.2
+            }
+          },
+          "napfltr": {
+            "_title": "Update time: 20:53:39\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-h6xkh:\n    1% (6)\n    +0.2%  (+1)\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-xr8nw:\n    1% (6)\n    0%  (0)\n",
+            "_curValue": {
+              "_time": 1687654419487,
+              "_value": 6,
+              "_percentage": 1,
+              "_increase": 1,
+              "_increasePercentage": 0.2
+            }
+          },
+          "nls-data-message-bus-kf": {
+            "_title": "Update time: 20:53:39\nnls-data-message-bus-kf-0:\n    2% (44)\n    +0.3%  (+7)\nnls-data-message-bus-kf-1:\n    2% (58)\n    -0.2%  (-4)\nnls-data-message-bus-kf-2:\n    1% (34)\n    -0.3%  (-7)\n",
+            "_curValue": {
+              "_time": 1687654419487,
+              "_value": 58,
+              "_percentage": 2,
+              "_increase": -4,
+              "_increasePercentage": -0.2
+            }
+          }
+        }
+      },
+      {
+        "type": "memory",
+        "content": "total",
+        "value": "70",
+        "frequency": "300",
+        "scope": {
+          "napfltr": "on",
+          "nls-data-message-bus-kf": "on",
+          "achndlr": "on"
+        },
+        "_result": {
+          "achndlr": {
+            "_title": "Update time: 20:53:39\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-rk725:\n    14% (303)\n    0%  (0)\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-xm4fp:\n    15% (310)\n    0%  (0)\n",
+            "_curValue": {
+              "_time": 1687654419487,
+              "_value": 310,
+              "_percentage": 15,
+              "_increase": 0,
+              "_increasePercentage": 0
+            }
+          },
+          "napfltr": {
+            "_title": "Update time: 20:53:39\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-h6xkh:\n    11% (236)\n    0%  (0)\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-xr8nw:\n    11% (231)\n    0%  (0)\n",
+            "_curValue": {
+              "_time": 1687654419487,
+              "_value": 236,
+              "_percentage": 11,
+              "_increase": 0,
+              "_increasePercentage": 0
+            }
+          },
+          "nls-data-message-bus-kf": {
+            "_title": "Update time: 20:53:39\nnls-data-message-bus-kf-0:\n    23% (1452)\n    +1.5%  (+90)\nnls-data-message-bus-kf-1:\n    16% (1011)\n    0%  (-1)\nnls-data-message-bus-kf-2:\n    17% (1054)\n    0%  (+2)\n",
+            "_curValue": {
+              "_time": 1687654419487,
+              "_value": 1452,
+              "_percentage": 23,
+              "_increase": 90,
+              "_increasePercentage": 1.5
+            }
+          }
+        }
+      },
+      {
+        "type": "space",
+        "content": "total",
+        "value": "85",
+        "frequency": "300",
+        "scope": {
+          "nls-data-message-bus-kf": "on"
+        },
+        "_result": {
+          "nls-data-message-bus-kf": {
+            "_title": "Update time: 20:53:39\nnls-data-message-bus-kf-0:\n    76%\n    0%\nnls-data-message-bus-kf-1:\n    82%\n    0%\nnls-data-message-bus-kf-2:\n    76%\n    0%\n",
+            "_curValue": {
+              "_time": 1687654419487,
+              "_value": 82,
+              "_increase": 0,
+              "_increasePercentage": 0
+            }
+          }
+        }
+      }
+    ]
   },
   "NSFilter": "mycac|testing|deploy|staging-umbrella-test",
   "log": {
@@ -63,37 +204,35 @@
     "highlights": [
       {
         "css": "background-color:#009;color:#FFF;",
-        "value": "SPP"
-      },
-      {
-        "css": "background-color:yellow;color:#000;",
-        "value": "\"message\": \"[^\"]+\"",
+        "value": "leave group",
         "enable": "on"
       },
       {
+        "css": "background-color:yellow;color:#000;",
+        "value": "outof"
+      },
+      {
         "css": "background-color:#FCC;color:#000;",
-        "value": "Location Event received the Message",
+        "value": "Exception",
         "enable": "on"
       },
       {
         "css": "background-color:#CFC;color:#000;",
-        "value": "DLT message",
-        "enable": "on"
+        "value": "DLT message"
       },
       {
-        "enable": "on",
         "css": "background-color:yellow;color:#000;",
         "value": "Listener receiving the Message End"
       },
       {
-        "enable": "on",
         "css": "background-color:#FFF;color:red;",
         "value": "Message processing failed from queue"
       }
     ],
     "groupMerge": "on",
-    "formatJSON": "on",
-    "autoMerge": "on"
+    "autoMerge": "on",
+    "formatXML": "on",
+    "formatJSON": "on"
   },
   "link": [
     {
@@ -108,13 +247,9 @@
   "cmd": [
     {
       "name": "Start kafka",
-      "value": "kafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-nap-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-aca-events-retry-1\n",
-      "podGroup": "nls-data-message-bus-kf"
-    },
-    {
-      "name": "check queue (achndlr)",
-      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-achndlr",
-      "podGroup": "nls-data-message-bus-kf"
+      "value": "kafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-retry-1",
+      "podGroup": "nls-data-message-bus-kf",
+      "open": false
     },
     {
       "podGroup": "bz-node-system",
@@ -129,21 +264,25 @@
     {
       "name": "Uninstall cac-nls-lstnrs",
       "podGroup": "bz-node-system",
-      "value": "helm uninstall cac-nls-lstnrs --namespace mycac"
+      "value": "helm uninstall cac-nls-lstnrs --namespace mycac",
+      "open": false
     },
     {
       "name": "Install cac-nls-lstnrs",
-      "value": "helm install cac-nls-lstnrs -f ../deploy/ews_CAC_NLS_LSTNRS.yaml --namespace mycac ../deploy/eric-tmo-cac-umbrella",
-      "podGroup": "bz-node-system"
+      "value": "helm install cac-nls-lstnrs -f /home/elxneiw/deploy/ews_CAC_NLS_LSTNRS.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella",
+      "podGroup": "bz-node-system",
+      "open": true
     },
     {
-      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-lochndlr",
-      "name": "check queue (lochndlr)",
-      "podGroup": "nls-data-message-bus-kf"
+      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-{$parameter:name=napfltr|achndlr|lochndlr}",
+      "name": "check kafka queue",
+      "podGroup": "nls-data-message-bus-kf",
+      "open": false
     },
     {
-      "name": "ps",
-      "value": "ps -auwx"
+      "name": "java version",
+      "value": "java -version",
+      "open": false
     },
     {
       "name": "Check Resource",
@@ -154,8 +293,61 @@
     {
       "name": "Delete Terminating Namespace",
       "podGroup": "bz-node-system",
-      "open": true,
+      "open": false,
       "value": "for ns in $(kubectl get ns --field-selector status.phase=Terminating -o jsonpath='{.items[*].metadata.name}')\ndo\n  kubectl get ns $ns -ojson | jq '.spec.finalizers = []' | kubectl replace --raw \"/api/v1/namespaces/$ns/finalize\" -f -\ndone\n\nfor ns in $(kubectl get ns --field-selector status.phase=Terminating -o jsonpath='{.items[*].metadata.name}')\ndo\n  kubectl get ns $ns -ojson | jq '.metadata.finalizers = []' | kubectl replace --raw \"/api/v1/namespaces/$ns/finalize\" -f -\ndone"
+    },
+    {
+      "name": "Creat heapdump",
+      "open": false,
+      "value": "curl localhost:8080/actuator/heapdump -o /tmp/{$parameter:name={$bz-group}-{$bz-hhmm}.bin}",
+      "podGroup": ""
+    },
+    {
+      "name": "top",
+      "open": false,
+      "value": "top"
+    },
+    {
+      "open": false,
+      "value": "kubectl scale deployment cac-nls-lstnrs-eric-tmo-des-ms-{$parameter:name=naplstnr|napfltr|achndlr|e911lstnr|lochndlr} --replicas {$parameter:number=2} -n ${$NS}",
+      "name": "Scole pod",
+      "podGroup": "bz-node-system"
+    },
+    {
+      "name": "Delete all logs",
+      "open": false,
+      "value": "ls tmp|grep -P '^spring'",
+      "podGroup": "napfltr"
+    },
+    {
+      "name": "Clean Kafka data",
+      "open": false,
+      "value": "$alarm:\nkubectl delete pvc datadir-nls-data-message-bus-kf-0\nkubectl delete pvc datadir-nls-data-message-bus-kf-1\nkubectl delete pvc datadir-nls-data-message-bus-kf-2",
+      "podGroup": "bz-node-system"
+    },
+    {
+      "name": "edit",
+      "open": false,
+      "value": "kubectl -n mycac edit configmap cac-nls-lstnrs-eric-tmo-des-ms-napfltr-logback",
+      "podGroup": "achndlr"
+    },
+    {
+      "open": false,
+      "name": "Check ms-testing kafka",
+      "value": "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group cac-{$parameter:name=napfltr|achndlr|lochndlr}",
+      "podGroup": "kafka"
+    },
+    {
+      "name": "Uninstall All ",
+      "podGroup": "bz-node-system",
+      "open": false,
+      "value": "helm uninstall cac-nls-lstnrs --namespace mycac\nhelm uninstall cac-nls --namespace mycac\nhelm uninstall cac-tmoes --namespace mycac\nhelm uninstall cac-common --namespace mycac\nhelm uninstall cac-adp --namespace mycac\nhelm uninstall cac-sm --namespace mycac\n\nkubectl delete namespace mycac"
+    },
+    {
+      "name": "Install mycac & common components",
+      "open": true,
+      "value": "kubectl create namespace mycac\nkubectl get secret armdocker-pull-secret --namespace=default -oyaml | grep -v '^\\s*namespace:\\s' | kubectl apply --namespace=mycac -f -\nkubectl create -f /home/elxneiw/deploy/rosetta.yaml --namespace mycac\n\nhelm install cac-sm -f /home/elxneiw/deploy/ews_CAC_MESH.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-adp -f /home/elxneiw/deploy/ews_CAC_ADP.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-common -f /home/elxneiw/deploy/ews_CAC_Common.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella",
+      "podGroup": "bz-node-system"
     }
   ],
   "api": [
@@ -172,7 +364,8 @@
       "method": "POST",
       "url": "/v4.0/notifications/locationevent",
       "headers": "{\n  \"Content-Type\":\t\"application/json; charset=UTF-8\",\n  \"User-Agent\":\t\"Apache-HttpClient/4.1.1\",\n  \"x-transaction-id\":\t\"a9d4f7d5-b459-42df-98c3-52c0f123309f\"\n}",
-      "body": "{\n  \"user_identities\":{\n    \"msisdn\":\"12223333002\"\n  },\n  \"event\":\"ADDR_UPDATE\",\n  \"service\":\"TMO-WebSheet|CustomerCare\",\n  \"message\":\"${window.idx=window.idx||0,++window.idx} Your address information is updated\",\n  \"address\":\"1821 Lincon,Seattle,WA\"\n}"
+      "body": "{\n  \"user_identities\":{\n    \"msisdn\":\"12223333002\"\n  },\n  \"event\":\"ADDR_UPDATE\",\n  \"service\":\"TMO-WebSheet|CustomerCare\",\n  \"message\":\"${window.idx=window.idx||0,++window.idx} Your address information is updated\",\n  \"address\":\"1821 Lincon,Seattle,WA\"\n}",
+      "open": false
     },
     {
       "podGroup": "naplstnr",
@@ -182,5 +375,7 @@
       "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}"
     }
   ],
-  "ns": "deploy-code-sd-mana-tmo-adp-locationeventhandler"
+  "ns": "mycac",
+  "alarmFrequency": "60",
+  "runningPodOnly": "on"
 }

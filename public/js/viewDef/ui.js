@@ -157,8 +157,15 @@ const ui={
               k8s._uiSwitch._curMainTab=this._data._item
             }
           },
-          _text:"_k8sMessage._main._tabs[_data._item]",
-          _dataRepeat:["_pods","_config","_alarm"]
+          _text:function(d){
+            k8s._uiSwitch._updateAlarm
+            let v=_k8sMessage._main._tabs[d._item]
+            if(d._item=="_alarm"&&k8s._hasAlarm()){
+              v+="(🔔)"
+            }
+            return v
+          },
+          _dataRepeat:["_pods","_config","_deployments","_alarm"]
         },
         {
           _tag:"div",
@@ -305,6 +312,7 @@ const ui={
       _items:[
         _listViewDef,
         _configMapViewDef,
+        _deploymentsViewDef,
         _Util._getSplitter("v",function(){
           let d=Math.max(...$(".bz-details-panel").toArray().map(x=>parseInt($(x).css("flex")))),
               l=Math.max(...$(".bz-list-box").toArray().map(x=>parseInt($(x).css("flex"))))
@@ -324,6 +332,13 @@ const ui={
               $(".bz-list-box").css({flex:1})
               return
             }
+          }else if(k8s._uiSwitch._curMainTab=='_deployments'){
+            if(!k8s._data._curDeployment){
+              $(".bz-list-box").css({flex:1})
+              return
+            }
+          }else{
+            return
           }
           setTimeout(()=>{
             $(".bz-details-panel").css({flex:d})
@@ -335,7 +350,9 @@ const ui={
         _fileViewDef,
         _podDetailsViewDef,
         _servicesViewDef,
-        _configDetailsViewDef
+        _configDetailsViewDef,
+        _deploymentDetailsViewDef,
+        _alarmViewDef
       ]
     }
   ]

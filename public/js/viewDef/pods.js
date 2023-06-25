@@ -292,7 +292,7 @@ const _listViewDef={
                           }
                           return c
                         },
-                        style:"'font-size: 18px;font-family: monospace;visibility:'+(_data._item._status=='Running'?'visible':'hidden')"
+                        style:"'font-size: 18px;font-family: monospace;visibility:'+(_data._item._status=='Running'?'visible':'hidden');margin-top:-3px;"
                       },
                       _jqext:{
                         click:function(e){
@@ -325,7 +325,7 @@ const _listViewDef={
                           return c
                         },
                         title:"_data._item._forwarding",
-                        style:"'font-size: 18px;font-family: monospace;visibility:'+(_data._item._status=='Running'?'visible':'hidden')"
+                        style:"'font-size: 18px;font-family: monospace;visibility:'+(_data._item._status=='Running'?'visible':'hidden');margin-top:-3px;"
                       },
                       _jqext:{
                         click:function(e){

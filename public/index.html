@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="/boozang-icon.png">
     <meta name="author" content="Wensheng Li">
+    <script>
+      !Array.prototype._last&&Object.defineProperty(Array.prototype, "_last", {enumerable: false,value:function(i){i=i||0;i++;return this[this.length-i]}});
+    </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/lib/jquery.min.v1.12.4.js"></script>
     <script src="/js/lib/html2canvas.min.js"></script>
@@ -21,9 +24,11 @@
     <script src="/js/viewDef/podDetails.js"></script>
     <script src="/js/viewDef/log.js"></script>
     <script src="/js/viewDef/services.js"></script>
+    <script src="/js/viewDef/alarm.js"></script>
     <script src="/js/viewDef/configmap.js"></script>
     <script src="/js/viewDef/configDetails.js"></script>
     <script src="/js/viewDef/deployments.js"></script>
+    <script src="/js/viewDef/deploymentDetails.js"></script>
     <script src="/js/viewDef/ui.js"></script>
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/group.css" rel="stylesheet">

@@ -19,7 +19,6 @@
   margin: 0 3px;
   padding: 0;
 }
-}
 
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); } 
@@ -28,6 +27,19 @@
 @keyframes spin {
   0% { transform: rotate(0deg); } 
   100% { transform: rotate(360deg); }
+}
+
+.bz-updating::after{
+  -webkit-animation: newupdate 2s linear infinite;
+  animation: newupdate 2s linear infinite;
+}
+@-webkit-keyframes newupdate {
+  0% { color: red; } 
+  100% { color: yellow; }
+}
+@keyframes newupdate {
+  0% { color: red; } 
+  100% { color: yellow; }
 }
 
 .bz-logo{
@@ -149,6 +161,9 @@ button.bz-folder-close{
   position: relative;
   top: -1px;
 }
+.bz-txt-icon:before{
+  margin-right:10px !important;
+}
 .bz-plus:before{
   content:"🞤";
   font-size: 13px;
@@ -190,7 +205,12 @@ button.bz-folder-close{
   font-size:15px;
   border-top:2px solid var(--word-color);
 }
-
+*[disabled]::before{
+  color:var(--disable-color) !important;
+}
+*[disabled]::after{
+  color:var(--disable-color) !important;
+}
 .bz-open-item{
   transform: rotate(90deg);
 }
@@ -220,6 +240,23 @@ button.bz-folder-close{
 
 .bz-star.on:before{
   content:"⭐";
+}
+
+.bz-alarm-item{
+  line-height:29px;
+}
+
+.bz-alarm-item:after{
+  content: attr(cv);
+  font-size: 11px;
+  margin-left: 5px;
+  display: block;
+  float: right;
+  width: 60px;
+  color:var(--highlight-word-color);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .bz-sweap:before{

@@ -1,4 +1,14 @@
 var _Util={
+  _parseSpace:function(v){
+    v=v.toLowerCase()
+    let vv=parseFloat(v)
+    if(v.includes("g")){
+      v=1024
+    }else{
+      v=1
+    }
+    return vv*v
+  },
   _getSplitter:function(t,_if){
     return {
       _if:_if,

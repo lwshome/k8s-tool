@@ -89,7 +89,7 @@ const _k8sMessage={
     formatJSON:"自动格式化 JSON 数据",
     formatXML:"自动格式化 XML 数据",
     groupMerge:"按过滤器分组日志",
-    highlightOnly:"只显示高亮语句",
+    _highlightOnly:"只显示高亮语句",
     autoMerge:"自动合并日志（合并重复内容）",
     _cleanDynamicRegex:"清理动态字符的正则表达式"
   }

@@ -2,15 +2,17 @@
   --bz-shadow:2px 2px 9px rgba(0,0,0,0.3);
   --active-color:#0069FF;
   --hightlight-color:#CFF;
+  --highlight-word-color:#009;
   --hightlight-background-color:#FFF;
-  --border-color: #ccc;
-  --bz-border:1px solid #ccc;
+  --border-color: #aaa;
+  --bz-border:1px solid var(--border-color);
   --pillbox-color: #f1f1f1;
   --background-color:#FFF;
   --word-color:#333;
   --even-color:#EEE;
   --header-color:#CCF;
   --bz-tmp-panel-color:#FFC;
+  --disable-color:#888;
 }
 html,body{
   height: 100%;
@@ -134,9 +136,11 @@ hr{
 .btn-primary {
   color: #F3F5F8 !important;
   background-color: var(--active-color) !important;
+  border-radius: 5px;
 }
 .btn-warn{
   color: #F3F5F8;
+  border-radius: 5px;
   background-color: #df3b69
 }
 .btn-warn:hover {
@@ -144,6 +148,7 @@ hr{
 }
 
 .btn-secondary {
+  border-radius: 5px;
   border-color: var(--border-color);
   background-color: inherit;
 }
@@ -191,7 +196,7 @@ input:focus {
 *[disabled],.bz-disabled{
   background-color: var(--border-color) !important;
   cursor: not-allowed;
-  color: #888 !important;
+  color: var(--disable-color) !important;
 }
 
 .input-group {
@@ -201,7 +206,8 @@ input:focus {
   margin:3px 0;
 }
 
-.input-group .form-control {
+.input-group .form-control,
+table.bz-data-table td .form-control {
   position: relative;
   padding: 0 5px;
   width:100%;
@@ -211,6 +217,26 @@ input:focus {
   -webkit-box-shadow: unset;
   box-shadow: unset;
   border:var(--bz-border);
+}
+
+table.bz-data-table{
+  width:100%;
+}
+table.bz-data-table>thead{
+  position: sticky;
+  background-color: var(--pillbox-color);  
+}
+
+table.bz-data-table td{
+  padding: 5px 0;
+}
+table.bz-data-table>thead td{
+  padding: 5px 10px;
+}
+
+table.bz-data-table input.form-control{
+  height: 27px;
+  width: calc(100% - 12px);
 }
 
 .input-group .form-control:focus {
@@ -238,6 +264,7 @@ input:focus {
   font-size: 12px;
   font-weight: normal;
   line-height: 1;
+  z-index:100000;
   background-color:var(--pillbox-color);
   border: var(--bz-border);
   border-radius: var(--bz-border-radius) 0 0 var(--bz-border-radius);
@@ -611,7 +638,7 @@ header{
   border-top:0px !important;
 }
 .bz-menu-panel{
-  z-index:1111;
+  z-index:111100;
   position:absolute;
   box-shadow: var(--bz-shadow);
   margin-top:3px;
@@ -720,7 +747,36 @@ button.btn.bz-none-border:hover{
 label>input[type=checkbox]{
   margin-right: 10px;
   position: relative;
-  top: 2px;
+}
+
+input[type=checkbox]{
+  accent-color: var(--background-color);
+  border: var(--bz-border);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  position: relative;
+  top: 4px;
+}
+
+input:checked:before{
+  content:"✔";
+  top: -4px;
+  position: relative;
+}
+
+.bz-panel-header.bz-highlight input[type=checkbox]{
+  height: 14px;
+}
+.bz-panel-header.bz-highlight input[type=checkbox]::before{
+  color:var(--word-color) !important;
+  top: -3px;
+}
+.bz-panel-header .btn{
+  border:0;
 }
 .bz-precentage-bar{
   background: green;
@@ -826,6 +882,7 @@ label>input[type=checkbox]{
 .bz-list-box{
   flex:1;
   overflow:auto;
+  padding: 5px 0;
 }
 .bz-cmd-item{
   overflow: hidden;
@@ -898,6 +955,10 @@ label>input[type=checkbox]{
   background-color: var(--active-color) !important;
 }
 
+.pull-left{
+  float:left;
+}
+
 @media (prefers-color-scheme: dark) {
   body,textarea,input,select{
     background-color:var(--background-color);
@@ -909,10 +970,10 @@ label>input[type=checkbox]{
   :root {
     --bz-shadow:2px 2px 9px rgba(255,255,255,0.3);
     --active-color:darkgreen;
-    --border-color: #333;
+    --border-color: #444;
     --hightlight-color:#262;
+    --highlight-word-color:#0cc;
     --hightlight-background-color:#111;
-    --bz-border:1px solid #333;
     --pillbox-color: #333;
     --background-color:#1f1f1f;
     --word-color:#CCC;

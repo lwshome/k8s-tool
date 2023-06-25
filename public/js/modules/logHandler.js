@@ -118,7 +118,8 @@ const _logHandler={
                     {
                       _tag:"input",
                       _attr:{
-                        type:"checkbox"
+                        type:"checkbox",
+                        class:"bz-right-space-5"
                       },
                       _dataModel:"_logHandler._data._setting.highlights[_data._idx].enable"
                     },
@@ -326,6 +327,7 @@ const _logHandler={
       })
       
       if(!_match&&_logHandler._data._setting.highlightOnly){
+        k8s._data._highlightCount++
         return
       }
       

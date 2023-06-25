@@ -3,6 +3,9 @@ const _k8sMessage={
     _namespace:"Namespace",
     _name:"Name",
     _value:"Value",
+    _type:"Type",
+    _content:"Content",
+    _frequency:"Frequency",
     _repeat:"Repeat",
     _message:"Message",
     _ok:"OK",
@@ -19,7 +22,9 @@ const _k8sMessage={
     _favor:"Bookmark",
     _parameters:"Parameters",
     _done:"Done!",
-    _items:"Items"
+    _items:"Items",
+    _updateTime:"Update time",
+    _scale:"Scale"
   },
   _info:{
     _title:"Boozang K8s-Tool",
@@ -43,6 +48,7 @@ const _k8sMessage={
     _nsFilter:"Namespace filter",
     _itemFilter:"Pod/Service filter",
     _search:"Search",
+    _addAlarm:"Add alarm",
     _confirm:"Confirm",
     _filter:"Filter",
     _yes:"Yes",
@@ -66,8 +72,8 @@ const _k8sMessage={
     _open:"Open",
     _close:"Close",
     _clean:"Clean",
-    _play:"Execute task",
-    _stop:"Stop task",
+    _play:"Execute",
+    _stop:"Stop",
     _addItem:"Add Item",
     _try:"Try",
     "add-folder":"Add Folder",
@@ -81,7 +87,7 @@ const _k8sMessage={
       _config:"ConfigMap",
       _alarm:"Alarms",
       // _services:"Services",
-      // _deployments:"Deployments"
+      _deployments:"Deployments"
     }
   },
   _setting:{
@@ -92,6 +98,19 @@ const _k8sMessage={
     _list:"Item list:",
     _showRunningOnly:"Show Running pod only"
   },
+  _alarm:{
+    _type:{
+      cpu:"CPU",
+      memory:"Memory",
+      space:"Disk Space"
+    },
+    _content:{
+      total:"Total",
+      increase:"Increase"
+    },
+    _curValue:"Current Value",
+    _change:"Fluctuation"
+  },
   _log:{
     _title:"Log setting",
     _highlightTitle:"Highlight",
@@ -101,7 +120,8 @@ const _k8sMessage={
     formatJSON:"Auto-format JSON Data",
     formatXML:"Auto-format XML Data",
     groupMerge:"Group log by filter",
-    highlightOnly:"Show highlighted parts only",
+    _highlightOnly:"Show highlighted log only",
+    _passLogAfterHighlight:"There are {0} lines log passed after show highlighted log only",
     autoMerge:"Auto merge log (merge duplicate content)",
     _cleanDynamicRegex:"Regular expression to sanitize dynamic characters"
   }

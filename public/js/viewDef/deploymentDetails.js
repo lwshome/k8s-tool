@@ -1,5 +1,5 @@
-const _configDetailsViewDef={
-  _if:"k8s._uiSwitch._curMainTab=='_config'&&k8s._data._curConfig",
+const _deploymentDetailsViewDef={
+  _if:"k8s._uiSwitch._curMainTab=='_deployments'&&k8s._data._curDeployment",
   _tag:"div",
   _after:function(){
     $(".bz-list-box").addClass("bz-in-details")
@@ -31,7 +31,7 @@ const _configDetailsViewDef={
               _tag:"header",
               _items:[
                 {
-                  _text:"k8s._data._curConfig._name"
+                  _text:"k8s._data._curDeployment._name"
                 }
               ]
             },
@@ -43,8 +43,8 @@ const _configDetailsViewDef={
               },
               _jqext:{
                 click:function(){
-                  k8s._updateK8sItem(JSON.stringify(k8s._data._curConfig._content,0,2),function(){
-                    k8s._getConfigDetails(k8s._data._curConfig._name)
+                  k8s._updateDeployment(k8s._data._curDeployment._content,function(){
+                    k8s._getDeployment(k8s._data._curDeployment._name)
                   })
                 }
               }
@@ -58,7 +58,7 @@ const _configDetailsViewDef={
               _jqext:{
                 click:function(){
                   k8s._data._curConfig._content=""
-                  k8s._getConfigDetails(k8s._data._curConfig._name)
+                  k8s._getDeployment(k8s._data._curDeployment._name)
                 }
               }
             },
@@ -70,59 +70,18 @@ const _configDetailsViewDef={
               },
               _jqext:{
                 click:function(){
-                  k8s._data._curConfig=0
+                  k8s._data._curDeployment=0
                 }
               }
             }
           ]
         },
         {
-          _if:"k8s._data._curConfig._content",
-          _tag:"div",
+          _tag:"textarea",
           _attr:{
-            style:"flex:1;margin-bottom:-5px;display:flex;flex-direction:column;"
+            style:"flex:1;margin-top:5px;"
           },
-          _items:[
-            {
-              _tag:"div",
-              _attr:{
-                class:"input-group"
-              },
-              _items:[
-                {
-                  _tag:"label",
-                  _attr:{
-                    class:"input-group-addon"
-                  },
-                  _text:"_k8sMessage._common._items"
-                },
-                {
-                  _tag:"select",
-                  _attr:{
-                    class:"form-control"
-                  },
-                  _dataModel:"k8s._data._curConfgItem",
-                  _items:[
-                    {
-                      _tag:"option",
-                      _attr:{
-                        value:"_data._key"
-                      },
-                      _text:"_data._key",
-                      _dataRepeat:"k8s._data._curConfig._content.data"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              _tag:"textarea",
-              _attr:{
-                style:"flex:1;margin-top:5px;"
-              },
-              _dataModel:"k8s._data._curConfig._content.data[k8s._data._curConfgItem]"
-            }
-          ]
+          _dataModel:"k8s._data._curDeployment._content"
         }
       ]
     }    

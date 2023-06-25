@@ -1,29 +1,302 @@
 //Machine learn
 const k8s={
   _uiSwitch:_CtrlDriver._buildProxy({_curMainTab:"_pods"}),
-  _data:_CtrlDriver._buildProxy({_curCtrl:0,_config:{stars:[],autoForward:{},filter:{}}}),
+  _data:_CtrlDriver._buildProxy({_highlightCount:0,_curCtrl:0,_config:{stars:[],autoForward:{},filter:{},alarms:{}}}),
   _getKey:function(){
     k8s._key=k8s._key||Date.now()
     return k8s._key++
   },
-  _getAlarmInfo:function(){
-    _k8sProxy._send({
-      _data:{
-        method:"exeCmd",
-        data:{
-          cmd:"kubectl get hpa -n "+k8s._data._config.ns
+  _startAlarm:function(){
+    k8s._uiSwitch._alarmPlay=1
+    k8s._getAlarmInfo()
+  },
+  _stopAlarm:function(){
+    clearTimeout(k8s._alarmTimer)
+    k8s._uiSwitch._alarmWait=0
+    k8s._uiSwitch._alarmPlay=0
+  },
+  _hasAlarm:function(){
+    let as=k8s._data._curAlarms
+    if(as){
+      return Object.values(as).find(a=>{
+        if(a._items){
+          return Object.values(a._items).find(x=>{
+            return x.find(y=>{
+              return Object.values(y._result).find(z=>{
+                return z._curValue._alarm
+              })
+            })
+          })
         }
-      },
-      _success:function(r){
-        if(v!="BZ-COMPLETE"){
-          v=v.split("\n")
-          v.forEach(x=>{
-            x=x.split(/\s+/)
-            k8s._data._config.alarms
+      })
+    }
+  },
+  _getAlarmInfo:function(){
+    if(!k8s._data._podList){
+      return setTimeout(()=>{
+        k8s._getAlarmInfo()
+      },1000)
+    }else if(k8s._alarmLoading){
+      return
+    }
+    k8s._alarmLoading=1
+    _buildCurAlarmData()
+
+    function _chkDisk(_time){
+      if(!Object.values(k8s._data._curAlarms).find(y=>{
+        if(y._items.space){
+          return y._resource.find(z=>{
+            let ds=z._alarmValue.space
+            let v=ds._last()
+            if(!v||v._time!=_time){
+              console.log(`kubectl -n ${k8s._data._config.ns} exec -i ${z._name} -- df`)
+              let vv=""
+              _k8sProxy._send({
+                _data:{
+                  method:"exeCmd",
+                  data:{
+                    cmd:`kubectl -n ${k8s._data._config.ns} exec -i ${z._name} -- df`
+                  }
+                },
+                _success:function(v){
+                  if(v!="BZ-COMPLETE"){
+                    vv+=v
+                  }else{
+                    v=vv.split("\n")
+                    while(v&&v[0]&&v[0].split(/ +/)[4]!="Use%"){
+                      v.shift()
+                    }
+                    v.shift()
+                    v=v.shift()
+                    if(!v||!v[0]){
+                      return setTimeout(()=>{
+                        _chkDisk(_time)
+                      },3000)
+                    }
+                    console.log(v)
+                    v=v.split(/ +/)[4]
+                    let lv=ds._last();
+                    if(!lv||(lv._time!=_time&&lv._time<_time)){
+                      ds.push({_time:_time,_value:parseInt(v)})
+                      if(ds.length>100){
+                        ds.shift()
+                      }
+                      console.log("++++++++++ "+z._name+":"+_time+":"+v)
+                      _chkDisk(_time)
+                    }
+                  }
+                }
+              })
+                      
+              return 1
+            }
+          })
+        }
+      })){
+        console.log("Update alarms!")
+        _buildResult()
+        k8s._alarmLoading=0
+        if(k8s._uiSwitch._alarmPlay){
+          clearTimeout(k8s._alarmTimer)
+          k8s._alarmTimer=0
+          setTimeout(()=>{
+            k8s._uiSwitch._alarmWait=Date.now()+_getNextAlarmTime()*1000
+            k8s._alarmTimer=setTimeout(()=>{
+              _chkCpuMemory()
+            },_getNextAlarmTime()*1000)
           })
         }
       }
-    })
+    }
+
+    function _buildResult(){
+      Object.keys(k8s._data._curAlarms).forEach(g=>{
+        let x=k8s._data._curAlarms[g]
+        let c=x._config,
+            as=x._items
+
+        Object.values(as).forEach(x=>{
+          x.forEach(a=>{
+            if(a._result){
+              delete a._result[g]
+            }
+          })
+        })
+  
+        x._resource.map(y=>{
+          let v=y._alarmValue
+
+
+          Object.keys(as).forEach(k=>{
+            as[k].forEach(a=>{
+              let lv=v[k]._last()
+              if(!lv){
+                return
+              }
+              a._result=a._result||{}
+              let r=a._result
+              r[g]=r[g]||{}
+              r=r[g]
+              r._title=r._title||`${_k8sMessage._common._updateTime}: ${_Util._formatTimestamp(lv._time,'hh:mm:ss')}\n`
+              r._title+=y._name+":\n"
+
+              let llv=v[k]._last(1),_curValue
+              if(c[k]){
+                lv._percentage=parseInt(lv._value/c[k]*100)
+                _curValue=`${lv._percentage}% (${lv._value})`
+              }else{
+                _curValue=`${lv._value}%`
+              }
+              if(!r._curValue||lv._value>r._curValue._value){
+                r._curValue=lv
+              }
+
+              r._title+=`    ${_curValue}`
+              if(a.content=="total"){
+                if(lv._percentage>a.value){
+                  lv._alarm=1
+                  r._title+="🔔"
+                }
+              }
+              r._title+="\n"
+              if(llv){
+                lv._increase=lv._value-llv._value
+                if(c[k]){
+                  lv._increasePercentage=Math.round(lv._increase/c[k]*1000)/10
+                }else{
+                  lv._increasePercentage=lv._increase
+                }
+
+                r._title+=`    ${(lv._increasePercentage>0?'+':'')+lv._increasePercentage}%`
+                if(c[k]){
+                  r._title+=`  (${(lv._increase>0?'+':'')+lv._increase})`
+                }
+                if(a.content=="increase"){
+                  if(lv._increasePercentage>a.value){
+                    lv._alarm=1
+                    r._title+="🔔"
+                  }
+                }
+                r._title+="\n"
+              }
+            })
+          })
+        })
+      });
+      k8s._uiSwitch._updateAlarm=Date.now()
+
+    }
+
+    function _getNextAlarmTime(){
+      return parseInt(k8s._data._config.alarmFrequency||60)
+    }
+
+    function _chkCpuMemory(){
+      k8s._uiSwitch._alarmWait=0
+      let vv="",_time=Date.now()
+      _k8sProxy._send({
+        _data:{
+          method:"exeCmd",
+          data:{
+            cmd:"kubectl -n "+k8s._data._config.ns+" top pods"
+          }
+        },
+        _success:function(v){
+          if(v!="BZ-COMPLETE"){
+            vv+=v
+          }else{
+            vv=vv.split("\n")
+            vv.shift()
+            vv.shift()
+
+            vv.forEach(x=>{
+              console.log(x)
+              x=x.split(/ +/)
+              Object.values(k8s._data._curAlarms).find(y=>{
+                y._resource.find(z=>{
+                  if(z._name==x[0]){
+                    z._alarmValue.cpu.push({_time:_time,_value:parseInt(x[1])})
+                    z._alarmValue.memory.push({_time:_time,_value:_Util._parseSpace(x[2])})
+
+                    if(z._alarmValue.cpu.length>100){
+                      z._alarmValue.cpu.shift()
+                      z._alarmValue.memory.shift()
+                    }
+                    return 1
+                  }
+                })
+              })
+            })
+            _chkDisk(_time)
+          }
+        }
+      })
+
+    }
+    function _buildCurAlarmData(){
+      if(!k8s._data._curAlarms){
+        let vs={}
+        k8s._data._config.alarms[k8s._data._config.ns].forEach(x=>{
+          Object.keys(x.scope).forEach(k=>{
+            if(x.scope[k]){
+              vs[k]=vs[k]||{_resource:[],_items:{}}
+              let o=vs[k]._items
+              o[x.type]=o[x.type]||[]
+              o[x.type].push(x)
+
+              k8s._data._podList.forEach(p=>{
+                if(p.gk==k&&!vs[k]._resource.includes(p)){
+                  vs[k]._resource.push(p)
+                  p._alarmValue=p._alarmValue||{cpu:[],memory:[],space:[]}
+                }
+              })
+            }
+          })
+        })
+        k8s._data._curAlarms=vs
+        _insertData(function(){
+          _chkCpuMemory()
+        })
+      }else if(!k8s._alarmTimer){
+        _chkCpuMemory()
+      }
+    }
+
+    function _insertData(_fun){
+      let o=Object.values(k8s._data._curAlarms).find(x=>!x._config),v=""
+      if(o){
+        _k8sProxy._send({
+          _data:{
+            method:"exeCmd",
+            data:{
+              cmd:"kubectl -n "+k8s._data._config.ns+" get pods "+o._resource[0]._name+" -o json"
+            }
+          },
+          _success:function(r){
+            if(r!="BZ-COMPLETE"){
+              if(!v){
+                r=r.split("\n")
+                r.shift()
+                r=r.join("\n")
+              }
+              v+=r
+            }else{
+              v=JSON.parse(v)
+              let vv={cpu:0,memory:0}
+              let x=v.spec.containers[0]
+              x=x.resources.limits
+              vv.cpu+=x.cpu.includes("m")?parseInt(x.cpu):parseInt(x.cpu)*1024
+              vv.memory+=_Util._parseSpace(x.memory)
+
+              o._config=vv
+              _insertData(_fun)
+            }
+          }
+        })
+      }else{
+        _fun&&_fun()
+      }
+    }
   },
   _getGroupKey:function(v,ff){
     if(ff){
@@ -648,6 +921,83 @@ const k8s={
         _fun&&_fun()
       }
     })
+  },
+  _getDeployments:function(){
+    if(k8s._data._deployments){
+      return
+    }
+    let vv=""
+    k8s._data._deployments=[]
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:"kubectl get deployments -n "+k8s._data._config.ns
+        }
+      },
+      _success:function(v){
+        if(v!="BZ-COMPLETE"){
+          vv+=v
+        }else{
+          vv=vv.split("\n")
+          vv.shift()
+          vv.shift()
+
+          vv.forEach(x=>{
+            if(x){
+              x=x.split(/ +/)
+              k8s._data._deployments.push({
+                _name:x[0],
+                _scale:parseInt(x[3])
+              })
+            }
+          })
+        }
+      }
+    })
+
+  },
+  _getDeployment:function(d){
+    if(!d._content){
+      let vv=""
+      _k8sProxy._send({
+        _data:{
+          method:"exeCmd",
+          data:{
+            cmd:"kubectl get deployments "+d._name+" -n "+k8s._data._config.ns+" -o yaml"
+          }
+        },
+        _success:function(v){
+          if(v!="BZ-COMPLETE"){
+            vv+=v
+          }else{
+            vv=vv.split("\n")
+            vv.shift()
+            
+            d._content=vv.join("\n")
+          }
+        }
+      })
+    }
+  },
+  _setScale:function(d){
+    let vv="";
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          cmd:"kubectl scale deploy "+d._name+" --replicas="+d._scale+" -n "+k8s._data._config.ns
+        }
+      },
+      _success:function(v){
+        if(v!="BZ-COMPLETE"){
+          vv+=v
+        }else{
+          alert(vv)
+        }
+      }
+    })
+
   },
   _getItemByGroup:function(d,t){
     let v={_key:t}
@@ -1408,7 +1758,7 @@ const k8s={
     _Util._confirmMessage(_k8sMessage._info._confirmDeleteNS+": "+k8s._data._config.ns,[{
       _title:_k8sMessage._method._confirm,
       _class:"btn btn-warn",
-      _click:function(){
+      _click:function(c){
         _k8sProxy._send({
           _data:{
             method:"exeCmd",
@@ -1426,6 +1776,7 @@ const k8s={
             k8s._getInitData()
           }
         })
+        c._ctrl._close()
       }
     }])
   },
@@ -1485,7 +1836,7 @@ const k8s={
       }
     })
   },
-  _updateConfig:function(v){
+  _updateK8sItem:function(v,_fun){
     let r=""
     _k8sProxy._send({
       _data:{
@@ -1499,7 +1850,28 @@ const k8s={
       _success:function(v){
         if(v=="BZ-COMPLETE"){
           alert(r)
-          k8s._getConfigDetails(k8s._data._curConfig._name)
+          _fun&&_fun()
+        }else{
+          r+=v
+        }
+      }
+    })
+  },
+  _updateDeployment:function(v,_fun){
+    let r=""
+    _k8sProxy._send({
+      _data:{
+        method:"exeCmd",
+        data:{
+          fileName:"deployment.yaml",
+          fileContent:v,
+          cmd:`kubectl -n ${k8s._data._config.ns} apply -f download/deployment.yaml`
+        }
+      },
+      _success:function(v){
+        if(v=="BZ-COMPLETE"){
+          alert(r)
+          _fun&&_fun()
         }else{
           r+=v
         }
