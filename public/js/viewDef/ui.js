@@ -339,6 +339,16 @@ const ui={
               $(".bz-list-box").css({flex:1})
               return
             }
+          }else if(k8s._uiSwitch._curMainTab=='_services'){
+            if(!k8s._data._curService){
+              $(".bz-list-box").css({flex:1})
+              return
+            }
+          }else if(k8s._uiSwitch._curMainTab=='_nodes'){
+            if(!k8s._data._curNode){
+              $(".bz-list-box").css({flex:1})
+              return
+            }
           }else{
             return
           }

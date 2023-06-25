@@ -56,7 +56,7 @@ const _servicesViewDef={
                   _jqext:{
                     click:function(){
                       k8s._data._curService=this._data._item
-                      k8s._getDeployment(k8s._data._curService)
+                      k8s._getService(k8s._data._curService)
                     }
                   }
                 }

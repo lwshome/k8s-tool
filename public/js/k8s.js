@@ -929,6 +929,29 @@ const k8s={
       }
     })
   },
+  _getService:function(d){
+    if(!d._content){
+      let vv=""
+      _k8sProxy._send({
+        _data:{
+          method:"exeCmd",
+          data:{
+            cmd:"kubectl get services "+d._name+" -n "+k8s._data._config.ns+" -o yaml"
+          }
+        },
+        _success:function(v){
+          if(v!="BZ-COMPLETE"){
+            vv+=v
+          }else{
+            vv=vv.split("\n")
+            vv.shift()
+            
+            d._content=vv.join("\n")
+          }
+        }
+      })
+    }
+  },
   _getNode:function(d){
     if(!d._content){
       let vv=""
