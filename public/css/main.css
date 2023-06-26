@@ -487,6 +487,13 @@ pre {
 .bz-list-row:hover .bz-row-star{
   display:none;
 }
+.bz-list-row .bz-copy{
+  display: none;
+}
+
+.bz-list-row:hover .bz-copy{
+  display: unset;
+}
 .bz-list-content{
   padding-left: 20px;
 }

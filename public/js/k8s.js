@@ -1188,7 +1188,7 @@ const k8s={
                     _attr:{
                       disabled:"k8s._uiSwitch."+_playing,
                       class:"form-control",
-                      style:"height:26px;padding:5px;width:calc(100% - 12px);",
+                      style:"height:32px;padding:2px 5px;width:calc(100% - 12px);font-size: 13px;",
                       placeholder:"Support mutiple line cmd, press ctrl or shite + enter to add new line"
                     },
                     _jqext:{

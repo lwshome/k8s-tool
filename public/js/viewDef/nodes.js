@@ -42,6 +42,19 @@ const _nodesViewDef={
                         d=d._item
                         return `(${d._status}, ${d._roles}, ${d._version})`
                       }
+                    },
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-none-border bz-copy"
+                      },
+                      _jqext:{
+                        click:function(e){
+                          let o=this.parentElement.children[0]
+                          _Util._copyText(o.innerText,document,o)
+                          e.stopPropagation()
+                        }
+                      }
                     }
                   ],
                   _jqext:{

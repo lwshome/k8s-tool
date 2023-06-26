@@ -149,6 +149,7 @@ button.bz-folder-close{
   font-weight: bold;
   font-size:13px;
   position: relative;
+  top:-1px;
 }
 .bz-save:before{
   content:"💾";
@@ -175,14 +176,14 @@ button.bz-folder-close{
   font-size: 9px;
   position: relative;
   top: -3px;
-  left: 6px;
+  left: 5px;
 }
 .bz-copy:after{
   content:"⬜";
   font-size: 9px;
   position: relative;
   top: 0px;
-  left: -4px;
+  left: -5px;
 }
 .bz-log:before{
   content:"🧾";
@@ -291,17 +292,18 @@ button.bz-folder-close{
 .bz-cmd:before{
   content:">_";
   font-size:13px;
-  font-family: monospace
+  font-family: monospace;
+  position: relative;
+  top: -2px;
 }
 
 .bz-link:before{
   content:"🔗";
-  font-size:11px;
+  font-size:13px;
 }
 
 .bz-api:before{
   content:"⇄";
-  font-size:13px;
 }
 
 .bz-play:before{

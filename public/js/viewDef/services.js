@@ -51,6 +51,19 @@ const _servicesViewDef={
                         d=d._item
                         return `(${d._clusterIp}, ${d._externalIp}, ${d._port})`
                       }
+                    },
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"btn btn-icon bz-none-border bz-copy"
+                      },
+                      _jqext:{
+                        click:function(e){
+                          let o=this.parentElement.children[1]
+                          _Util._copyText(o.innerText,document,o)
+                          e.stopPropagation()
+                        }
+                      }
                     }
                   ],
                   _jqext:{
