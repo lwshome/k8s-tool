@@ -217,17 +217,25 @@
     ],
     "groupMerge": "on",
     "autoMerge": "on",
-    "formatXML": "on",
-    "formatJSON": "on"
+    "formatJSON": "on",
+    "formatXML": "on"
   },
   "link": [
     {
       "name": "health",
-      "value": "/actuator/health"
+      "value": "/actuator/health",
+      "open": true
     },
     {
       "name": "metrics",
-      "value": "/actuator/metrics"
+      "value": "/actuator/metrics",
+      "open": true
+    },
+    {
+      "open": "on",
+      "name": "google",
+      "value": "https://www.google.com",
+      "podGroup": "bz-node-system"
     }
   ],
   "cmd": [
@@ -235,7 +243,7 @@
       "name": "Start kafka",
       "value": "kafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-retry-1",
       "podGroup": "nls-data-message-bus-kf",
-      "open": false
+      "open": true
     },
     {
       "podGroup": "bz-node-system",
@@ -243,9 +251,10 @@
       "name": "Shut down Kafka"
     },
     {
-      "name": "Start Kafka",
+      "name": "Re-Start Kafka to 3",
       "podGroup": "bz-node-system",
-      "value": "kubectl scale sts nls-data-message-bus-kf -n mycac --replicas 3"
+      "value": "kubectl scale sts nls-data-message-bus-kf -n mycac --replicas 3",
+      "open": false
     },
     {
       "name": "Uninstall cac-nls-lstnrs",
@@ -257,7 +266,7 @@
       "name": "Install cac-nls-lstnrs",
       "value": "helm install cac-nls-lstnrs -f /home/elxneiw/deploy/ews_CAC_NLS_LSTNRS.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella",
       "podGroup": "bz-node-system",
-      "open": true
+      "open": false
     },
     {
       "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-{$parameter:name=napfltr|achndlr|lochndlr}",
@@ -289,36 +298,13 @@
       "podGroup": ""
     },
     {
-      "name": "top",
-      "open": false,
-      "value": "top"
-    },
-    {
-      "open": false,
-      "value": "kubectl scale deployment cac-nls-lstnrs-eric-tmo-des-ms-{$parameter:name=naplstnr|napfltr|achndlr|e911lstnr|lochndlr} --replicas {$parameter:number=2} -n ${$NS}",
-      "name": "Scole pod",
-      "podGroup": "bz-node-system"
-    },
-    {
-      "name": "Delete all logs",
-      "open": false,
-      "value": "ls tmp|grep -P '^spring'",
-      "podGroup": "napfltr"
-    },
-    {
       "name": "Clean Kafka data",
       "open": false,
       "value": "$alarm:\nkubectl delete pvc datadir-nls-data-message-bus-kf-0\nkubectl delete pvc datadir-nls-data-message-bus-kf-1\nkubectl delete pvc datadir-nls-data-message-bus-kf-2",
       "podGroup": "bz-node-system"
     },
     {
-      "name": "edit",
-      "open": false,
-      "value": "kubectl -n mycac edit configmap cac-nls-lstnrs-eric-tmo-des-ms-napfltr-logback",
-      "podGroup": "achndlr"
-    },
-    {
-      "open": false,
+      "open": true,
       "name": "Check ms-testing kafka",
       "value": "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group cac-{$parameter:name=napfltr|achndlr|lochndlr}",
       "podGroup": "kafka"
@@ -331,7 +317,7 @@
     },
     {
       "name": "Install mycac & common components",
-      "open": true,
+      "open": false,
       "value": "kubectl create namespace mycac\nkubectl get secret armdocker-pull-secret --namespace=default -oyaml | grep -v '^\\s*namespace:\\s' | kubectl apply --namespace=mycac -f -\nkubectl create -f /home/elxneiw/deploy/rosetta.yaml --namespace mycac\n\nhelm install cac-sm -f /home/elxneiw/deploy/ews_CAC_MESH.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-adp -f /home/elxneiw/deploy/ews_CAC_ADP.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-common -f /home/elxneiw/deploy/ews_CAC_Common.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella",
       "podGroup": "bz-node-system"
     }
@@ -361,7 +347,7 @@
       "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}"
     }
   ],
-  "ns": "mycac",
+  "ns": "ms-testing",
   "alarmFrequency": "60",
   "runningPodOnly": "on"
 }

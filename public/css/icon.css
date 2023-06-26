@@ -308,6 +308,8 @@ button.bz-folder-close{
   content:"▶";
   color:red;
   font-size:13px;
+  position: relative;
+  top: 2px;
 }
 .bz-stop:before{
   content:"⏹";

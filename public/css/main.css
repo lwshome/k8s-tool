@@ -268,7 +268,7 @@ table.bz-data-table input.form-control{
   font-size: 12px;
   font-weight: normal;
   line-height: 1;
-  z-index:100000;
+  z-index:1000;
   background-color:var(--pillbox-color);
   border: var(--bz-border);
   border-radius: var(--bz-border-radius) 0 0 var(--bz-border-radius);
@@ -786,7 +786,7 @@ input:checked:before{
   background: green;
   position: relative;
   height: 27px;
-  z-index: 1111;
+  z-index: 120;
 }
 .bz-precentage-bar:after{
   content:attr(precentage);

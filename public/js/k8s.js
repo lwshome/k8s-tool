@@ -378,7 +378,9 @@ const k8s={
         })
       },
       _attr:{
-        class:"bz-fun-setting-dialog"
+        class:"bz-fun-setting-dialog",
+        style:"height: 100%;display:flex;flex-direction: column;",
+        id:"_funSetting"
       },
       _items:[
         {
@@ -394,12 +396,12 @@ const k8s={
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon bz-plus bz-none-border bz-small-btn",
-                style:"margin-top:2px;"
+                class:"btn btn-icon bz-plus bz-none-border",
+                style:"margin-right: 10px;"
               },
               _jqext:{
                 click:function(ex){
-                  let d={}
+                  let d={open:"on"}
                   if(t=="api"){
                     d.podGroup=k8s._data._curGroup
                   }
@@ -410,10 +412,9 @@ const k8s={
                   let ls=k8s._uiSwitch._configList
                   k8s._uiSwitch._configList=[]
                   k8s._uiSwitch._configList=ls
-                  _Util._resizeModelWindow()
                   setTimeout(()=>{
                     let os=$(".bz-fun-setting-dialog input")
-                    $(os[os.length-2]).focus()
+                    $(os[os.length-1]).focus()
                   },100)
                 }
               }
@@ -424,7 +425,7 @@ const k8s={
           _tag:"div",
           _attr:{
             class:"bz-panel-content",
-            style:"margin-bottom:10px;max-height:600px;"
+            style:"flex:1;overflow-x: hidden;"
           },
           _items:[
             {
@@ -451,7 +452,6 @@ const k8s={
                       _jqext:{
                         click:function(){
                           this._data._item.open=!this._data._item.open
-                          _Util._resizeModelWindow()
                         }
                       }
                     },
@@ -528,7 +528,8 @@ const k8s={
                     {
                       _tag:"button",
                       _attr:{
-                        class:"btn btn-icon bz-play bz-none-border bz-middle-btn",
+                        class:"btn btn-icon bz-play bz-none-border",
+                        style:"margin:3px 5px",
                         title:"_k8sMessage._method._try"
                       },
                       _jqext:{
@@ -541,7 +542,8 @@ const k8s={
                       _tag:"button",
                       _attr:{
                         title:"_k8sMessage._method.delete",
-                        class:"btn btn-icon bz-delete bz-none-border bz-middle-btn"
+                        class:"btn btn-icon bz-delete bz-none-border",
+                        style:"margin:3px 5px"
                       },
                       _jqext:{
                         click:function(){
@@ -672,9 +674,9 @@ const k8s={
       ]
     },[],_k8sMessage._setting[t],t=="cmd"?"80%":"60%",1,0,1)
   
+    _Util._attachResize("#_funSetting",500)
     function _saveList(){
       k8s._saveSetting()
-      _Util._resizeModelWindow()
     }
   },
   _addFile:function(d,p,f){
@@ -1107,6 +1109,8 @@ const k8s={
   },
   _exeItem:function(t,d){
     d=_Util._clone(d)
+    t=_Util._clone(t)
+    t._key=t._type||t._key
     let id=Date.now(),
         _highlight=0,
         _response="r"+id,
@@ -1123,7 +1127,11 @@ const k8s={
       }
     }
     if(t._key=="link"){
-      window.open(t._item._host+d.value)
+      if(d.value.match(/^https?:/)){
+        window.open(d.value)
+      }else{
+        window.open(t._item._host+d.value)
+      }
     }else if(t._key=="cmd"||t._key=="sys-cmd"){
       k8s._uiSwitch[_response]=""
       k8s._data[_tmpCmd]=d.value
@@ -1157,7 +1165,7 @@ const k8s={
           {
             _tag:"div",
             _attr:{
-              style:"display:flex;"
+              style:"display:flex;margin-top: 8px;"
             },
             _items:[
               {
@@ -1198,7 +1206,7 @@ const k8s={
                 _tag:"div",
                 _attr:{
                   class:"input-group",
-                  style:"width:200px;"
+                  style:"width:240px;"
                 },
                 _items:[
                   {
@@ -1264,6 +1272,7 @@ const k8s={
                             }
                             return c
                           },
+                          style:"margin:7px !important;",
                           title:"k8s._uiSwitch."+_playing+"?_k8sMessage._method._stop:_k8sMessage._method._play"
                         },
                         _jqext:{
@@ -1283,6 +1292,7 @@ const k8s={
                         _tag:"button",
                         _attr:{
                           class:"bz-none-border btn btn-icon bz-delete",
+                          style:"margin:7px !important;",
                           title:"_k8sMessage._method._clean"
                         },
                         _jqext:{
@@ -1313,7 +1323,7 @@ const k8s={
       },1)
       
       _sendCmd(d.value,t._item?t._item._name:0,0,{_data:d,_value:"value"})
-      _attachResize()
+      _Util._attachResize("#"+id)
     }else if(t._key=="api"){
       _sendAPI(t._item,d)
     }
@@ -1549,7 +1559,7 @@ const k8s={
         },[],_k8sMessage._common._message,400,1,0,1)
         
         _doSend(1)
-        _attachResize()
+        _Util._attachResize("#"+id)
         function _doSend(n){
           k8s._data._remain=n
           if(n){
@@ -1568,15 +1578,6 @@ const k8s={
           }
         }
       }
-    }
-
-    function _attachResize(){
-      setTimeout(()=>{
-        let o=$("#"+id)[0]
-        $(o).css({"min-height":"unset"})
-        o=_Util._getParentElementByCss(".bz-modal-window",o)
-        _Util._attachResizeWindow(o)
-      },100)
     }
   },
   _clickCmd:function(o,e){

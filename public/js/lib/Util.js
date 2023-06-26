@@ -875,6 +875,17 @@ tbody td:first-child,tbody td:last-child{
       _Util._resizeModelWindow(_dialog,_body.ownerDocument)
     }
   },
+  _attachResize:function(o,h){
+    setTimeout(()=>{
+      o=$(o)[0]
+      $(o).css({"min-height":"unset"})
+      o=_Util._getParentElementByCss(".bz-modal-window",o)
+      if(h){
+        $(o).css({height:h+"px"})
+      }
+      _Util._attachResizeWindow(o)
+    },100)
+  },
   _attachResizeWindow:function(w){
     let o=$("<div class='bz-corner-resize'></div>").appendTo(w)
     let p,wr=w.getBoundingClientRect();

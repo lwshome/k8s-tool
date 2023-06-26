@@ -176,14 +176,15 @@ const ui={
         {
           _tag:"button",
           _attr:{
-            style:"position: relative;top: 5px;margin-right: 5px;",
+            style:"position: relative;top: 5px;margin-right: 10px;",
             class:"btn btn-icon bz-none-border bz-cmd",
             title:"_k8sMessage._method.cmd+' ('+_k8sMessage._common._system+')'"
           },
           _jqext:{
             click:function(e){
               k8s._uiSwitch._showMenu={
-                _key:'sys-cmd',
+                _key:'sys',
+                _type:"cmd",
                 _element:this,
                 _item:{}
               }
@@ -192,7 +193,26 @@ const ui={
           }
         },
         {
-          _if:"k8s._uiSwitch._showMenu._key=='sys-cmd'",
+          _tag:"button",
+          _attr:{
+            style:"position: relative;top: 5px;margin-right: 10px;",
+            class:"btn btn-icon bz-none-border bz-link",
+            title:"_k8sMessage._method.request+' ('+_k8sMessage._common._system+')'"
+          },
+          _jqext:{
+            click:function(e){
+              k8s._uiSwitch._showMenu={
+                _key:'sys',
+                _type:"link",
+                _element:this,
+                _item:{}
+              }
+              e.stopPropagation()
+            }
+          }
+        },
+        {
+          _if:"k8s._uiSwitch._showMenu._key=='sys'",
           _tag:"div",
           _attr:{
             style:function(){
@@ -214,7 +234,7 @@ const ui={
                     {
                       _tag:"button",
                       _attr:{
-                        class:"btn btn-icon bz-small-btn bz-none-border bz-cmd",
+                        class:"'btn btn-icon bz-small-btn bz-none-border bz-'+k8s._uiSwitch._showMenu._type",
                         style:"margin-right:10px;"
                       }
                     },
@@ -224,7 +244,7 @@ const ui={
                     }
                   ],
                   _dataRepeat:function(d){
-                    return k8s._data._config.cmd.filter(x=>x.podGroup=='bz-node-system')
+                    return k8s._data._config[k8s._uiSwitch._showMenu._type].filter(x=>x.podGroup=='bz-node-system')
                   },
                   _jqext:{
                     click:function(){
@@ -259,7 +279,7 @@ const ui={
               _jqext:{
                 click:function(){
                   k8s._data._curGroup="bz-node-system"
-                  k8s._openFunSetting(k8s._uiSwitch._showMenu._key)
+                  k8s._openFunSetting(k8s._uiSwitch._showMenu._type)
                 }
               }
             }
