@@ -1314,7 +1314,7 @@ const k8s={
             ]
           }
         ]
-      },[],_k8sMessage._common._message,"80%",1,function(){
+      },[],_k8sMessage._method.cmd,"80%",1,function(){
         delete k8s._uiSwitch[_response]
         delete k8s._data[_tmpCmd]
         delete k8s._uiSwitch[_playing]
@@ -1405,7 +1405,7 @@ const k8s={
                 cc+=" bz-flag bz-space-10"
               }else if(!_panel.children.length||(_panel.children[_panel.children.length-1].innerText.match(/^=== [^=]+=+$/))){
                 cc+=" bz-cmd-header"
-                _click=`onmousedown='k8s._clickCmd(this,event)' ondblclick='k8s._dblClickCmd(this)'`
+                _click=`onclick='k8s._mousedownCmd(this,event)' oncontextmenu='k8s._clickCmd(this,event)' ondblclick='k8s._dblClickCmd(this)'`
               }
               $(_panel).append("<div class='"+cc+"' "+_click+">"+x+"</div>")
             })
@@ -1556,7 +1556,7 @@ const k8s={
               ]
             }
           ]
-        },[],_k8sMessage._common._message,400,1,0,1)
+        },[],_k8sMessage._method.api,400,1,0,1)
         
         _doSend(1)
         _Util._attachResize("#"+id)
@@ -1581,17 +1581,24 @@ const k8s={
     }
   },
   _clickCmd:function(o,e){
+    _Util._copyText(o.innerText,document,o)
     e.stopPropagation()
     e.preventDefault()
+    return false
+  },
+  _mousedownCmd:function(o,e){
     if(e.button==2){
-      _Util._copyText(o.innerText)
+      
     }else{
+      e.stopPropagation()
+      e.preventDefault()
       let p=_Util._getParentElementByCss(o,"textarea")
       let v=o.innerText.trim().split("--")
       v.shift()
       v=v.join("--").trim()
       p=$(p).find("textarea")[0]
       eval(p._viewDef._dataModel+"=v")
+      return false
     }
   },
   _dblClickCmd:function(o){
