@@ -2,7 +2,7 @@ const _podDetailsViewDef={
   _if:"k8s._uiSwitch._curMainTab=='_pods'&&k8s._data._curPodDetails&&k8s._uiSwitch._curPodDetails=='_details'",
   _tag:"div",
   _after:function(){
-    $(".bz-list-box").addClass("bz-in-details")
+    _Util._setInDetailsCss()
   },
   _attr:{
     class:"bz-details-panel"

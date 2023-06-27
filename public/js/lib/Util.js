@@ -9,6 +9,18 @@ var _Util={
     }
     return vv*v
   },
+  _setInDetailsCss:function(){
+    $(".bz-list-box").addClass("bz-in-details")
+    let a=1,b=2;
+    let o=$(".bz-splitter-v")[0]
+    if(o){
+      a=o.a
+      b=o.b
+    }
+    
+    $(".bz-list-box").css({flex:a})
+    $(".bz-details-panel").css({flex:b})
+  },
   _getSplitter:function(t,_if){
     return {
       _if:_if,
@@ -50,6 +62,8 @@ var _Util={
                 a.style.flex=ar+(xy.y-o._start.y)
                 b.style.flex=br-(xy.y-o._start.y)
               }
+              o.a=a.style.flex
+              o.b=b.style.flex
             }else{
               o._start=0
               document.body.onmousemove=_onmousemove

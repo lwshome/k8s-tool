@@ -45,6 +45,8 @@ const _configMapViewDef={
                       k8s._data._curConfig=this._data._item
                       if(!k8s._data._curConfig._content){
                         k8s._getConfigDetails(this._data._item._name)
+                      }else{
+                        k8s._data._curConfgItem=Object.keys(k8s._data._curConfig._content.data)[0]
                       }
                     }
                   }

@@ -2,7 +2,7 @@ const _serviceDetailsViewDef={
   _if:"k8s._uiSwitch._curMainTab=='_services'&&k8s._data._curService",
   _tag:"div",
   _after:function(){
-    $(".bz-list-box").addClass("bz-in-details")
+    _Util._setInDetailsCss()
   },
   _attr:{
     class:"bz-details-panel"

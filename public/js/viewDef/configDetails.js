@@ -2,7 +2,7 @@ const _configDetailsViewDef={
   _if:"k8s._uiSwitch._curMainTab=='_config'&&k8s._data._curConfig",
   _tag:"div",
   _after:function(){
-    $(".bz-list-box").addClass("bz-in-details")
+    _Util._setInDetailsCss()
   },
   _attr:{
     class:"bz-details-panel"
