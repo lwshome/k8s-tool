@@ -29,6 +29,14 @@
   100% { transform: rotate(360deg); }
 }
 
+.bz-swing{
+  -webkit-animation: swing 1s linear infinite;
+  animation: swing 1s linear infinite;
+  position: fixed;
+  font-size: 13px;
+  margin-top: -10px;
+  margin-left: 2px;
+}
 .bz-updating::after{
   -webkit-animation: newupdate 2s linear infinite;
   animation: newupdate 2s linear infinite;
@@ -40,6 +48,17 @@
 @keyframes newupdate {
   0% { color: red; } 
   100% { color: yellow; }
+}
+
+@-webkit-keyframes swing {
+  0% { -webkit-transform: rotate(30deg); } 
+  50% { -webkit-transform: rotate(-30deg); }
+  100% { -webkit-transform: rotate(30deg); }
+}
+@keyframes swing {
+  0% { transform: rotate(30deg); }
+  50% { transform: rotate(-30deg); }
+  100% { transform: rotate(30deg); }
 }
 
 .bz-logo{

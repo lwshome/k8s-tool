@@ -157,14 +157,22 @@ const ui={
               k8s._uiSwitch._curMainTab=this._data._item
             }
           },
-          _text:function(d){
-            k8s._uiSwitch._updateAlarm
-            let v=_k8sMessage._main._tabs[d._item]
-            if(d._item=="_alarm"&&k8s._hasAlarm()){
-              v+="(🔔)"
+          _items:[
+            {
+              _text:function(d){
+                k8s._uiSwitch._updateAlarm
+                return _k8sMessage._main._tabs[d._item]
+              }    
+            },
+            {
+              _if:"_data._item=='_alarm'&&k8s._hasAlarm()",
+              _tag:"span",
+              _attr:{
+                class:"bz-swing"
+              },
+              _text:"🔔"
             }
-            return v
-          },
+          ],
           _dataRepeat:["_pods","_services","_deployments","_nodes","_config","_alarm"]
         },
         {
