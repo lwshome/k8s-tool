@@ -99,32 +99,6 @@
           "achndlr": "on",
           "napfltr": "on",
           "nls-data-message-bus-kf": "on"
-        },
-        "_result": {
-          "achndlr": {
-            "_title": "Update time: 09:37:30\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-srs2x:\n    6% (32)\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-xtvqf:\n    9% (45)\n",
-            "_curValue": {
-              "_time": 1687700250234,
-              "_value": 45,
-              "_percentage": 9
-            }
-          },
-          "napfltr": {
-            "_title": "Update time: 09:37:30\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-7mq4q:\n    2% (13)\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-g87p2:\n    3% (15)\n",
-            "_curValue": {
-              "_time": 1687700250234,
-              "_value": 15,
-              "_percentage": 3
-            }
-          },
-          "nls-data-message-bus-kf": {
-            "_title": "Update time: 09:37:30\nnls-data-message-bus-kf-0:\n    4% (101)\nnls-data-message-bus-kf-1:\n    4% (94)\nnls-data-message-bus-kf-2:\n    4% (93)\n",
-            "_curValue": {
-              "_time": 1687700250234,
-              "_value": 101,
-              "_percentage": 4
-            }
-          }
         }
       },
       {
@@ -136,32 +110,6 @@
           "napfltr": "on",
           "nls-data-message-bus-kf": "on",
           "achndlr": "on"
-        },
-        "_result": {
-          "achndlr": {
-            "_title": "Update time: 09:37:30\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-srs2x:\n    19% (398)\ncac-nls-lstnrs-eric-tmo-des-ms-achndlr-6858f6677-xtvqf:\n    18% (369)\n",
-            "_curValue": {
-              "_time": 1687700250234,
-              "_value": 398,
-              "_percentage": 19
-            }
-          },
-          "napfltr": {
-            "_title": "Update time: 09:37:30\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-7mq4q:\n    17% (352)\ncac-nls-lstnrs-eric-tmo-des-ms-napfltr-7ccd457b6-g87p2:\n    17% (349)\n",
-            "_curValue": {
-              "_time": 1687700250234,
-              "_value": 352,
-              "_percentage": 17
-            }
-          },
-          "nls-data-message-bus-kf": {
-            "_title": "Update time: 09:37:30\nnls-data-message-bus-kf-0:\n    16% (994)\nnls-data-message-bus-kf-1:\n    15% (927)\nnls-data-message-bus-kf-2:\n    14% (915)\n",
-            "_curValue": {
-              "_time": 1687700250234,
-              "_value": 994,
-              "_percentage": 16
-            }
-          }
         }
       },
       {
@@ -171,15 +119,6 @@
         "frequency": "300",
         "scope": {
           "nls-data-message-bus-kf": "on"
-        },
-        "_result": {
-          "nls-data-message-bus-kf": {
-            "_title": "Update time: 09:37:30\nnls-data-message-bus-kf-0:\n    76%\nnls-data-message-bus-kf-1:\n    81%\nnls-data-message-bus-kf-2:\n    76%\n",
-            "_curValue": {
-              "_time": 1687700250234,
-              "_value": 81
-            }
-          }
         }
       }
     ]
@@ -347,7 +286,7 @@
       "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}"
     }
   ],
-  "ns": "ms-testing",
+  "ns": "mycac",
   "alarmFrequency": "60",
   "runningPodOnly": "on"
 }

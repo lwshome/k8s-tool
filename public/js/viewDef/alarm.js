@@ -284,6 +284,7 @@ const _alarmViewDef={
                                       return v
                                     }
                                   }
+                                  return "?"
                                 },
                                 title:function(d){
                                   let r=d._supData._item._result

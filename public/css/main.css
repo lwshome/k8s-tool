@@ -13,6 +13,7 @@
   --header-color:#CCF;
   --bz-tmp-panel-color:#FFC;
   --disable-color:#888;
+  --active-word-color:#000;
 }
 html,body{
   height: 100%;
@@ -72,7 +73,7 @@ a{
   border-bottom: 1px solid;
   display: flex;
   max-width: 100%;
-  line-height: 30px;
+  line-height: 24px;
   padding: 5px 5px;
 }
 .main-bar{
@@ -87,10 +88,14 @@ a{
   text-overflow:ellipsis;
   text-decoration:none;
   cursor: pointer;
+  height: 25px;
+  position: relative;
+  top: 3px;
 }
 
 .bz-tab-bar .bz-tab.active{
   background-color: var(--hightlight-color);
+  color:var(--active-word-color);
 }
 
 .bz-tab-content{
@@ -991,6 +996,7 @@ input:checked:before{
     --even-color:#111;
     --header-color:#333;
     --bz-tmp-panel-color:#223;
+    --active-word-color:#FFF;
   }
   
   .btn-icon:before{

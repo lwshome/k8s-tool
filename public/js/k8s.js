@@ -22,7 +22,7 @@ const k8s={
         if(a._items){
           return Object.values(a._items).find(x=>{
             return x.find(y=>{
-              return Object.values(y._result).find(z=>{
+              return Object.values(y._result||{}).find(z=>{
                 return z._curValue._alarm
               })
             })
@@ -313,7 +313,7 @@ const k8s={
     let d=k8s._data
     d._loading=1
     d._podList=0
-    d._serviceList=0
+    d._serviceList=d._deployments=d._nodeList=0
     d._configMap=d._curConfig=0
     k8s._uiSwitch._curMainTab='_pods'
 
@@ -809,10 +809,14 @@ const k8s={
     })
   },
   _saveSetting:function(){
+    let d=_Util._clone(k8s._data._config)
+    Object.values(d.alarms).forEach(x=>{
+      x.forEach(y=>delete y._result)
+    })
     _k8sProxy._send({
       _data:{
         method:"saveConfig",
-        data:k8s._data._config
+        data:d
       }
     })
   },
