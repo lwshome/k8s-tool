@@ -60,6 +60,10 @@
       "s": "eric-pm-server",
       "p": "etc/../bin",
       "fd": true
+    },
+    {
+      "s": "e911lstnr",
+      "p": "etc/../config/application.yaml"
     }
   ],
   "autoForward": {
@@ -139,7 +143,7 @@
       {
         "type": "cpu",
         "content": "increase",
-        "value": "1",
+        "value": "10",
         "frequency": "300",
         "scope": {
           "achndlr": "on",
@@ -149,7 +153,7 @@
       {
         "type": "memory",
         "content": "increase",
-        "value": "1",
+        "value": "5",
         "frequency": "300",
         "scope": {
           "achndlr": "on",
@@ -222,11 +226,10 @@
         "value": "Message processing failed from queue"
       }
     ],
-    "groupMerge": "on",
-    "autoMerge": "on",
-    "formatJSON": "on",
     "formatXML": "on",
-    "highlightOnly": "on"
+    "formatJSON": "on",
+    "autoMerge": "on",
+    "groupMerge": "on"
   },
   "link": [
     {
@@ -238,8 +241,8 @@
       "value": "/actuator/metrics"
     },
     {
-      "name": "google",
-      "value": "https://www.google.com",
+      "name": "Check memory",
+      "value": "http://10.63.133.234:9090/graph?g0.expr=jvm_memory_used_bytes%7Bapp_kubernetes_io_name%3D%22eric-tmo-des-ms-achndlr%22%2Carea%3D%22heap%22%2Cservice_istio_io_canonical_name%3D%22eric-tmo-des-ms-achndlr%22%7D&g0.tab=0&g0.stacked=0&g0.show_exemplars=0&g0.range_input=4h",
       "podGroup": "bz-node-system",
       "faver": true
     }
@@ -310,8 +313,7 @@
     {
       "name": "Uninstall mycac",
       "podGroup": "bz-node-system",
-      "value": "helm uninstall cac-nls-lstnrs --namespace mycac\nhelm uninstall cac-nls --namespace mycac\nhelm uninstall cac-tmoes --namespace mycac\nhelm uninstall cac-common --namespace mycac\nhelm uninstall cac-adp --namespace mycac\nhelm uninstall cac-sm --namespace mycac\n\nkubectl delete namespace mycac",
-      "open": true
+      "value": "helm uninstall cac-nls-lstnrs --namespace mycac\nhelm uninstall cac-nls --namespace mycac\nhelm uninstall cac-tmoes --namespace mycac\nhelm uninstall cac-common --namespace mycac\nhelm uninstall cac-adp --namespace mycac\nhelm uninstall cac-sm --namespace mycac\n\nkubectl delete namespace mycac"
     },
     {
       "name": "Install mycac & common components",
@@ -342,11 +344,13 @@
       "method": "POST",
       "url": "/ckfigimjlkjlhugyfcxdxzaresrtftf?partnerID=1234&Password=password&Timestamp=2023-02-27%2012:12:12&xmlPayload=%3CCustomerTransactions%3E%3CCustomerTransaction%3E%3CTransactionInfo%3E%3CRequestedAction%3Eupdate%3C/RequestedAction%3E%3CFieldsModified%3EAccountStatus%3C/FieldsModified%3E%3CCustomerID%3E374731705%3C/CustomerID%3E%3Cmsisdn%3E4343362133%3C/msisdn%3E%3CVersion%3E1.4%3C/Version%3E%3CTransactionID%3E7703794741015003626%3C/TransactionID%3E%3CVendorID%3E36%3C/VendorID%3E%3C/TransactionInfo%3E%3CAccountInfo%3E%3CAccountStatus%3Esuspended%3C/AccountStatus%3E%3CCustomerID%3E374731705%3C/CustomerID%3E%3Cmsisdn%3E4343362133%3C/msisdn%3E%3Cimsi%3E310260135691434%3C/imsi%3E%3Cban%3E957113154%3C/ban%3E%3CaccountType%3EI%3C/accountType%3E%3CaccountSubType%3ER%3C/accountSubType%3E%3CmultiLineIndicator%3ENPAH_NP%3C/multiLineIndicator%3E%3CbillCyclePeriod%3E13%3C/billCyclePeriod%3E%3CCustomerType%3E1%3C/CustomerType%3E%3CsimSerial%3E8901260138756914341%3C/simSerial%3E%3C/AccountInfo%3E%3CServiceInfo%3E%3CVendorID%3E36%3C/VendorID%3E%3CServiceLevel%3E1%3C/ServiceLevel%3E%3CFeatures%3E%3CFeature%3E%3CName%3ENACANMEX%3C/Name%3E%3C/Feature%3E%3CFeature%3E%3CName%3EB52ROAM%3C/Name%3E%3C/Feature%3E%3CFeature%3E%3CName%3ESCUNL-LITT%3C/Name%3E%3C/Feature%3E%3C/Features%3E%3C/ServiceInfo%3E%3C/CustomerTransaction%3E%3C/CustomerTransactions%3E",
       "headers": "{\n  \"Content-Type\":\"application/xml; charset=UTF-8\",\n  \"User-Agent\":\"Apache-HttpClient/4.1.1\"\n}",
-      "faver": true
+      "faver": true,
+      "open": true
     }
   ],
   "ns": "mycac",
   "alarmFrequency": "60",
   "runningPodOnly": "on",
-  "autoCheckAlarm": "on"
+  "autoCheckAlarm": "on",
+  "css": "dark"
 }

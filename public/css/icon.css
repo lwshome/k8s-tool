@@ -61,6 +61,16 @@
   100% { transform: rotate(30deg); }
 }
 
+.bz-light::before{
+  content:"☀";
+  color:yellow !important;
+  font-weight: 400px;
+}
+
+.bz-dark::before{
+  content:"☾"
+}
+
 .bz-logo{
   background-image: url(/css/logo-s.png);
 }
@@ -390,4 +400,9 @@ button.bz-folder-close{
 
 .bz-deployment::after{
   content: "⟳";
+}
+
+.bz-samll-icon::after,
+.bz-samll-icon::before{
+  font-size: 11px;
 }

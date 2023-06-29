@@ -865,6 +865,15 @@ const k8s={
       _success:function(v){
         for(let k in v){
           k8s._data._config[k]=v[k]
+          if(k=="css"){
+            if(v[k]=="dark"){
+              $(document.body).removeClass("bz-in-light")
+              $(document.body).addClass("bz-in-dark")
+            }else if(v[k]=="light"){
+              $(document.body).removeClass("bz-in-dark")
+              $(document.body).addClass("bz-in-light")
+            }
+          }
         }
 
         _logHandler._data._setting=v.log
@@ -1194,7 +1203,7 @@ const k8s={
         _exeCount="ec"+id
         
     k8s._uiSwitch[_playing]=1
-    if(!t._item){
+    if(!t._item&&d.podGroup!="bz-node-system"){
       t._item=(k8s._getItemByGroup(d,t._key)||{})._item
       if(!t._item){
         return

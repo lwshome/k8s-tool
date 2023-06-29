@@ -29,7 +29,7 @@ const _logViewDef={
             {
               _tag:"button",
               _attr:{
-                class:"btn btn-icon  bz-right-space-5 bz-none-border bz-log",
+                class:"btn btn-icon  bz-right-space-5 bz-log",
                 style:"cursor:default;"
               }
             },
@@ -43,7 +43,7 @@ const _logViewDef={
               _if:"_logHandler._data._setting.highlights.length",
               _tag:"i",
               _attr:{
-                style:"font-weight: 100;font-size: 13px;"
+                style:"font-weight: 100;font-size: 13px;margin-top:3px;"
               },
               _items:[
                 {

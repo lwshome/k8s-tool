@@ -659,9 +659,9 @@ const _listViewDef={
 };
 
 function _setCurCtrl(o,_focus){
-  if(!_focus&&k8s._data._curCtrl&&$(k8s._data._curCtrl._element).find(":focus")[0]){
-    return
-  }
+  // if(!_focus&&k8s._data._curCtrl&&$(k8s._data._curCtrl._element).find(":focus")[0]){
+  //   return
+  // }
   k8s._data._curCtrl={
     _element:o,
     _data:o._data._item

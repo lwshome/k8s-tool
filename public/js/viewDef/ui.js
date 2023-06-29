@@ -35,6 +35,46 @@ const ui={
           _text:"_k8sMessage._info._title"
         },
         {
+          _tag:"button",
+          _attr:{
+            class:"'btn btn-icon bz-light bz-none-border '+(k8s._data._config.css=='light'?'bz-press':'')",
+            style:"position: relative;top: 5px;left: -22px;"
+          },
+          _jqext:{
+            click:function(){
+              $(document.body).removeClass("bz-in-dark")
+              $(document.body).removeClass("bz-in-light")
+              if(k8s._data._config.css=="light"){
+                k8s._data._config.css=""
+              }else{
+                k8s._data._config.css='light'
+                $(document.body).addClass("bz-in-light")
+              }
+              k8s._saveSetting()
+            }
+          }
+        },
+        {
+          _tag:"button",
+          _attr:{
+            class:"'btn btn-icon bz-dark bz-none-border '+(k8s._data._config.css=='dark'?'bz-press':'')",
+            style:"position: relative;top: 5px;left: -14px;"
+          },
+          _jqext:{
+            click:function(){
+              $(document.body).removeClass("bz-in-dark")
+              $(document.body).removeClass("bz-in-light")
+              if(k8s._data._config.css=="dark"){
+                k8s._data._config.css=""
+              }else{
+                k8s._data._config.css='dark'
+                $(document.body).addClass("bz-in-dark")
+              }
+              k8s._saveSetting()
+            }
+          }
+        },
+        {
           _tag:"div",
           _attr:{
             class:"bz-namespace-box"
@@ -193,7 +233,7 @@ const ui={
         {
           _tag:"div",
           _attr:{
-            style:"flex:1;text-align:center;"
+            style:"flex:1;text-align:center;white-space: nowrap;overflow: hidden;"
           },
           _items:[
             {
@@ -218,7 +258,7 @@ const ui={
                 {
                   _tag:"span",
                   _attr:{
-                    class:"'bz-'+_data._item._type",
+                    class:"'bz-samll-icon bz-'+_data._item._type",
                     style:"display:inline-block;margin-top:3px;"
                   }
                 },
@@ -252,17 +292,6 @@ const ui={
                   })
                 }
 
-                if(c.link){
-                  c.link.forEach(x=>{
-                    if(x.faver){
-                      vs.push({
-                        _type:"link",
-                        _value:x
-                      })
-                    }
-                  })
-                }
-
                 if(c.api){
                   c.api.forEach(x=>{
                     if(x.faver){
@@ -274,6 +303,16 @@ const ui={
                   })
                 }
 
+                if(c.link){
+                  c.link.forEach(x=>{
+                    if(x.faver){
+                      vs.push({
+                        _type:"link",
+                        _value:x
+                      })
+                    }
+                  })
+                }
                 return vs
               }
             }
