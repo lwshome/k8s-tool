@@ -23,12 +23,41 @@ const k8s={
           return Object.values(a._items).find(x=>{
             return x.find(y=>{
               return Object.values(y._result||{}).find(z=>{
-                return z._curValue._alarm
+                return z._curValue._alarmTotal||z._curValue._alarmIncrease
               })
             })
           })
         }
       })
+    }
+  },
+  _getAlarmSummary:function(){
+    let w=""
+    let as=k8s._data._curAlarms
+    if(as){
+      Object.values(as).forEach(a=>{
+        if(a._items){
+          Object.values(a._items).forEach(x=>{
+            x.forEach(y=>{
+              Object.values(y._result||{}).forEach(z=>{
+                if(z._title&&z._title.includes("🔔")){
+                  if(w){
+                    z=z._title.split("\n")
+                    z.shift()
+                    z=z.join("\n")
+                  }else{
+                    z=z._title
+                  }
+                  if(!w.includes(z)){
+                    w+=z+"\n"
+                  }
+                }
+              })
+            })
+          })
+        }
+      })
+      return w
     }
   },
   _getAlarmInfo:function(){
@@ -154,7 +183,7 @@ const k8s={
               r._title+=`    ${_curValue}`
               if(a.content=="total"){
                 if((lv._percentage||lv._value)>a.value){
-                  lv._alarm=1
+                  lv._alarmTotal=1
                   r._title+="🔔"
                 }
               }
@@ -173,7 +202,7 @@ const k8s={
                 }
                 if(a.content=="increase"){
                   if(lv._increasePercentage>a.value){
-                    lv._alarm=1
+                    lv._alarmIncrease=1
                     r._title+="🔔"
                   }
                 }
@@ -264,7 +293,7 @@ const k8s={
 
     function _insertData(_fun){
       let o=Object.values(k8s._data._curAlarms).find(x=>!x._config),v=""
-      if(o){
+      if(o&&o._resource&&o._resource[0]){
         _k8sProxy._send({
           _data:{
             method:"exeCmd",
@@ -285,9 +314,11 @@ const k8s={
               let vv={cpu:0,memory:0}
               let x=v.spec.containers[0]
               x=x.resources.limits
-              vv.cpu+=x.cpu.includes("m")?parseInt(x.cpu):parseInt(x.cpu)*1024
-              vv.memory+=_Util._parseSpace(x.memory)
-
+              if(x){
+                vv.cpu+=x.cpu.includes("m")?parseInt(x.cpu):parseInt(x.cpu)*1024
+                vv.memory+=_Util._parseSpace(x.memory)
+  
+              }
               o._config=vv
               _insertData(_fun)
             }
@@ -313,7 +344,7 @@ const k8s={
     let d=k8s._data
     d._loading=1
     d._podList=0
-    d._serviceList=d._deployments=d._nodeList=0
+    d._serviceList=d._deployments=d._nodeList=k8s._data._curAlarms=0
     d._configMap=d._curConfig=0
     k8s._uiSwitch._curMainTab='_pods'
 
@@ -334,6 +365,9 @@ const k8s={
           setTimeout(()=>{
             k8s._loadForwards()
           },100)
+          setTimeout(()=>{
+            k8s._startAlarm()
+          },1000)
         })
       })
     }
@@ -365,7 +399,26 @@ const k8s={
       t="cmd"
     }
     k8s._data._config[t]=k8s._data._config[t]||[];
-    k8s._uiSwitch._configList=k8s._data._config[t];
+    k8s._uiSwitch._configList=k8s._data._config[t].filter(x=>{
+      delete x.open
+      x=x.podGroup
+      let rg=(k8s._data._config.filter[k8s._data._config.ns]||"").split("|")
+      return !x||x=="bz-node-system"||rg.includes(x)
+    }).sort((a,b)=>{
+      a=a.podGroup
+      b=b.podGroup
+      if(a=="bz-node-system"){
+        return 1
+      }else if(b=="bz-node-system"){
+        return -1
+      }else if(!a){
+        return 1
+      }else if(!b){
+        return -1
+      }else{
+        return a>b?1:-1
+      }
+    });
     if(t=="api"){
       k8s._uiSwitch._configList=k8s._uiSwitch._configList.filter(x=>x.podGroup==k8s._data._curGroup)
     }
@@ -524,6 +577,20 @@ const k8s={
                           _dataModel:`k8s._uiSwitch._configList[_data._idx].podGroup`
                         }
                       ]
+                    },
+                    {
+                      _tag:"button",
+                      _attr:{
+                        class:"'btn btn-icon bz-star bz-none-border '+(_data._item.faver?'on':'')",
+                        style:"margin:3px 5px",
+                        title:"_k8sMessage._method[_data._item.faver?'_unsetBookmark':'_setBookmark']"
+                      },
+                      _jqext:{
+                        click:function(){
+                          this._data._item.faver=!this._data._item.faver
+                          k8s._saveSetting()
+                        }
+                      }
                     },
                     {
                       _tag:"button",
@@ -1122,11 +1189,14 @@ const k8s={
         _playing="p"+id,
         _tmpIntervals="i"+id,
         _waiting="w"+id,
-        _timer="t"+id
+        _timer="t"+id,
+        _remain="rm"+id,
+        _exeCount="ec"+id
+        
     k8s._uiSwitch[_playing]=1
     if(!t._item){
-      t=k8s._getItemByGroup(d,t)
-      if(!t){
+      t._item=(k8s._getItemByGroup(d,t._key)||{})._item
+      if(!t._item){
         return
       }
     }
@@ -1382,7 +1452,7 @@ const k8s={
                     if(z.trim()!=zz.trim()){
                       zz=z.split(/[^ ]+/)
                       z=z.trim()
-                      if(z.match(/^[0-9]{3,}$/)&&y[i].trim().match(/^[0-9]{3,}$/)){
+                      if(z.match(/^[0-9]{2,}$/)&&y[i].trim().match(/^[0-9]{2,}$/)){
                         let zi=parseInt(z)-parseInt(y[i].trim()),
                             _size=(Math.abs(zi)+"").length+3
                         if(zi&&zz[1].length>_size){
@@ -1461,7 +1531,7 @@ const k8s={
     function _sendAPI(t,d){
       k8s._uiSwitch[_response]=""
       let s=_Util._jsonToCurl(t,d)
-      k8s._data._exeCount=1
+      k8s._data[_exeCount]="1,1"
       if(s){
         _Util._confirmMessage({
           _tag:"div",
@@ -1498,30 +1568,28 @@ const k8s={
                     class:"form-control",
                     style:function(){
                       let c="background-color:transparent;color:"
-                      if(k8s._data._remain){
+                      if(k8s._data[_remain]){
                         c+="transparent;"
                       }else{
                         c+="var(--word-color);"
                       }
                       return c
-                    },
-                    type:"number",
-                    min:0
+                    }
                   },
-                  _dataModel:"k8s._data._exeCount"
+                  _dataModel:"k8s._data."+_exeCount
                 },
                 {
-                  _if:"k8s._data._remain",
+                  _if:"k8s._data."+_remain,
                   _tag:"div",
                   _attr:{
                     class:"bz-precentage-bar",
                     style:function(){
-                      let c=(1-k8s._data._remain/k8s._data._exeCount)*100+"%"
+                      let c=(1-k8s._data[_remain]/parseInt(k8s._data[_exeCount]))*100+"%"
                       
                       return "width:"+c
                     },
                     precentage:function(){
-                      return parseInt((1-k8s._data._remain/k8s._data._exeCount)*100)+"%"
+                      return parseInt((1-k8s._data[_remain]/parseInt(k8s._data[_exeCount]))*100)+"%"
                     }
                   }
                 },
@@ -1534,12 +1602,18 @@ const k8s={
                     {
                       _tag:"button",
                       _attr:{
-                        class:"btn btn-icon bz-play bz-none-border",
+                        class:function(){
+                          return 'btn btn-icon bz-none-border bz-'+(k8s._data[_remain]?'stop':'play')
+                        },
                         style:"margin-left:5px;"
                       },
                       _jqext:{
                         click:function(){
-                          _doSend(k8s._data._exeCount)
+                          if(!k8s._data[_remain]){
+                            _doSend(...k8s._data[_exeCount].split(","))
+                          }else{
+                            k8s._data[_remain]=0
+                          }
                         }
                       }
                     },
@@ -1562,23 +1636,29 @@ const k8s={
           ]
         },[],_k8sMessage._method.api,400,1,0,1)
         
-        _doSend(1)
+        _doSend(1,1)
         _Util._attachResize("#"+id)
-        function _doSend(n){
-          k8s._data._remain=n
-          if(n){
+        function _doSend(n,ts){
+          k8s._data[_remain]=n
+          let _time=Date.now()
+          if(n>0){
             _k8sProxy._send({
               _data:{
                 method:"exeAPI",
                 data:{
-                  api:_Util._jsonToCurl(t,d)
+                  api:_Util._jsonToCurl(t,d),
+                  times:ts||1
                 }
               },
               _success:function(v){
                 _updateResponse(v)
-                _doSend(n-1)
+                setTimeout(()=>{
+                  _doSend(k8s._data[_remain]-1)
+                },_time+1000-Date.now())
               }
             })  
+          }else{
+            k8s._data[_remain]=0
           }
         }
       }

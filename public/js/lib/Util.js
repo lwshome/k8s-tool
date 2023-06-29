@@ -9,6 +9,9 @@ var _Util={
     }
     return vv*v
   },
+  _getShortName:function(v){
+    return v.split(/[ _$%#-]/).map(x=>x[0].toUpperCase()).join("").substring(0,2)
+  },
   _setInDetailsCss:function(){
     $(".bz-list-box").addClass("bz-in-details")
     let a=1,b=2;

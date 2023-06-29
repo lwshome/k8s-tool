@@ -69,6 +69,8 @@ const _k8sMessage={
     delete:"Delete",
     _save:"Save",
     _cancel:"Cancel",
+    _setBookmark:"Set bookmark",
+    _unsetBookmark:"Unset bookmark",
     _open:"Open",
     _close:"Close",
     _clean:"Clean",
@@ -110,7 +112,8 @@ const _k8sMessage={
       increase:"Increase"
     },
     _curValue:"Current Value",
-    _change:"Fluctuation"
+    _change:"Fluctuation",
+    _autoCheck:"Auto check"
   },
   _log:{
     _title:"Log setting",

@@ -44,6 +44,32 @@ const _alarmViewDef={
           }
         },
         {
+          _tag:"label",
+          _attr:{
+            style:"position: relative;top: 15px;"
+          },
+          _items:[
+            {
+              _tag:"input",
+              _attr:{
+                type:"checkbox"
+              },
+              _dataModel:"k8s._data._config.autoCheckAlarm",
+              _jqext:{
+                click:function(){
+                  if(this.checked){
+                    k8s._startAlarm()
+                  }
+                }
+              }
+            },
+            {
+              _tag:"span",
+              _text:"_k8sMessage._alarm._autoCheck"
+            }
+          ]
+        },
+        {
           _tag:"div",
           _attr:{
             class:"input-group bz-space-15 bz-bottom-space-5",
@@ -63,7 +89,8 @@ const _alarmViewDef={
                 class:"form-control",
                 type:"number",
                 step:60,
-                min:0
+                min:0,
+                disabled:"k8s._data._config.autoCheckAlarm"
               },
               _dataModel:"k8s._data._config.alarmFrequency"
             },
@@ -91,7 +118,7 @@ const _alarmViewDef={
         {
           _tag:"button",
           _attr:{
-            disabled:"!(k8s._data._config.alarms||{})[k8s._data._config.ns].length",
+            disabled:"k8s._data._config.autoCheckAlarm||!(k8s._data._config.alarms||{})[k8s._data._config.ns].length",
             class:"'btn btn-icon bz-none-border bz-space-15 bz-bottom-space-5 '+(k8s._uiSwitch._alarmPlay?'bz-stop':'bz-play')",
             title:"k8s._uiSwitch._alarmPlay?_k8sMessage._method._stop:_k8sMessage._method._play"
           },
@@ -273,10 +300,16 @@ const _alarmViewDef={
                                   if(r&&r[d._item]){
                                     let v= r[d._item]._curValue
                                     if(v&&typeof v=="object"){
-                                      if(v._percentage===undefined){
-                                        v= `${v._alarm?'🔔 ':''}${v._value}%`
+                                      let _alarm
+                                      if(s.content=="total"){
+                                        _alarm=v._alarmTotal
                                       }else{
-                                        v= `${v._alarm?'🔔 ':''}${v._percentage}% (${v._value+u})`
+                                        _alarm=v._alarmIncrease
+                                      }
+                                      if(v._percentage===undefined){
+                                        v= `${_alarm?'🔔':''}${v._value}%`
+                                      }else{
+                                        v= `${_alarm?'🔔':''}${v._percentage}% (${v._value+u})`
                                       }
                                       if(o&&v!=$(o).attr("cv")){
                                         $(o).addClass("bz-updating")

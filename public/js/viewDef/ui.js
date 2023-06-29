@@ -150,7 +150,12 @@ const ui={
         {
           _tag:"div",
           _attr:{
-            class:"'bz-tab '+(k8s._uiSwitch._curMainTab==_data._item&&'active')"
+            class:"'bz-tab '+(k8s._uiSwitch._curMainTab==_data._item&&'active')",
+            title:function(d){
+              if(d._item=="_alarm"){
+                return k8s._getAlarmSummary()
+              }
+            }
           },
           _jqext:{
             click:function(){
@@ -159,6 +164,16 @@ const ui={
           },
           _items:[
             {
+              _tag:"span",
+              _attr:{
+                style:function(d){
+                  if(d._item=='_alarm'&&k8s._hasAlarm()){
+                    return "color:var(--alarm-color);"
+                  }else{
+                    return "color:var(--word-color);"
+                  }
+                }
+              },
               _text:function(d){
                 k8s._uiSwitch._updateAlarm
                 return _k8sMessage._main._tabs[d._item]
@@ -178,8 +193,91 @@ const ui={
         {
           _tag:"div",
           _attr:{
-            style:"flex:1"
-          }
+            style:"flex:1;text-align:center;"
+          },
+          _items:[
+            {
+              _tag:"span",
+              _attr:{
+                class:"btn bz-none-border bz-space-5 bz-hover-btn",
+                style:"position: relative;top: 5px;",
+                title:function(d){
+                  d=d._item
+                  let w=d._value.name+":\n"
+                  if(d._type=='api'){
+                    d=_Util._clone(d._value)
+                    delete d.name
+                    w+=JSON.stringify(d,0,2)
+                  }else{
+                    w+=d._value.value
+                  }
+                  return w
+                }
+              },
+              _items:[
+                {
+                  _tag:"span",
+                  _attr:{
+                    class:"'bz-'+_data._item._type",
+                    style:"display:inline-block;margin-top:3px;"
+                  }
+                },
+                {
+                  _tag:"span",
+                  _attr:{
+                    style:"font-size: 9px;margin-left: -3px;position: relative;top: -12px;"
+                  },
+                  _text:function(d){
+                    return _Util._getShortName(d._item._value.name)
+                  }
+                }
+              ],
+              _jqext:{
+                click:function(){
+                  let o=this._data._item
+                  k8s._exeItem(o,o._value)
+                }
+              },
+              _dataRepeat:function(){
+                let c=k8s._data._config,vs=[]
+
+                if(c.cmd){
+                  c.cmd.forEach(x=>{
+                    if(x.faver){
+                      vs.push({
+                        _type:"cmd",
+                        _value:x
+                      })
+                    }
+                  })
+                }
+
+                if(c.link){
+                  c.link.forEach(x=>{
+                    if(x.faver){
+                      vs.push({
+                        _type:"link",
+                        _value:x
+                      })
+                    }
+                  })
+                }
+
+                if(c.api){
+                  c.api.forEach(x=>{
+                    if(x.faver){
+                      vs.push({
+                        _type:"api",
+                        _value:x
+                      })
+                    }
+                  })
+                }
+
+                return vs
+              }
+            }
+          ]
         },
         {
           _tag:"button",

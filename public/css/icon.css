@@ -251,15 +251,17 @@ button.bz-folder-close{
 }
 
 .bz-star:before{
-  content:"★";
+  content:"☆";
   font-size:15px;
   position: relative;
-  top: -3px;
+  top: -2px;
+  font-weight: 100;
   color:#999;
 }
 
 .bz-star.on:before{
   content:"⭐";
+  font-weight: bold;
 }
 
 .bz-alarm-item{
@@ -316,6 +318,9 @@ button.bz-folder-close{
   top: -2px;
 }
 
+.bz-link{
+  transform: rotate(90deg);
+}
 .bz-link:before{
   content:"🔗";
   font-size:13px;

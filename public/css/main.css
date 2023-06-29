@@ -14,6 +14,7 @@
   --bz-tmp-panel-color:#FFC;
   --disable-color:#888;
   --active-word-color:#000;
+  --alarm-color:#c00;
 }
 html,body{
   height: 100%;
@@ -25,6 +26,14 @@ body{
   height: calc(100% - 10px);
   display: flex;
   padding: 5px;
+}
+.rotate90{
+  transform: rotate(90deg);
+}
+.bz-hover-btn:hover{
+  background-color: var(--hightlight-color);
+  border-radius: 10px;
+  padding:10px 10px 5px 10px;
 }
 *{
   border-color: var(--border-color);
@@ -998,6 +1007,7 @@ input:checked:before{
     --header-color:#333;
     --bz-tmp-panel-color:#223;
     --active-word-color:#FFF;
+    --alarm-color:#F00;
   }
   
   .btn-icon:before{
