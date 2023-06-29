@@ -104,6 +104,7 @@ a{
   height: 25px;
   position: relative;
   top: 3px;
+  font-family: sans-serif;
 }
 .btn-icon:before{
   color:var(--word-color) !important;
@@ -115,6 +116,7 @@ a{
 .bz-tab-bar .bz-tab.active{
   background-color: var(--hightlight-color);
   color:var(--active-word-color);
+  font-weight: bold;
 }
 
 .bz-tab-content{
@@ -777,6 +779,7 @@ button.btn.bz-none-border:hover{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: sans-serif;
 }
 
 label>input[type=checkbox]{
