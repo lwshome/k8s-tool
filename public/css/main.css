@@ -808,6 +808,7 @@ input:checked:before{
   margin-top: -21px;
   margin-right: 5px;
   float: right;
+  font-size:11px;
 }
 .input-group-btn .btn-icon{
   width: 24px !important;
@@ -953,7 +954,7 @@ input:checked:before{
   position: relative;
   left:4px;
   background-color: transparent;  
-  z-index:1111;
+  z-index:11110;
 }
 .bz-splitter-v{
   width: 5px;

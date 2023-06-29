@@ -50,7 +50,7 @@ io.on('disconnect', o=>{
 
 function socketFun(socket){
   socket.on('work', msg => {
-    console.log(msg)
+    // console.log(msg)
     let _fun=function(v){
       _sendMsg({
         k:msg.k,

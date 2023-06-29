@@ -82,7 +82,7 @@ const _alarmViewDef={
                 },
                 precentage:function(){
                   k8s._uiSwitch._alarmWaitUpdate
-                  return parseInt((k8s._data._config.alarmFrequency*1000-k8s._uiSwitch._alarmWait+Date.now())/1000)+"s"
+                  return parseInt((k8s._uiSwitch._alarmWait-Date.now())/1000)+"s"
                 }
               }
             }
@@ -264,6 +264,9 @@ const _alarmViewDef={
                                 },
                                 class:"pull-left bz-alarm-item",
                                 cv:function(d,c,o){
+                                  if(!k8s._data._config.alarms[k8s._data._config.ns][d._supData._idx].scope[d._item]){
+                                    return
+                                  }
                                   let s=d._supData._item,
                                       r=s._result,
                                       u=s.type=="cpu"?"m":s.type=="memory"?"Mi":""

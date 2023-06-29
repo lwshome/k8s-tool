@@ -1615,7 +1615,7 @@ const k8s={
   _replaceVariable:function(v,_group,_fun){
     $NS=k8s._data._config.ns
     v=eval("`"+v+"`")
-    let _alarm=v.match(/^\$bz-alarm:.+\n/)
+    let _alarm=v.match(/^\{\$bz-alarm:.+\}\n/)
     if(_alarm){
       _alarm=_alarm[0]
       v=v.replace(_alarm,"").trim()
@@ -1709,7 +1709,7 @@ const k8s={
       })
       return
     }else if(_alarm){
-      return _Util._confirmMessage(_alarm.replace("$alarm:","").trim()||_k8sMessage._info._confirmExe,[{
+      return _Util._confirmMessage(_alarm.replace("$bz-alarm:","").trim().replace(/^\{|\}$/g,"")||_k8sMessage._info._confirmExe,[{
         _title:_k8sMessage._method._execute,
         _class:"btn btn-primary",
         _click:function(c){
@@ -2126,6 +2126,7 @@ const k8s={
           }
         },
         _success:function(v){
+          console.log(v.length)
           _logHandler._addLog(v,p._log)
         }
       })

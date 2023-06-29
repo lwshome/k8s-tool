@@ -20,7 +20,7 @@ const k8s={
     _exe("kubectl get namespace",_fun)
   },
   killProcess:function(k,_fun){
-    let s=`ps aux | grep "${k}"`
+    let s=`ps aux | grep -P "${k}"`
     console.log(s)
     _exe(s,function(v){
       if(v){
@@ -35,19 +35,71 @@ const k8s={
   forward:function(d,_fun){
     console.log("Forward: ")
     console.log(d)
-    k8s.killProcess(d.serverName,function(){
+    k8s.killProcess("port-forward.+"+d.port,function(){
       let s=`${_getK8sCmdHeader(d)} port-forward ${d.serverName} ${d.port}`
+      console.log(s)
       s=s.split(" ")
       _monitor(s.shift(),s,_fun)
     })
   },
   getLog:function(d,_fun){
-    let s=`logs -f --tail=100 ${d.serverName}`
+    let s=`logs -f --tail=100 ${d.serverName}`,
+        _size=0,_timer=0,_stop;
     k8s.killProcess(s,function(){
       s=`${_getK8sCmdHeader(d)} ${s}`
       s=s.split(" ")
-      _monitor(s.shift(),s,_fun)
+      _monitorLog(s.shift(),s,_fun)
     })
+
+    function _monitorLog(_cmd,_args,_fun){
+      console.log(Date.now())
+      console.log("_cmd: "+_cmd)
+      console.log("_args: "+_args)
+      try{
+        let ls = spawn(_cmd, _args);
+    
+        ls.stdout.on('data', function (d) {
+          _sendData(d,"log")
+        });
+        
+        ls.stderr.on('data', function (d) {
+          _sendData(d,"log-err")
+        });
+        
+        ls.on('exit', function (code) {
+          _fun("COMPLETE-LOG: " + code);
+        });
+      }catch(ex){
+        _fun(ex.message)
+      }
+    }
+    
+    function _sendData(dd,_mark){
+      if(_stop){
+        console.log("stop pre-log!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        return
+      }
+      _size++
+      dd=dd.toString()
+      // console.log(_mark+":"+d.length)
+      _fun(dd);
+      clearTimeout(_timer)
+      _timer=setTimeout(()=>{
+        _stop=1
+        console.log("Redo log: "+d.serverName+" ..........................................................................")
+        console.log(new Date())
+        k8s.getLog(d,_fun)
+      },_getTimeout(_size))
+    }
+
+    function _getTimeout(s){
+      if(s>1000){
+        return 5000
+      }else if(s>500){
+        return 10000
+      }
+      return 100000
+    }
   },
   getList:function(d,_fun){
     let s=`${_getK8sCmdHeader(d)} get ${d.type}`
@@ -249,7 +301,7 @@ const k8s={
     // })
   },
   exeCmd:function(d,_fun){
-    console.log(d)
+    // console.log(d)
     if(d.fileName){
       fs.writeFileSync("download/"+d.fileName,d.fileContent||"");
     }
@@ -271,7 +323,7 @@ const k8s={
     function _exe(cs,_split){
       let c=cs.shift()
       if(c){
-        console.log(c)
+        // console.log(c)
         let s=c.split(" "),_start;
         _monitor(s.shift(),s,function(v){
           if(v.startsWith("COMPLETE:")){
@@ -299,29 +351,29 @@ const k8s={
   }
 }
 function _getK8sCmdHeader(_data){
-  console.log(_data)
+  // console.log(_data)
   return `kubectl -n ${_data.ns}`
 }
 function _buildRemoteK8sCmd(_data,_fun){
   return `${_getK8sCmdHeader(_data)} exec -i ${_data.name} -- ${_data.cmd}`
 }
 function _exe(s,_fun){
-  console.log(s)
+  // console.log(s)
   exec(s, (_error, b, _stderr) => {
     if(_error||_stderr){
       _error=_error||_stderr
       console.error(_error)
       return _fun(_error)
     }
-    console.log(b)
+    // console.log(b)
     _fun(b)
   });
 }
 
 function _monitor(_cmd,_args,_fun){
-  console.log(Date.now())
-  console.log("_cmd: "+_cmd)
-  console.log("_args: "+_args)
+  // console.log(Date.now())
+  // console.log("_cmd: "+_cmd)
+  // console.log("_args: "+_args)
   try{
     let ls = spawn(_cmd, _args);
 
