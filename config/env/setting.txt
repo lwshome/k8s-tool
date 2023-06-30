@@ -347,7 +347,6 @@
   ],
   "ns": "mycac",
   "alarmFrequency": "60",
-  "runningPodOnly": "on",
   "autoCheckAlarm": "on",
   "css": ""
 }

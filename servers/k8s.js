@@ -93,9 +93,9 @@ const k8s={
     }
 
     function _getTimeout(s){
-      if(s>1000){
+      if(_size>1000){
         return 5000
-      }else if(s>500){
+      }else if(_size>500){
         return 10000
       }
       return 100000
