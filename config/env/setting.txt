@@ -313,8 +313,9 @@
     },
     {
       "name": "Install mycac & common components",
-      "value": "kubectl create namespace mycac\nkubectl get secret armdocker-pull-secret --namespace=default -oyaml | grep -v '^\\s*namespace:\\s' | kubectl apply --namespace=mycac -f -\nkubectl create -f /home/elxneiw/deploy/rosetta.yaml --namespace mycac\n\nhelm install cac-sm -f /home/elxneiw/deploy/ews_CAC_MESH.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-adp -f /home/elxneiw/deploy/ews_CAC_ADP.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-common -f /home/elxneiw/deploy/ews_CAC_Common.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella",
-      "podGroup": "bz-node-system"
+      "value": "kubectl create namespace mycac\nkubectl get secret armdocker-pull-secret --namespace=default -oyaml | grep -vwE \"(namespace)\" | kubectl apply --namespace=mycac -f -\nkubectl create -f /home/elxneiw/deploy/rosetta.yaml --namespace mycac\n\nhelm install cac-sm -f /home/elxneiw/deploy/ews_CAC_MESH.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-adp -f /home/elxneiw/deploy/ews_CAC_ADP.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella\nhelm install cac-common -f /home/elxneiw/deploy/ews_CAC_Common.yaml --namespace mycac /home/elxneiw/deploy/eric-tmo-cac-umbrella",
+      "podGroup": "bz-node-system",
+      "open": true
     }
   ],
   "api": [

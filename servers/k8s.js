@@ -326,7 +326,7 @@ const k8s={
       let c=cs.shift()
       if(c){
         // console.log(c)
-        if(c.includes("|")){
+        if(c.includes("|")||c.includes(">")){
           _exe(c,function(v){
             if(v){
               console.log(v)
@@ -341,9 +341,7 @@ const k8s={
               v=(_split||"")+c+"\n"+v
 
               _fun(v)
-              setTimeout(()=>{
-                _fun("BZ-COMPLETE")
-              })
+              _exeCmd(cs,_split)
             }
           })
           return
@@ -404,9 +402,9 @@ function _monitor(_cmd,_args,_fun){
   // console.log(Date.now())
   // console.log("_cmd: "+_cmd)
   // console.log("_args: "+_args)
-  console.log(_cmd)
-  console.log(_args)
-  console.log(_args.length)
+  // console.log(_cmd)
+  // console.log(_args)
+  // console.log(_args.length)
   try{
     let ls = spawn(_cmd, _args);
 
