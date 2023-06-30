@@ -63,7 +63,8 @@
 
 .bz-light::before{
   content:"☀";
-  font-weight: 400px;
+  font-weight: 400;
+  font-size: 20px;
 }
 
 .bz-dark::before{
