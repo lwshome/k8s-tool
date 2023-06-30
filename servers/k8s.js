@@ -320,17 +320,45 @@ const k8s={
         return x
       }
     })
-    _exe(cs)
+    _exeCmd(cs)
 
-    function _exe(cs,_split){
+    function _exeCmd(cs,_split){
       let c=cs.shift()
       if(c){
         // console.log(c)
+        if(c.includes("|")){
+          _exe(c,function(v){
+            if(v){
+              console.log(v)
+
+              if(_split||d.split){
+                let s=d.split||""
+                if(s){
+                  s+=". "
+                }
+                _split="\n=== "+s+new Date()+" "+"=".repeat("30")+"\n\n"
+              }
+              v=(_split||"")+c+"\n"+v
+
+              _fun(v)
+              setTimeout(()=>{
+                _fun("BZ-COMPLETE")
+              })
+            }
+          })
+          return
+        }
         let s=c.split(" "),_start;
+        // let ss=s.shift().trim().split(" "),
+        //     _cmd=ss.shift();
+        // if(s.length){
+        //   ss.push("--")
+        //   ss.push(...s.map(x=>"'"+x.trim()+"'"))
+        // }
         _monitor(s.shift(),s,function(v){
           if(v.startsWith("COMPLETE:")){
             _start=0
-            _exe(cs,1)
+            _exeCmd(cs,1)
           }else{
             if(!_start){
               if(_split||d.split){
@@ -376,6 +404,9 @@ function _monitor(_cmd,_args,_fun){
   // console.log(Date.now())
   // console.log("_cmd: "+_cmd)
   // console.log("_args: "+_args)
+  console.log(_cmd)
+  console.log(_args)
+  console.log(_args.length)
   try{
     let ls = spawn(_cmd, _args);
 

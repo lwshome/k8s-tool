@@ -399,8 +399,15 @@ const k8s={
       t="cmd"
     }
     k8s._data._config[t]=k8s._data._config[t]||[];
-    k8s._uiSwitch._configList=k8s._data._config[t].filter(x=>{
+    k8s._uiSwitch._configList=k8s._data._config[t];
+
+    if(t=="api"){
+      k8s._uiSwitch._configList=k8s._uiSwitch._configList.filter(x=>x.podGroup==k8s._data._curGroup)
+    }
+
+    k8s._uiSwitch._configList=k8s._uiSwitch._configList.filter(x=>{
       delete x.open
+
       x=x.podGroup
       let rg=(k8s._data._config.filter[k8s._data._config.ns]||"").split("|")
       return !x||x=="bz-node-system"||rg.includes(x)
@@ -418,10 +425,7 @@ const k8s={
       }else{
         return a>b?1:-1
       }
-    });
-    if(t=="api"){
-      k8s._uiSwitch._configList=k8s._uiSwitch._configList.filter(x=>x.podGroup==k8s._data._curGroup)
-    }
+    })
 
     _Util._confirmMessage({
       _tag:"div",
@@ -459,9 +463,9 @@ const k8s={
                     d.podGroup=k8s._data._curGroup
                   }
                   k8s._uiSwitch._configList.push(d)
-                  if(t=="api"){
-                    k8s._data._config.api.push(k8s._uiSwitch._configList[k8s._uiSwitch._configList.length-1])
-                  }
+
+                  k8s._data._config[t].push(k8s._uiSwitch._configList[k8s._uiSwitch._configList.length-1])
+
                   let ls=k8s._uiSwitch._configList
                   k8s._uiSwitch._configList=[]
                   k8s._uiSwitch._configList=ls
@@ -601,7 +605,7 @@ const k8s={
                       },
                       _jqext:{
                         click:function(){
-                          k8s._exeItem(t,this._data._item)
+                          k8s._exeItem({_type:t},this._data._item)
                         }
                       }
                     },
@@ -615,9 +619,8 @@ const k8s={
                       _jqext:{
                         click:function(){
                           let o=k8s._uiSwitch._configList.splice(this._data._idx,1);
-                          if(t=="api"){
-                            k8s._data._config.api.splice(k8s._data._config.api.indexOf(o),1)
-                          }
+                          k8s._data._config[t].splice(k8s._data._config[t].indexOf(o),1)
+
                           let ls=k8s._uiSwitch._configList
                           k8s._uiSwitch._configList=[]
                           k8s._uiSwitch._configList=ls
@@ -732,9 +735,7 @@ const k8s={
                   _tag:"hr"
                 }
               ],
-              _dataRepeat:function(){
-                return k8s._uiSwitch._configList
-              }
+              _dataRepeat:"k8s._uiSwitch._configList"
             }
           ]
         }
@@ -1461,7 +1462,7 @@ const k8s={
                     if(z.trim()!=zz.trim()){
                       zz=z.split(/[^ ]+/)
                       z=z.trim()
-                      if(z.match(/^[0-9]{2,}$/)&&y[i].trim().match(/^[0-9]{2,}$/)){
+                      if(z.match(/^[0-9]{2,}$/)&&y[i]&&y[i].trim().match(/^[0-9]{2,}$/)){
                         let zi=parseInt(z)-parseInt(y[i].trim()),
                             _size=(Math.abs(zi)+"").length+3
                         if(zi&&zz[1].length>_size){

@@ -108,6 +108,9 @@ const ui={
                   },
                   _items:[
                     {
+                      _tag:"option"
+                    },
+                    {
                       _tag:"option",
                       _attr:{
                         value:"_data._item"

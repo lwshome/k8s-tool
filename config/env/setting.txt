@@ -95,7 +95,8 @@
     "testing": "",
     "appdynamics": "",
     "deploy-code-sd-mana-tmo-adp-naplistener": "",
-    "deploy-code-sd-mana-tmo-adp-napeventfilter": ""
+    "deploy-code-sd-mana-tmo-adp-napeventfilter": "",
+    "lws": ""
   },
   "alarms": {
     "ms-testing": [
@@ -194,7 +195,7 @@
       }
     ]
   },
-  "NSFilter": "mycac|testing|deploy|staging-umbrella-test",
+  "NSFilter": "lws|mycac|testing|deploy|staging-umbrella-test",
   "log": {
     "cleanDynamicRegex": "([0-9 -:/.]{17,23}|@[0-9a-f]{7,32})|id [0-9]{1,10}| --- \\[[^\\]]+\\]",
     "highlights": [
@@ -249,9 +250,25 @@
   ],
   "cmd": [
     {
+      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-{$parameter:name=napfltr|achndlr|lochndlr}",
+      "name": "check kafka queue",
+      "podGroup": "nls-data-message-bus-kf",
+      "faver": true
+    },
+    {
       "name": "Start kafka",
       "value": "kafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-nap-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 3 --replication-factor 3 --topic cac-location-events-retry-1\n \n \nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-dlt\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-retry-0\nkafka-topics --create --bootstrap-server nls-data-message-bus-kf-0:9092 --command-config /etc/kafka/kafka.properties --partitions 4 --replication-factor 3 --topic cac-aca-events-retry-1",
       "podGroup": "nls-data-message-bus-kf"
+    },
+    {
+      "name": "java version",
+      "value": "java -version"
+    },
+    {
+      "name": "Creat heapdump",
+      "value": "curl localhost:8080/actuator/heapdump -o /tmp/{$parameter:name={$bz-group}-{$bz-hhmm}.bin}",
+      "podGroup": "",
+      "faver": false
     },
     {
       "podGroup": "bz-node-system",
@@ -275,16 +292,6 @@
       "podGroup": "bz-node-system"
     },
     {
-      "value": "kafka-consumer-groups.sh --bootstrap-server nls-data-message-bus-kf-0:9092 --describe --group cac-{$parameter:name=napfltr|achndlr|lochndlr}",
-      "name": "check kafka queue",
-      "podGroup": "nls-data-message-bus-kf",
-      "faver": true
-    },
-    {
-      "name": "java version",
-      "value": "java -version"
-    },
-    {
       "name": "Check Resource",
       "podGroup": "bz-node-system",
       "value": "kubectl get hpa -n ${$NS}"
@@ -295,20 +302,9 @@
       "value": "for ns in $(kubectl get ns --field-selector status.phase=Terminating -o jsonpath='{.items[*].metadata.name}')\ndo\n  kubectl get ns $ns -ojson | jq '.spec.finalizers = []' | kubectl replace --raw \"/api/v1/namespaces/$ns/finalize\" -f -\ndone\n\nfor ns in $(kubectl get ns --field-selector status.phase=Terminating -o jsonpath='{.items[*].metadata.name}')\ndo\n  kubectl get ns $ns -ojson | jq '.metadata.finalizers = []' | kubectl replace --raw \"/api/v1/namespaces/$ns/finalize\" -f -\ndone"
     },
     {
-      "name": "Creat heapdump",
-      "value": "curl localhost:8080/actuator/heapdump -o /tmp/{$parameter:name={$bz-group}-{$bz-hhmm}.bin}",
-      "podGroup": "",
-      "faver": false
-    },
-    {
       "name": "Clean Kafka data",
       "value": "{$bz-alarm:Do you want to delete kafka data?}\nkubectl delete pvc datadir-nls-data-message-bus-kf-0\nkubectl delete pvc datadir-nls-data-message-bus-kf-1\nkubectl delete pvc datadir-nls-data-message-bus-kf-2",
       "podGroup": "bz-node-system"
-    },
-    {
-      "name": "Check ms-testing kafka",
-      "value": "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group cac-{$parameter:name=napfltr|achndlr|lochndlr}",
-      "podGroup": "kafka"
     },
     {
       "name": "Uninstall mycac",
@@ -352,5 +348,5 @@
   "alarmFrequency": "60",
   "runningPodOnly": "on",
   "autoCheckAlarm": "on",
-  "css": "dark"
+  "css": ""
 }
