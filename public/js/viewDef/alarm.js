@@ -46,7 +46,7 @@ const _alarmViewDef={
         {
           _tag:"label",
           _attr:{
-            style:"position: relative;top: 15px;"
+            style:"position: relative;top: 19px;"
           },
           _items:[
             {

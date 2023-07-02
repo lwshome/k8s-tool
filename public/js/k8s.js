@@ -293,12 +293,12 @@ const k8s={
 
     function _insertData(_fun){
       let o=Object.values(k8s._data._curAlarms).find(x=>!x._config),v=""
-      if(o&&o._resource&&o._resource[0]){
+      if(o&&o._resource&&o._resource[0]&&o._resource.find(x=>x._ready)){
         _k8sProxy._send({
           _data:{
             method:"exeCmd",
             data:{
-              cmd:"kubectl -n "+k8s._data._config.ns+" get pods "+o._resource[0]._name+" -o json"
+              cmd:"kubectl -n "+k8s._data._config.ns+" get pods "+o._resource.find(x=>x._ready)._name+" -o json"
             }
           },
           _success:function(r){
@@ -1201,7 +1201,8 @@ const k8s={
         _waiting="w"+id,
         _timer="t"+id,
         _remain="rm"+id,
-        _exeCount="ec"+id
+        _exeCount="ec"+id,
+        _lastCmd;
         
     k8s._uiSwitch[_playing]=1
     if(!t._item&&d.podGroup!="bz-node-system"){
@@ -1209,6 +1210,9 @@ const k8s={
       if(!t._item){
         return
       }
+    }
+    if(t._item&&d.podGroup!="bz-node-system"){
+      window["$bz-pod"]=t._item._name
     }
     if(t._key=="link"){
       if(d.value.match(/^https?:/)){
@@ -1412,7 +1416,7 @@ const k8s={
       _sendAPI(t._item,d)
     }
 
-    function _updateResponse(v,_fun){
+    function _updateResponse(v,_noHightlight,_fun){
       let o=$("#"+id+" pre.textarea")[0]||$("#"+id+" textarea")[0];
 
       _Util._autoScrollToBottom(o,function(){
@@ -1435,11 +1439,14 @@ const k8s={
               _insertPanel(o)
             }
             let _panel=o.children[o.children.length-1]
-            if(o._curText){
+            if(_noHightlight){
+              o._history=o._curText=0
+            }else if(o._curText){
               v=v.trim()
             }
             o._curText=o._curText||[]
             o._history=o._history||[]
+
             v=v.split("\n")
             o._curText.push(...v)
             
@@ -1511,17 +1518,20 @@ const k8s={
           _setValue._data[_setValue._value]=v
         }
         k8s._uiSwitch[_playing]+=1
+        v=v.trim()
+        let _clear=_lastCmd!=v;
         _k8sProxy._send({
           _data:{
             method:"exeCmd",
             data:{
-              cmd:v.trim(),
+              cmd:v,
               name:n,
               split:e&&k8s._uiSwitch[_playing]
             }
           },
           _success:function(r){
-            _updateResponse(r,function(){
+            _updateResponse(r,_clear==1,function(){
+              _lastCmd=v
               if(parseInt(k8s._data[_tmpIntervals])&&k8s._uiSwitch[_playing]){
                 k8s._uiSwitch[_timer]=setTimeout(()=>{
                   if(e&&e.getBoundingClientRect().width){
@@ -1534,10 +1544,12 @@ const k8s={
                 k8s._uiSwitch[_playing]=0
               }
             })
+            _clear=0
           }
         })
       })
     }
+    
     function _sendAPI(t,d){
       k8s._uiSwitch[_response]=""
       let s=_Util._jsonToCurl(t,d)
@@ -1661,7 +1673,7 @@ const k8s={
                 }
               },
               _success:function(v){
-                _updateResponse(v)
+                _updateResponse(v,1)
                 setTimeout(()=>{
                   _doSend(k8s._data[_remain]-1)
                 },_time+1000-Date.now())
@@ -1715,6 +1727,7 @@ const k8s={
     v=v.replace(/\{\$bz-yyyyMMdd\}/g,_Util._formatTimestamp(0,"yyyyMMdd"))
     v=v.replace(/\{\$bz-timestamp\}/g,_Util._formatTimestamp(0,"yyyyMMddhhmmss"))
     v=v.replace(/\{\$bz-group\}/g,_group)
+    v=v.replace(/\{\$bz-pod\}/g,window["$bz-pod"])
 
     let ps=v.match(/\{\$parameter:[^\}]+\}/g)
     if(ps){

@@ -328,21 +328,20 @@ const k8s={
         // console.log(c)
         if(c.includes("|")||c.includes(">")){
           _exe(c,function(v){
-            if(v){
-              console.log(v)
+            console.log(v)
 
-              if(_split||d.split){
-                let s=d.split||""
-                if(s){
-                  s+=". "
-                }
-                _split="\n=== "+s+new Date()+" "+"=".repeat("30")+"\n\n"
+            if(_split||d.split){
+              let s=d.split||""
+              if(s){
+                s+=". "
               }
-              v=(_split||"")+c+"\n"+v
-
-              _fun(v)
-              _exeCmd(cs,_split)
+              _split="\n=== "+s+new Date()+" "+"=".repeat("30")+"\n\n"
             }
+            v=(_split||"")+c+"\n"+v
+
+            _fun(v)
+            _exeCmd(cs,_split)
+
           })
           return
         }
