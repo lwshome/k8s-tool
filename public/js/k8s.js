@@ -1427,7 +1427,16 @@ const k8s={
           o._history=(o._curText||[]).filter(x=>x)
           o._curText=0
           _highlight++
-          _fun&&_fun()
+          let rs=[]
+          o._history.forEach(x=>{
+            if(x.match(/^=== [^=]+=+$/)){
+              rs=[]
+            }else{
+              rs.push(x)
+            }
+          })
+          rs.shift()
+          _fun&&_fun(rs.join("\n"))
 
         }else{
           $(".bz-shell-mark").html("<div class='bz-small-loading'></div>")
@@ -1518,38 +1527,82 @@ const k8s={
           _setValue._data[_setValue._value]=v
         }
         k8s._uiSwitch[_playing]+=1
-        v=v.trim()
-        let _clear=_lastCmd!=v;
-        _k8sProxy._send({
-          _data:{
-            method:"exeCmd",
-            data:{
-              cmd:v,
-              name:n,
-              split:e&&k8s._uiSwitch[_playing]
+        v=v.trim().split("\n")
+        let w="",js="",vs=[]
+        v.forEach(x=>{
+          if(x.match(/^\{\$bz-js:/)||js){
+            js+="\n"+x
+            if(w){
+              vs.push(w.trim())
+              w=""
             }
-          },
-          _success:function(r){
-            _updateResponse(r,_clear==1,function(){
-              _lastCmd=v
-              if(parseInt(k8s._data[_tmpIntervals])&&k8s._uiSwitch[_playing]){
-                k8s._uiSwitch[_timer]=setTimeout(()=>{
-                  if(e&&e.getBoundingClientRect().width){
-                    _sendCmd(v,n,e)
-                  }
-                },k8s._data[_tmpIntervals]*1000)
-                k8s._uiSwitch[_waiting]=parseInt(k8s._data[_tmpIntervals])
-              }else{
-                k8s._uiSwitch[_waiting]=0
-                k8s._uiSwitch[_playing]=0
-              }
-            })
-            _clear=0
+            if((js.match(/[\{]/g)||[""])[0].length==(js.match(/[\}]/g)||[""])[0].length){
+              vs.push({_bzjs:js})
+              js=""
+            }
+          }else{
+            w+="\n"+x
           }
         })
+        if(w){
+          vs.push(w.trim())
+        }
+        if(js){
+          vs.push({_bzjs:js})
+        }
+        _doSend(vs,n,e)
       })
     }
-    
+
+    function _doSend(vs,n,e){
+      let v=vs.shift()
+      if(v){
+        if(v._bzjs){
+          v._bzjs=v._bzjs.trim().replace("{$bz-js:","")
+          v._bzjs=v._bzjs.substring(0,v._bzjs.length-1)
+          let r=eval(v._bzjs)
+          if(r&&r.constructor==Function){
+            r(function(){
+              _doSend(vs,n,e)
+            })
+          }else{
+            _doSend(vs,n,e)
+          }
+        }else{
+          let _clear=_lastCmd!=v;
+          _k8sProxy._send({
+            _data:{
+              method:"exeCmd",
+              data:{
+                cmd:v,
+                name:n,
+                split:e&&k8s._uiSwitch[_playing]
+              }
+            },
+            _success:function(r){
+              _updateResponse(r,_clear,function(rv){
+                window["$bz-result"]=rv
+                _doSend(vs,n,e)
+              })
+              _clear=0
+            }
+          })
+        }
+      }else{
+        _lastCmd=v
+        if(parseInt(k8s._data[_tmpIntervals])&&k8s._uiSwitch[_playing]){
+          k8s._uiSwitch[_timer]=setTimeout(()=>{
+            if(e&&e.getBoundingClientRect().width){
+              _sendCmd(v,n,e)
+            }
+          },k8s._data[_tmpIntervals]*1000)
+          k8s._uiSwitch[_waiting]=parseInt(k8s._data[_tmpIntervals])
+        }else{
+          k8s._uiSwitch[_waiting]=0
+          k8s._uiSwitch[_playing]=0
+        }
+      }
+    }
     function _sendAPI(t,d){
       k8s._uiSwitch[_response]=""
       let s=_Util._jsonToCurl(t,d)
