@@ -1550,11 +1550,11 @@ const k8s={
         if(js){
           vs.push({_bzjs:js})
         }
-        _doSend(vs,n,e)
+        _doSend(vs,n,e,vs.map(x=>x))
       })
     }
 
-    function _doSend(vs,n,e){
+    function _doSend(vs,n,e,os){
       let v=vs.shift()
       if(v){
         if(v._bzjs){
@@ -1563,13 +1563,14 @@ const k8s={
           let r=eval(v._bzjs)
           if(r&&r.constructor==Function){
             r(function(){
-              _doSend(vs,n,e)
+              _doSend(vs,n,e,os)
             })
           }else{
-            _doSend(vs,n,e)
+            _doSend(vs,n,e,os)
           }
         }else{
           let _clear=_lastCmd!=v;
+          _lastCmd=v
           _k8sProxy._send({
             _data:{
               method:"exeCmd",
@@ -1582,18 +1583,17 @@ const k8s={
             _success:function(r){
               _updateResponse(r,_clear,function(rv){
                 window["$bz-result"]=rv
-                _doSend(vs,n,e)
+                _doSend(vs,n,e,os)
               })
               _clear=0
             }
           })
         }
       }else{
-        _lastCmd=v
         if(parseInt(k8s._data[_tmpIntervals])&&k8s._uiSwitch[_playing]){
           k8s._uiSwitch[_timer]=setTimeout(()=>{
             if(e&&e.getBoundingClientRect().width){
-              _sendCmd(v,n,e)
+              _sendCmd(os,n,e)
             }
           },k8s._data[_tmpIntervals]*1000)
           k8s._uiSwitch[_waiting]=parseInt(k8s._data[_tmpIntervals])
@@ -2282,7 +2282,6 @@ const k8s={
           }
         },
         _success:function(v){
-          console.log(v.length)
           _logHandler._addLog(v,p._log)
         }
       })
